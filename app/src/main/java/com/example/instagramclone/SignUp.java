@@ -48,12 +48,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         txtGetData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("KickBoker");
-                parseQuery.getInBackground("Oeg5NOoDWh", new GetCallback<ParseObject>() {
+                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("KickBoker");//gets the kickboxer class from data base
+                parseQuery.getInBackground("Oeg5NOoDWh", new GetCallback<ParseObject>() {// gets the object in kickboxer with this id
                     @Override
                     public void done(ParseObject object, ParseException e) {
-                        if (object != null && e == null) {
-                            txtGetData.setText(object.get("name") + "-" + "Punch Power: " + object.get("punchPower"));
+                        if (object != null && e == null) {//checks the object exists
+                            txtGetData.setText(object.get("name") + "-" + "Punch Power: " + object.get("punchPower"));//object.get gets the value of the key punchpower
                         }
                     }
                 });
@@ -75,7 +75,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void done(List<ParseObject> objects, ParseException e) {
 
-                        if (e == null) {
+                        if (e == null) {//checks if no exception
                             if (objects.size() > 0) {
                                 for(ParseObject kickBoxer : objects) {
                                     allKickBockers = allKickBockers + kickBoxer.get("name") + "PunchPwer is:" + kickBoxer.get("punchPower") + "\n";
@@ -115,10 +115,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         try {
             final ParseObject kickBoxer = new ParseObject("KickBoker");
             kickBoxer.put("name", edtName.getText().toString());
-            kickBoxer.put("punchSpeed", Integer.parseInt(edtPunchSpeed.getText().toString()));
+            kickBoxer.put("punchSpeed", Integer.parseInt(edtPunchSpeed.getText().toString()));//adds key and value
             kickBoxer.put("punchPower", Integer.parseInt(edtKickPower.getText().toString()));
             kickBoxer.put("kickSpeed", Integer.parseInt(edtPunchPower.getText().toString()));
-            kickBoxer.saveInBackground(e -> {
+            kickBoxer.saveInBackground(e -> {//saves key and value to kickboker class in database
                 if (e == null) {
                     FancyToast.makeText(SignUp.this, kickBoxer.get("name") + " is saved to server", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
                 } else {
@@ -127,7 +127,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             });
 
         }catch(Exception e) {
-            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();//added library FancyToast in build.gradle
 
         }
     }
