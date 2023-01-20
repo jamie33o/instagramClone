@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/teal_200"
+    tools:context=".Login_Activity">
+
+    <EditText
+        android:id="@+id/loginedtPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="102dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginEnd="99dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/loginedtEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/loginbtnLogin"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_orange_light"
+        android:text="login"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toTopOf="@+id/loginbtnSignUp"
+        app:layout_constraintEnd_toEndOf="@+id/loginedtEmail"
+        app:layout_constraintStart_toStartOf="@+id/loginedtEmail"
+        app:layout_constraintTop_toBottomOf="@+id/loginedtEmail" />
+
+    <Button
+        android:id="@+id/loginbtnSignUp"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="Sign up"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/loginbtnLogin"
+        app:layout_constraintStart_toStartOf="@+id/loginbtnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/loginbtnLogin" />
+
+    <EditText
+        android:id="@+id/loginedtEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/loginbtnLogin"
+        app:layout_constraintEnd_toEndOf="@+id/loginedtPassword"
+        app:layout_constraintStart_toStartOf="@+id/loginedtPassword"
+        app:layout_constraintTop_toBottomOf="@+id/loginedtPassword" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="125dp"
+        android:layout_marginBottom="163dp"
+        app:layout_constraintBottom_toTopOf="@+id/loginedtPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/instagramlogo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
