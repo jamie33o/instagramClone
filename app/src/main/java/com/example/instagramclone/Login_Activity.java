@@ -37,10 +37,10 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
         loginbtnLogin.setOnClickListener(this);
 
 
-        if(ParseUser.getCurrentUser() != null){
-            //  ParseUser.getCurrentUser().logOut();
-            transitionSocialMediaActivity();
-        }
+       /* if(ParseUser.getCurrentUser() != null){
+
+            //transitionSocialMediaActivity();
+        }*/
     }
 
 
@@ -71,7 +71,6 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
                 break;
         }
     }
-
     private void transitionSocialMediaActivity(){
 
         Intent intent = new Intent(Login_Activity.this, SocialMediaActivity.class);

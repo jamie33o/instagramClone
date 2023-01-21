@@ -34,13 +34,13 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         edtEmail = findViewById(R.id.loginedtEmail);
         edtPasswordSignUp = findViewById(R.id.loginedtPassword);
 
-        edtPasswordSignUp.setOnKeyListener(new View.OnKeyListener() {
+        edtEmail.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 //login when you press enter on keyboard
                if(keyCode == KeyEvent.KEYCODE_ENTER &&
                        event.getAction() == KeyEvent.ACTION_DOWN){
-//todo not working
+
                    onClick(btnSignUp);
                }
 
@@ -55,10 +55,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         btnLogin.setOnClickListener(this);
 
 
-        if(ParseUser.getCurrentUser() != null){
-          //  ParseUser.getCurrentUser().logOut();
+      /*  if(ParseUser.getCurrentUser() != null){
+
             transitionSocialMediaActivity();
-        }
+        }*/
 
 
     }
@@ -84,24 +84,23 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     appUser.setPassword(edtPasswordSignUp.getText().toString());
                     appUser.setEmail(edtEmail.getText().toString());
 
-                    ProgressDialog progressDialog = new ProgressDialog((this));
+                    ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setMessage("Signing up " + edtUserNameSignUp.getText().toString());
                     progressDialog.show();
 
 
-                    appUser.signUpInBackground(new SignUpCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                FancyToast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
-                            } else {
-                                FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                    appUser.signUpInBackground((e)-> {
+                        if (e == null) {
+                            FancyToast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
 
-                                transitionSocialMediaActivity();
+                            transitionSocialMediaActivity();
+                        } else {
+                            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
 
-                            }
-                            progressDialog.dismiss();
+
+
                         }
+                        progressDialog.dismiss();
                     });
                 }
                 break;
