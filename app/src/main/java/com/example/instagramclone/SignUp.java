@@ -89,7 +89,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     progressDialog.show();
 
 
-                    appUser.signUpInBackground((e)-> {
+                    appUser.signUpInBackground(e -> {
                         if (e == null) {
                             FancyToast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
 
