@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,8 +40,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 //login when you press enter on keyboard
                if(keyCode == KeyEvent.KEYCODE_ENTER &&
                        event.getAction() == KeyEvent.ACTION_DOWN){
-
                    onClick(btnSignUp);
+                  // btnSignUp.animate().rotation(360).setDuration(10);
                }
 
                 return false;
@@ -55,10 +55,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         btnLogin.setOnClickListener(this);
 
 
-      /*  if(ParseUser.getCurrentUser() != null){
+        if(ParseUser.getCurrentUser() != null){//gets token logs u straight in
 
             transitionSocialMediaActivity();
-        }*/
+        }
 
 
     }
@@ -68,14 +68,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.loginbtnSignUp:
 
+               //todo  edtUserNameSignUp.animate().rotation(360).setDuration(5000);
                 if(edtEmail.getText().toString().equals("") ||
                         edtUserNameSignUp.getText().toString().equals("")||
                         edtPasswordSignUp.getText().toString().equals("")) {
 
-                    FancyToast.makeText(SignUp.this,
+                    Toast.makeText(SignUp.this,
                             "Email, Username,Password is required!",
-                            FancyToast.LENGTH_SHORT, FancyToast.INFO,
-                            true).show();
+                            Toast.LENGTH_SHORT).show();
 
                 }else {
 
@@ -91,11 +91,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                     appUser.signUpInBackground(e -> {
                         if (e == null) {
-                            FancyToast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
+                            Toast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", Toast.LENGTH_SHORT).show();
 
                             transitionSocialMediaActivity();
                         } else {
-                            FancyToast.makeText(SignUp.this, e.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR, true).show();
+                            Toast.makeText(SignUp.this, e.getMessage(), Toast.LENGTH_LONG).show();
 
 
 
@@ -128,6 +128,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         Intent intent = new Intent(SignUp.this, SocialMediaActivity.class);
         startActivity(intent);
+        finish();
       }
 }
 

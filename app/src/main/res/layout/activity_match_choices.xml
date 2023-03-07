@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F4F2F2"
+            android:orientation="vertical">
+
+
+            <TableLayout
+                android:id="@+id/gender"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/searchFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center_horizontal"
+                    android:text="@string/match_filter"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10sp"
+
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/gender"
+                        android:textSize="20sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/notSelectedButton"
+                        android:layout_width="120sp"
+                        android:layout_height="50sp"
+                        android:layout_margin="5sp"
+                        android:textColor="@color/buttonText"
+                        android:textSize="20sp"
+                        android:visibility="gone"
+                        app:chipStrokeColor="@color/buttonText"
+                        app:chipStrokeWidth="3dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/selectedButton"
+                        android:layout_width="120sp"
+                        android:layout_height="50sp"
+                        android:layout_margin="5sp"
+                        android:textColor="#FA092147"
+                        android:textSize="20sp"
+                        android:visibility="gone"
+                        app:chipStrokeColor="#FA092147"
+                        app:chipStrokeWidth="3dp" />
+
+                </TableRow>
+            </TableLayout>
+            <TableLayout
+                android:id="@+id/interestsTablelayout"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/interests"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/interests"
+                        android:textSize="20sp" />
+
+                </TableRow>
+
+
+            </TableLayout>
+            <TableLayout
+                android:id="@+id/countiesTablelayout"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/county"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/county"
+                        android:textSize="20sp" />
+                </TableRow>
+
+            </TableLayout>
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    </HorizontalScrollView>
+
+</RelativeLayout>

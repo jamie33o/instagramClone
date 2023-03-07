@@ -29,7 +29,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.shashank.sony.fancytoastlib.FancyToast;
+
 
 import java.io.ByteArrayOutputStream;
 
@@ -94,18 +94,21 @@ break;
 
             if(edtDescription.getText().toString().equals("")){
 
-                FancyToast.makeText(getContext(),"Error: you must specify a despription", FancyToast.LENGTH_SHORT,FancyToast.ERROR, true).show();
+                Toast.makeText(getContext(),"Error: you must specify a despription", Toast.LENGTH_SHORT).show();
 
             }else{
 
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();//converts image to array of bytes
                 receivedImageBitmap.compress(Bitmap.CompressFormat.PNG, 100,byteArrayOutputStream);//how u want to compress it
                 byte[] bytes = byteArrayOutputStream.toByteArray(); //array has image
+
                 ParseFile parseFile = new ParseFile("img.png", bytes);////the img in bytes create parse the file
                 ParseObject parseObject = new ParseObject("Photo");//new parse object with class Photo
                 parseObject.put("picture", parseFile);//parse object and put column called picture
                 parseObject.put("image_des", edtDescription.getText().toString());//new column for image decription
                 parseObject.put("username", ParseUser.getCurrentUser().getUsername());//and column for username
+
+
                 final ProgressDialog dialog = new ProgressDialog(getContext());//shows loading image
                 dialog.setMessage("Loading");
                 dialog.show();
@@ -114,10 +117,10 @@ break;
                     public void done(ParseException e) {
 
                         if(e ==null){
-                            FancyToast.makeText(getContext(),"Done!!!", FancyToast.LENGTH_SHORT,FancyToast.SUCCESS, true).show();
+                            Toast.makeText(getContext(),"Done!!!",Toast.LENGTH_SHORT).show();
 
                         }else{
-                            FancyToast.makeText(getContext(),"Unknown Error: ", FancyToast.LENGTH_SHORT,FancyToast.ERROR, true).show();
+                            Toast.makeText(getContext(),"Unknown Error: ", Toast.LENGTH_SHORT).show();
 
                         }
                         dialog.dismiss();
@@ -125,7 +128,7 @@ break;
                 });
             }
         }else{
-            FancyToast.makeText(getContext(),"Unknown Error: you must select an Image", FancyToast.LENGTH_SHORT,FancyToast.ERROR, true).show();
+            Toast.makeText(getContext(),"Unknown Error: you must select an Image", Toast.LENGTH_SHORT).show();
 
         }
         break;
@@ -134,7 +137,7 @@ break;
     }
 
     private void getChoosenImage() {
-        FancyToast.makeText(getContext(),"Now we can access the images", FancyToast.LENGTH_SHORT,FancyToast.SUCCESS, true).show();
+        Toast.makeText(getContext(),"Now we can access the images", Toast.LENGTH_SHORT).show();
     Intent intent = new Intent(Intent.ACTION_PICK,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
     startActivityForResult(intent,2000);

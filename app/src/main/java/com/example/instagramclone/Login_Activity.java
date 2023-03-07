@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.shashank.sony.fancytoastlib.FancyToast;
+//import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class Login_Activity extends AppCompatActivity implements View.OnClickListener {
     private EditText loginedtPassword,loginedtEmail;
@@ -37,10 +37,10 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
         loginbtnLogin.setOnClickListener(this);
 
 
-       /* if(ParseUser.getCurrentUser() != null){
+        if(ParseUser.getCurrentUser() != null){//checks if user already logged in
 
-            //transitionSocialMediaActivity();
-        }*/
+            transitionSocialMediaActivity();
+        }
     }
 
 
@@ -54,10 +54,10 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
                     loginedtPassword.getText().toString(),
                         (user, e) -> {
                         if (user != null && e == null) {
-                            FancyToast.makeText(Login_Activity.this,
+                           /* FancyToast.makeText(Login_Activity.this,
                                     user.getUsername() + " is login in successfully",
                                     FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
-                            transitionSocialMediaActivity();
+                         */   transitionSocialMediaActivity();
                         }
 
                     });
@@ -65,6 +65,9 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
 
             case R.id.loginbtnSignUp:
+
+                Intent intent = new Intent(Login_Activity.this,SignUp.class);
+                startActivity(intent);
 
 
 
@@ -75,6 +78,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
         Intent intent = new Intent(Login_Activity.this, SocialMediaActivity.class);
         startActivity(intent);
+        finish();
     }
 
 

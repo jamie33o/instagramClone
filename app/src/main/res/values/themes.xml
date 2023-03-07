@@ -17,8 +17,16 @@
         <!-- Customize your theme here. -->
         <item name="titleTextColor">@color/ActionBarTitleColor</item>
 
+
         <item name="android:button">@color/white</item>
     </style>
-
+    <style name="Theme.Transparent" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+    </style>
 
 </resources>
