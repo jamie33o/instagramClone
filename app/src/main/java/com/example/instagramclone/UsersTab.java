@@ -2,17 +2,10 @@ package com.example.instagramclone;
 
 import static android.content.ContentValues.TAG;
 
-import static com.parse.Parse.getApplicationContext;
-
-import android.app.ProgressDialog;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -21,19 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.parse.FindCallback;
-
-import com.parse.GetDataCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 //import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +29,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.parse.ParseUser;
+import com.shashank.sony.fancytoastlib.FancyToast;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -57,32 +40,34 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 public class UsersTab extends Fragment {
 
     private CardStackLayoutManager manager;
-    private CardStackAdapter adapter;
+    CardStackAdapter adapter;
     List<ItemModel> items;
-    int counter = 0;
-    ItemModel item;
-    int itemsLeft;
+    List<ItemModel> initialItems;
+
     View view;
 
     public UsersTab() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_users_tab, container, false);
-        queryDatabase();
         items = new ArrayList<>();
+        //initialItems = new ArrayList<>();
 
+        init(view);
+
+        QueryDatabase queryDatabase = new QueryDatabase(getContext());
+        queryDatabase.getQueryDatabaseCardview(this);
 
         return view;
     }
 
 
-    private void init(View view) {
+    public void init(View view) {
         CardStackView cardStackView = view.findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(getContext(), new CardStackListener() {
 
@@ -110,7 +95,6 @@ public class UsersTab extends Fragment {
 
                 // adding pages??
                 if (manager.getTopPosition() == adapter.getItemCount()) {
-                    pages();
 
                 }
 
@@ -140,7 +124,13 @@ public class UsersTab extends Fragment {
 */
 
                 if (position == items.size() - 1) {
-                    Intent intent = new Intent(getActivity().getApplication(), MatchChoices.class);
+                   // clearItems();
+
+
+                    pages();
+
+                  //  newItems();
+                    Intent intent = new Intent(getContext(), MatchChoices.class);
                     startActivity(intent);//todo create pop up so they can change choices to get more
                 }
 
@@ -163,7 +153,7 @@ public class UsersTab extends Fragment {
         cardStackView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private void pages() {
+    void pages() {
         System.out.println("pages called");
         List<ItemModel> old = adapter.getItems();
         List<ItemModel> baru = new ArrayList<>(items);
@@ -175,79 +165,30 @@ public class UsersTab extends Fragment {
 
     }
 
-
-    public void queryDatabase() {
-
-        ParseQuery<ParseObject> parseQuery = new ParseQuery<>("Profile");
-        parseQuery.orderByDescending("createdAt");
-
-        ProgressDialog dialog = new ProgressDialog(getContext());
-        dialog.setMessage("Loading...");
-        dialog.show();
-
-        parseQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (objects.size() > 0 && e == null) {
-                    for (ParseObject post : objects) {
-
-                        String name = post.get("profileName") + "";
-                        String age = post.get("age") + "";
-                        String county = post.get("county") + "";
+  /*  public void newItems(){
+        adapter.setItems(initialItems);
+    }*/
 
 
-                        ParseFile postPicture = (ParseFile) post.get("image1");
-
-                        postPicture.getDataInBackground(new GetDataCallback() {
-                            @Override
-                            public void done(byte[] data, ParseException e) {
-                                if (data != null && e == null) {
-                                    counter++;
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                    File file = new File(getApplicationContext().getCacheDir(), counter + ".jpg");
-                                    String filePath = file.getAbsolutePath();
-                                    FileOutputStream fos = null;
-                                    try {
-                                        fos = new FileOutputStream(filePath);
-                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                                    } catch (FileNotFoundException a) {
-                                        e.printStackTrace();
-                                    } finally {
-                                        try {
-                                            fos.close();
-                                        } catch (IOException a) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    System.out.println("items added");
-                                    item = new ItemModel(filePath, name, age, county);
-                                    items.add(item);
-                                    itemsLeft = items.size();
-
-                                    if (items.size() == objects.size())
-                                        init(view);
-
-                                }
-                                dialog.dismiss();
-                            }
-                        });
-                    }
-                } else {
-                    dialog.dismiss();
-                }
-            }
-        });
+    public void setNewItems(List<ItemModel> newItems) {
+        adapter.setItems(newItems);
     }
 
-   /* private List<ItemModel> addList() {
-        System.out.println("add list called");
+    // Method to clear the current items in the adapter
+    public void clearItems() {
+        adapter.clearItems();
+    }
 
-        items.add(new ItemModel("/data/user/0/com.example.instagramclone/cache/2.jpg","jgjg","hggf","FGhhgf"));
 
 
 
-        return items;
 
-    }*/
+
+public void addList(String image,String name,String age,String county) {
+
+        items.add(new ItemModel(image,name,age,county));
+       // initialItems.add(new ItemModel(image,name,age,county));
+
+    }
 
 }

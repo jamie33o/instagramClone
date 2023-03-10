@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,40 +22,42 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-public class MyProfileTab extends Fragment implements View.OnClickListener {
+public class MyProfileTab extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
 
-    private EditText edtProfileName,edtBio,edtProfession,edtHobbies,edtSport,edtAge,edtUsername,edtCounty;
-    private Button btnUpdateInfo;
+    public EditText edtName,edtBio,edtProfession,edtAge,edtUsername;
+    private TableLayout countyLayout,profileHobbiesLayout, sportsLayout,chosencountiesLayout,choseninterestsLayout;
+    public Button btnUpdateInfo;
 
+    ButtonCreator buttonCreator;
     String parseUser;
-    private boolean imgViewShareClicked,imgViewShare1Clicked,imgViewShare2Clicked;
-    ;
-    private ImageView imgViewShare,imgViewShare1,imgViewShare2;
+    public boolean imgViewShareClicked,imgViewShare1Clicked,imgViewShare2Clicked;
+    QueryDatabase queryDatabase;
+    public ImageView imgViewShare,imgViewShare1,imgViewShare2;
 
     ParseObject currentUser,userprofile;
-
+    Button notSelectedButton, selectedButton;
 
     Bitmap receivedImageBitmap,bitmap1,bitmap2,bitmap3;
     ParseObject userClass;
+
+
     public MyProfileTab() {
-        // Required empty public constructor
+
+
+
     }
 
 
@@ -65,243 +66,88 @@ public class MyProfileTab extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        try {
-            View view = inflater.inflate(R.layout.fragment_profile_tab,//used to find view inside fragment
-                    container, false);
 
-
-            imgViewShare = view.findViewById(R.id.imgViewShare);
-            imgViewShare1 = view.findViewById(R.id.imgViewShare1);
-            imgViewShare2 = view.findViewById(R.id.imgViewShare2);
-
-
-            imgViewShare.setOnClickListener(MyProfileTab.this);
-            imgViewShare1.setOnClickListener(MyProfileTab.this);
-            imgViewShare2.setOnClickListener(MyProfileTab.this);
-            imgViewShare.setImageResource(R.drawable.baseline_add_a_photo_24);
-            imgViewShare1.setImageResource(R.drawable.baseline_add_a_photo_24);
-            imgViewShare2.setImageResource(R.drawable.baseline_add_a_photo_24);
+        View view = inflater.inflate(R.layout.fragment_profile_tab,//used to find view inside fragment
+                container, false);
 
 
 
-            edtProfileName = view.findViewById(R.id.edtProfileName);
-            edtAge = view.findViewById(R.id.edtAge);
-            edtCounty = view.findViewById(R.id.edtCounty);
-            edtUsername = view.findViewById(R.id.edtUsername);
-            edtBio = view.findViewById(R.id.edtBio);
-            edtHobbies = view.findViewById(R.id.edtHobbies);
-            edtProfession = view.findViewById(R.id.edtProfession);
-            edtSport = view.findViewById(R.id.edtSport);
-
-            btnUpdateInfo = view.findViewById(R.id.btnUpdateInfo);
-
-            parseUser = ParseUser.getCurrentUser().getUsername();
-            userClass = ParseUser.getCurrentUser();
-
-            queryDatabaseProfile();
+        buttonCreator = new ButtonCreator(getContext(),this);
 
 
-            btnUpdateInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        queryDatabase = new QueryDatabase(getContext());
+        queryDatabase.queryDatabaseProfile(this);
 
-                    ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Profile");
-                    queryAll.whereEqualTo("username", parseUser);
-                    queryAll.findInBackground(new FindCallback<ParseObject>() {
-                        @Override
-                        public void done(List<ParseObject> objects, ParseException e) {
-                            if (e == null) {
-
-                                if (objects.size() > 0) {
-
-                                    for (ParseObject profile : objects) {
+        imgViewShare = view.findViewById(R.id.imgViewShare);
+        imgViewShare1 = view.findViewById(R.id.imgViewShare1);
+        imgViewShare2 = view.findViewById(R.id.imgViewShare2);
 
 
-                                        profile.put("profileName", edtProfileName.getText().toString());
-                                        profile.put("age",edtAge.getText().toString());
-                                        profile.put("county",edtCounty.getText().toString());
-                                        profile.put("profileBio", edtBio.getText().toString());
-                                        profile.put("profileProfession", edtProfession.getText().toString());
-                                        profile.put("profileHobbies", edtHobbies.getText().toString());
-                                        profile.put("profileSport", edtSport.getText().toString());
-
-                                        ProgressDialog progressDialog = new ProgressDialog(getContext());
-                                        progressDialog.setMessage("Updating Info");
-                                        progressDialog.show();
-
-                                        profile.saveInBackground(new SaveCallback() {
-                                            @Override
-                                            public void done(ParseException e) {
-                                                if (e == null) {
-                                                    FancyToast.makeText(getContext(),
-                                                            "Info Updated",
-                                                            FancyToast.LENGTH_SHORT, FancyToast.INFO,
-                                                            true).show();
-
-                                                } else {
-                                                    FancyToast.makeText(getContext(),
-                                                            e.getMessage(),
-                                                            FancyToast.LENGTH_LONG,
-                                                            FancyToast.ERROR, true).show();
+        imgViewShare.setOnClickListener(MyProfileTab.this);
+        imgViewShare1.setOnClickListener(MyProfileTab.this);
+        imgViewShare2.setOnClickListener(MyProfileTab.this);
+        imgViewShare.setImageResource(R.drawable.baseline_add_a_photo_24);
+        imgViewShare1.setImageResource(R.drawable.baseline_add_a_photo_24);
+        imgViewShare2.setImageResource(R.drawable.baseline_add_a_photo_24);
 
 
-                                                }
-                                                progressDialog.dismiss();
+        edtName = view.findViewById(R.id.edtName);
+        edtName.setOnFocusChangeListener(this);
 
-                                            }
+        edtAge = view.findViewById(R.id.edtAge);
+        edtAge.setOnFocusChangeListener(this);
 
-                                        });
-
-                                    }
-                                }
-                            }
-
-                        }
+        countyLayout = view.findViewById(R.id.countyLayout);
 
 
-                    });
-                }
-            });
-            return view;//must return type view
+        edtUsername = view.findViewById(R.id.edtUsername);
+        edtUsername.setOnFocusChangeListener(this);
+
+        edtBio = view.findViewById(R.id.edtBio);
+        edtBio.setOnFocusChangeListener(this);
+
+        profileHobbiesLayout = view.findViewById(R.id.profileHobbiesLayout);
+
+        edtProfession = view.findViewById(R.id.edtProfession);
+        edtProfession.setOnFocusChangeListener(this);
+
+        sportsLayout = view.findViewById(R.id.sportsLayout);
+        chosencountiesLayout = view.findViewById(R.id.chosencountiesLayout) ;
+        choseninterestsLayout = view.findViewById(R.id.choseninterestsLayout);
+
+        parseUser = ParseUser.getCurrentUser().getUsername();
+        userClass = ParseUser.getCurrentUser();
+
+        //queryDatabase.getUserInfoQueryDatabase();
 
 
-          } catch (Exception e) {
-        e.printStackTrace();
+
+        return view;//must return type view
+
+
+
     }
-       return null;
-        }
 
+    public void setUserTextField(String name, String age, String county, String userName, String profileBio, String profileProfession, String profileHobbies, String sports, String[] choseninterests, String[] chosencounties){
 
-        public void queryDatabaseProfile(){
-
-
-
-
-            ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("Profile");
-            queryAll.whereEqualTo("username",parseUser);
-            queryAll.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> objects, ParseException e) {
-                    if(e == null){
-
-
-                        if(objects.size() > 0){
-
-                            for(ParseObject profile : objects){
+        edtName.setText(name);
+        edtAge.setText(age);
+        buttonCreator.buttonCreator(countyLayout, county);
+        edtUsername.setText(userName);
+        edtBio.setText(profileBio);
+        edtProfession.setText(profileProfession);
+        if(profileHobbies != null)
+            buttonCreator.buttonCreator(profileHobbiesLayout, profileHobbies);
+        if(sports != null)
+            buttonCreator.buttonCreator(sportsLayout, sports);
+        if(chosencounties != null)
+            buttonCreator.buttonCreator(chosencountiesLayout, chosencounties);
+        if(choseninterests != null)
+            buttonCreator.buttonCreator(choseninterestsLayout, choseninterests);
 
 
 
-                                if(profile.get("profileName")  != null )
-                                    edtProfileName.setText(profile.get("profileName") + "");
-                                if(profile.get("age")  != null )
-                                    edtAge.setText(profile.get("age") + "");
-                                if(profile.get("county")  != null )
-                                    edtCounty.setText(profile.get("county") + "");
-                                if(profile.get("username")  != null )
-                                    edtUsername.setText(profile.get("username") + "");
-                                if(profile.get("profileBio")  != null )
-                                    edtBio.setText(profile.get("profileBio") + "");
-                                if(profile.get("profileProfession")  != null )
-                                    edtProfession.setText(profile.get("profileProfession") + "");
-                                if(profile.get("profileHobbies")  != null )
-                                    edtHobbies.setText(profile.get("profileHobbies") + "");
-                                if(profile.get("profileSport")  != null )
-                                    edtSport.setText(profile.get("profileSport") + "");
-
-
-                                if(profile.get("image1") != null) {
-                                    ParseFile postPicture = (ParseFile) profile.get("image1");
-                                    postPicture.getDataInBackground(new GetDataCallback() {
-                                        @Override
-                                        public void done(byte[] data, ParseException e) {
-                                            if (data != null && e == null) {
-                                                //crates image and image view
-                                                bitmap1 = BitmapFactory.decodeByteArray(data, 0, data.length);//convert  byte array from server to bitmap
-                                                imgViewShare.setImageBitmap(bitmap1);
-
-                                            }
-                                        }
-                                    });
-                                }
-
-
-
-                                if(profile.get("image2") != null) {
-
-                                    ParseFile postPicture1 = (ParseFile) profile.get("image2");
-                                    postPicture1.getDataInBackground(new GetDataCallback() {
-                                        @Override
-                                        public void done(byte[] data, ParseException e) {
-                                            if (data != null && e == null) {
-                                                //crates image and image view
-                                                bitmap2 = BitmapFactory.decodeByteArray(data, 0, data.length);//convert  byte array from server to bitmap
-                                                imgViewShare1.setImageBitmap(bitmap2);
-
-                                            }
-                                        }
-                                    });
-
-
-
-                                }
-                                if(profile.get("image3") != null) {
-
-                                    ParseFile postPicture2 = (ParseFile) profile.get("image3");
-                                    postPicture2.getDataInBackground(new GetDataCallback() {
-                                        @Override
-                                        public void done(byte[] data, ParseException e) {
-                                            if (data != null && e == null) {
-                                                //crates image and image view
-                                                bitmap3 = BitmapFactory.decodeByteArray(data, 0, data.length);//convert  byte array from server to bitmap
-                                                imgViewShare2.setImageBitmap(bitmap3);
-
-                                            }
-
-                                        }
-
-                                    });
-                                }
-
-
-                            }
-                        } else{
-                            ParseObject object = new ParseObject("Profile");
-                            object.put("username",parseUser);
-
-
-                            object.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e == null) {
-                                        ParseQuery<ParseObject> query = ParseQuery.getQuery("Profile");
-                                        query.whereEqualTo("username", parseUser);
-                                        query.getFirstInBackground(new GetCallback<ParseObject>() {
-                                            public void done(ParseObject user, ParseException e) {
-                                                if (e == null) {
-                                                    currentUser = user;
-                                                    queryDatabaseProfile();
-                                                } else {
-                                                    // Something is wrong
-                                                }
-                                            }
-                                        });
-                                        Toast.makeText(getContext(), "done", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "not done", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-
-                        }
-                    }
-                }
-            });
-
-
-
-        }
-
+    }
 
 
     @Override
@@ -465,4 +311,18 @@ public class MyProfileTab extends Fragment implements View.OnClickListener {
     }
 
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+                EditText editText = (EditText) v;
+                String text = editText.getText().toString();
+                String fieldName = editText.getTag().toString();
+
+                // Upload text to database for the field that lost focus
+                queryDatabase.putQueryDatabase(fieldName, text);
+                if(fieldName.equals("username")) {
+                    userClass.put("username", text);
+                }
+        }
+    }
 }

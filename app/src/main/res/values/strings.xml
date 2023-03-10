@@ -20,4 +20,6 @@
     <string name="animals">Animals</string>
     <string name="yoga">Yoga</string>
     <string name="county">Counties</string>
+    <string name="save_button">save button</string>
+    <string name="back_button">back button</string>
 </resources>

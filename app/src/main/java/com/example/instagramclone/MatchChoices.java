@@ -2,24 +2,28 @@ package com.example.instagramclone;
 
         import androidx.appcompat.app.AppCompatActivity;
 
+        import android.app.Activity;
+        import android.content.Intent;
+        import android.graphics.Color;
         import android.os.Bundle;
         import android.util.DisplayMetrics;
         import android.view.Gravity;
-        import android.view.LayoutInflater;
         import android.view.View;
         import android.view.WindowManager;
         import android.widget.Button;
+        import android.widget.ImageButton;
         import android.widget.TableLayout;
-        import android.widget.TableRow;
 
+        import java.util.ArrayList;
         import java.util.Arrays;
+        import java.util.Objects;
 
 public class MatchChoices extends AppCompatActivity implements View.OnClickListener {
     public static boolean yes, no;
-    int counter;
 
     String[] interests,gender,counties;
-    Button notSelectedButton, selectedButton;
+
+    ButtonCreator buttonCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,18 +31,18 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_match_choices);
 
-
         gender = new String[]{"Male","Female"};
         counties = new String[]{"Antrim", "Armagh", "Carlow", "Cavan", "Clare", "Cork", "Derry", "Donegal", "Down", "Dublin", "Fermanagh", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Tyrone", "Waterford", "Westmeath", "Wexford", "Wicklow"};
         interests = new String[]{"Reading", "Writing", "Photography", "Traveling", "Cooking", "Hiking", "Yoga", "Painting", "Gaming", "Music", "Dancing", "Sports", "Fitness", "Meditation", "Coding", "Gardening", "Fishing", "Gym", "Surfing", "Netflix"};
 
 
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.activity_match_choices, null);
 
-        notSelectedButton = view.findViewById(R.id.notSelectedButton);
-        selectedButton = view.findViewById(R.id.selectedButton);
+        findViewById(R.id.backbtn).setOnClickListener(this);
+        findViewById(R.id.savebtn).setOnClickListener(this);
+
+
+
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -54,142 +58,106 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
         getWindow().setAttributes(params);
 
         TableLayout genderLayout = findViewById(R.id.gender);
-        buttonCreator(genderLayout,gender);
+         buttonCreator = new ButtonCreator(this,this);
+        buttonCreator.buttonCreator(genderLayout,gender);
 
 
 
 
 
         TableLayout interestsLayout = findViewById(R.id.interestsTablelayout);
-        buttonCreator(interestsLayout,interests);
-
+        buttonCreator.buttonCreator(interestsLayout,interests);
 
 
 
         TableLayout countiesBtnLayout = findViewById(R.id.countiesTablelayout);
-        buttonCreator(countiesBtnLayout,counties);
-
-
-
+        buttonCreator.buttonCreator(countiesBtnLayout,counties);
     }
+    private ArrayList<String> chosenInterests = new ArrayList<>();
+    String chosenGender;
+    private ArrayList<String> chosenCounties = new ArrayList<>();
 
-    int[] interestsClicked = new int[20];
-    int[] countiesClicked = new int[32];
+
+    private ArrayList<String> selectedButtons = new ArrayList<>();
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.backbtn) {
+            finish();
+            return;
+        }
+
+        if (v.getId() == R.id.savebtn) {
+            for(String button : selectedButtons) {
+                // Check if the button is contained in the gender array
+                if (Arrays.asList(gender).contains(button)) {
+                    // Add the button to the chosenGender array if it's not already there
+
+                    if (!Objects.equals(chosenGender, button)) {
+                        chosenGender =button;                    }
+                }
+                // Check if the button is contained in the counties array
+                if (Arrays.asList(counties).contains(button)) {
+                    // Add the button to the chosenCounties array if it's not already there
+                    if (!chosenCounties.contains(button)) {
+                        chosenCounties.add(button);
+                    }
+                }
+                // Check if the button is contained in the interests array
+                if (Arrays.asList(interests).contains(button)) {
+                    // Add the button to the chosenInterests array if it's not already there
+                    if (!chosenInterests.contains(button)) {
+                        chosenInterests.add(button);
+                    }
+                }
+            }
+
+
+
+
+
+            QueryDatabase queryDatabase = new QueryDatabase(this);
+
+            queryDatabase.putQueryDatabase("chosencounties",chosenCounties);
+            queryDatabase.putQueryDatabase("chosengender",chosenGender);
+            queryDatabase.putQueryDatabase("choseninterest",chosenInterests);
+
+            closeActivity();
+            return;
+        }
+
+
         int buttonId = v.getId();
+        Button button =  findViewById(buttonId);
+        String buttonText = button.getText().toString();
 
-        if (buttonId <= 32) {
-            Button clickedCountiestbtn = findViewById(buttonId);
-
-
-            // Find the button using its ID
-            // Set the background color of the button
-            if (countiesClicked[buttonId] == buttonId) {
-                clickedCountiestbtn.setBackground(notSelectedButton.getBackground());
-                clickedCountiestbtn.setTextColor(notSelectedButton.getTextColors());
-
-
-                countiesClicked[buttonId] = buttonId + 50;
-
-            } else {
-                clickedCountiestbtn.setBackground(selectedButton.getBackground());
-                clickedCountiestbtn.setTextColor(selectedButton.getTextColors());
-                countiesClicked[buttonId] = buttonId;
-                System.out.println(buttonId);
-
-            }
-
-        } else if (buttonId <= 52) {
-            Button clickedInterestbtn = findViewById(buttonId);
-
-            if (interestsClicked[buttonId - 33] == buttonId) {
-
-                clickedInterestbtn.setBackground(notSelectedButton.getBackground());
-                clickedInterestbtn.setTextColor(notSelectedButton.getTextColors());
-
-                interestsClicked[buttonId - 33] = buttonId + 60;
-                System.out.println(Arrays.toString(interestsClicked));
-
-            } else {
-                clickedInterestbtn.setBackground(selectedButton.getBackground());
-                clickedInterestbtn.setTextColor(selectedButton.getTextColors());
-
-                interestsClicked[buttonId - 33] = buttonId;
-                System.out.println(Arrays.toString(interestsClicked));
-
-            }
+        if (selectedButtons.contains(buttonText)) {
+            selectedButtons.remove(buttonText);
+            buttonCreator.gdDefault.setStroke(3, Color.BLACK);
+            button.setTextColor(Color.BLACK);
+        } else {
+            selectedButtons.add(buttonText);
+            buttonCreator.gdDefault.setStroke(3, Color.parseColor("#b7312c"));
+            button.setTextColor(Color.parseColor("#b7312c"));
 
         }
+
+
+
+
     }
 
-    //findViewById(R.id.textView2);
-
-       /* findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-            @Override//Yes button
-            public void onClick(View v) {
-
-                yes =true;
-
-                finish();
-
-            }
-        });
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override//No button
-            public void onClick(View v) {
-
-                no=true;
-
-                finish();
-
-            }
-        });*/
-
-    public void buttonCreator(TableLayout tableLayout, String[] array){
-
-       // this.array = array;
-    counter =0;
-        int numRows = (int)Math.ceil((double)array.length / 4.0);////divides by colum amount
-    int numCols = Math.min(array.length, 4);;////checks if array less than 4 then sets to array lenght
-    Button[][] buttonArray = new Button[numRows][numCols];
-    TableLayout table = new TableLayout(this);
-        for(int row = 0;row<numRows;row++){
-        TableRow currentRow = new TableRow(this);
-            if(row == numRows-1 && array.length%4 >= 1)
-                numCols = array.length%4;
-
-        for (int button = 0; button < numCols; button++) {
-
-
-            Button countiesBtn = new Button(this);
-            countiesBtn.setText(array[counter]);
-            countiesBtn.setLayoutParams(notSelectedButton.getLayoutParams());
-
-            countiesBtn.setBackground(notSelectedButton.getBackground());
-            countiesBtn.setId(counter);//View.generateViewId()
-            countiesBtn.setTextColor(notSelectedButton.getTextColors());
-            counter++;
-
-            countiesBtn.setOnClickListener(this);
-
-
-            buttonArray[row][button] = countiesBtn;
-            currentRow.addView(countiesBtn);
-        }
-        // a new row has been constructed -> add to countiesTable
-        table.addView(currentRow);
+    public void closeActivity() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("result", "Data to be passed back to previous activity");
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish(); // Call the finish() method to close the activity
     }
-// and finally takes that new countiesTable and add it to your layout.
-        tableLayout.addView(table);
-
-}
-
 
 
 
 }
+
 
 
 

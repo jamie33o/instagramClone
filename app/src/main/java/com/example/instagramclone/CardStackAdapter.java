@@ -69,14 +69,28 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
                         name.setText(data.getName());
                         age.setText(data.getAge());
                         county.setText(data.getCounty());
+            System.out.println(getItemCount());
         }
     }
 
     public List<ItemModel> getItems() {
+
         return items;
+
     }
 
     public void setItems(List<ItemModel> items) {
         this.items = items;
+       notifyDataSetChanged(); // notify the adapter that the data set has changed
+
     }
+
+    public void clearItems() {
+        items.clear();
+        notifyItemRangeChanged(0,items.size()); // notify the adapter that the data set has changed
+    }
+
+
+
+
 }

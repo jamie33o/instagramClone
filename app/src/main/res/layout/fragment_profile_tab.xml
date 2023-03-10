@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,8 +10,9 @@
 
 
     <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -24,9 +25,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
+
+
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <TableRow
                 android:id="@+id/imgtable"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="100dp"
@@ -60,108 +69,283 @@
                     android:layout_marginRight="10dp"
                     tools:src="@drawable/baseline_add_a_photo_24" />
             </TableRow>
+            </TableLayout>
 
-            <EditText
-                android:id="@+id/edtProfileName"
+
+            <TableLayout
+                android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add name"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/edtAge"
+                android:layout_height="wrap_content">
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add Age"
-                android:inputType="number" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/edtCounty"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textSize="20sp"
+                    android:textColor="#070707" />
+            </TableRow>
+
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add County"
-                android:inputType="text" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Add name"
+                    android:inputType="textPersonName"
+                    android:tag="name"
+                    android:textColor="#070707" />
+            </TableRow>
+            </TableLayout>
 
 
-            <EditText
-                android:id="@+id/edtUsername"
+            <TableLayout
+                android:id="@+id/txtRowAge"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add Username"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Your Age"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+                </TableRow>
 
-
-
-
-            <EditText
-                android:id="@+id/edtSport"
+                <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add favourite sport"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/edtHobbies"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:ems="10"
-                android:hint="Add hobbies"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/edtProfession"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add profession"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/edtBio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="100dp"
-                android:layout_marginEnd="10dp"
-                android:ems="10"
-                android:hint="Add your bio"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/edtAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#EFE9E9"
+                    android:ems="10"
+                    android:hint="Add Age"
+                    android:inputType="number"
+                    android:tag="age"
+                    android:textColor="#040303" />
+            </TableRow>
+            </TableLayout>
 
 
-            <Button
-                android:id="@+id/btnUpdateInfo"
+
+            <TableLayout
+                android:id="@+id/countyLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:text="Update Info" />
+                android:layout_height="wrap_content">
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="County"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+                </TableRow>
+            </TableLayout>
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Username"
+                    android:textSize="20sp"
+                    android:textColor="#070707" />
+                </TableRow>
+
+                <TableRow
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Your Username"
+                    android:inputType="textPersonName"
+                    android:tag = "username"
+                    android:textColor="#070707" />
+
+            </TableRow>
+            </TableLayout>
+
+
+            <TableLayout
+                android:id="@+id/sportsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sports"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+            </TableRow>
+
+
+
+
+            </TableLayout>
+            <TableLayout
+                android:id="@+id/profileHobbiesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hobbies"
+                    android:textSize="20sp"
+                    android:textColor="#070707" />
+
+            </TableRow>
+            </TableLayout>
+
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Profession"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+                </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edtProfession"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+                    android:hint="Add profession"
+                    android:inputType="textPersonName"
+                    android:tag="profession"
+                    android:textColor="#070707" />
+
+            </TableRow>
+            </TableLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="About me"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+                </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+
+                <EditText
+                    android:id="@+id/edtBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:ems="10"
+                    android:hint="Add your bio"
+                    android:inputType="textMultiLine"
+                    android:tag="bio"
+                    android:textColor="#070707" />
+            </TableRow>
+
+
+
+
+            </TableLayout>
+            <TableLayout
+                android:id="@+id/chosencountiesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Counties"
+                        android:textSize="20sp"
+                        android:textColor="#070707" />
+                </TableRow>
+
+
+            </TableLayout>
+
+                <TableLayout
+                    android:id="@+id/choseninterestsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TableRow
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Interests"
+                            android:textSize="20sp"
+                            android:textColor="#070707" />
+                    </TableRow>
+
+                </TableLayout>
+
+
+
+
+
+
 
         </LinearLayout>
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

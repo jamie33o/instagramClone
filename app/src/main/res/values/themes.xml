@@ -28,5 +28,9 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
     </style>
-
+    <style name="MyButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="strokeColor">#FA092147</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundColor">#FF0000</item>
+    </style>
 </resources>
