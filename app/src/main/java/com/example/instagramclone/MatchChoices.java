@@ -118,9 +118,9 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
 
             QueryDatabase queryDatabase = new QueryDatabase(this);
 
-            queryDatabase.putQueryDatabase("chosencounties",chosenCounties);
-            queryDatabase.putQueryDatabase("chosengender",chosenGender);
-            queryDatabase.putQueryDatabase("choseninterest",chosenInterests);
+            queryDatabase.putQueryDatabase("chosencounties",chosenCounties,this);
+            queryDatabase.putQueryDatabase("chosengender",chosenGender,this);
+            queryDatabase.putQueryDatabase("choseninterest",chosenInterests,this);
 
             closeActivity();
             return;

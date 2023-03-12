@@ -17,7 +17,7 @@ public class TabAdapter extends FragmentPagerAdapter {
 
         switch (tabPosition){
             case 0:
-                MyProfileTab profileTab = new MyProfileTab();
+                ProfileTab profileTab = new ProfileTab();
                 return profileTab;
 
             case 1:

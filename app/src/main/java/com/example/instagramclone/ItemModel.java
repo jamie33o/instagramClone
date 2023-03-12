@@ -1,7 +1,6 @@
 package com.example.instagramclone;
 
 
-import android.graphics.Bitmap;
 
 public class ItemModel {
     private String image;

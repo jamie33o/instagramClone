@@ -37,37 +37,38 @@ public class ButtonCreator implements View.OnClickListener{
 
     public void buttonCreator(TableLayout tableLayout, String... array){
         counter =0;
-        int numRows = (int)Math.ceil((double)array.length / 3.0);////divides by colum amount
-        int numCols = Math.min(array.length, 3);;////checks if array less than 4 then sets to array lenght
+        int numRows = (int)Math.ceil((double)array.length / 4.0);////divides by colum amount
+        int numCols = Math.min(array.length, 4);;////checks if array less than 4 then sets to array lenght
         Button[][] buttonArray = new Button[numRows][numCols];
         TableLayout table = new TableLayout(context);
         for(int row = 0;row<numRows;row++){
             TableRow currentRow = new TableRow(context);
-            if(row == numRows-1 && array.length%3 >= 1)
+            if(row == numRows-1 && array.length%4 >= 1)
                 numCols = array.length%4;
 
             for (int button = 0; button < numCols; button++) {
 
                 Button countiesBtn = new Button(context);
-
-                countiesBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
                 countiesBtn.setText(array[counter]);
                 countiesBtn.setId(View.generateViewId());//
 
-                gdDefault.setSize(200,50);
+                countiesBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+
+
+
 
                 gdDefault.setColor(Color.parseColor("#fff2f4"));
-                gdDefault.setCornerRadius(30);
+                gdDefault.setCornerRadius(50);
+
 
 
                 gdDefault.setStroke(3, Color.BLACK);
                 countiesBtn.setBackground(gdDefault);
                 countiesBtn.setTextColor(Color.BLACK);
-                TableRow.LayoutParams params = new TableRow.LayoutParams(
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        TableRow.LayoutParams.WRAP_CONTENT
-                );
-                int marginSize = 16; // Replace with your desired margin size in pixels
+                TableRow.LayoutParams params = new TableRow.LayoutParams(250, 93);
+
+
+                int marginSize = 8; // Replace with your desired margin size in pixels
                 params.setMargins(marginSize, marginSize, marginSize, marginSize);
                 countiesBtn.setLayoutParams(params);
 

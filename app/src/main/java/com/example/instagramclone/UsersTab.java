@@ -42,7 +42,6 @@ public class UsersTab extends Fragment {
     private CardStackLayoutManager manager;
     CardStackAdapter adapter;
     List<ItemModel> items;
-    List<ItemModel> initialItems;
 
     View view;
 
