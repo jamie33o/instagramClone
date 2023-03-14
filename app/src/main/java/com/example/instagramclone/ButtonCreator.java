@@ -56,8 +56,9 @@ public class ButtonCreator implements View.OnClickListener{
 
 
 
+                int color = ContextCompat.getColor(context, R.color.ActionBarTitleColor);
 
-                gdDefault.setColor(Color.parseColor("#fff2f4"));
+                gdDefault.setColor(color);
                 gdDefault.setCornerRadius(50);
 
 

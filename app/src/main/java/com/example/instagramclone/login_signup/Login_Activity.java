@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.login_signup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
+import com.example.instagramclone.R;
+import com.example.instagramclone.main_class_s.SocialMediaActivity;
 import com.parse.ParseUser;
 //import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -66,7 +66,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
             case R.id.loginbtnSignUp:
 
-                Intent intent = new Intent(Login_Activity.this,SignUp.class);
+                Intent intent = new Intent(Login_Activity.this, SignUp.class);
                 startActivity(intent);
 
 

@@ -1,9 +1,11 @@
-package com.example.instagramclone;
+package com.example.instagramclone.tabs;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.instagramclone.UsersTab;
 
 public class TabAdapter extends FragmentPagerAdapter {
 

@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.tabs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.instagramclone.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;

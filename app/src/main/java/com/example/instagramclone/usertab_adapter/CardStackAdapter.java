@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.usertab_adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,17 +6,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import java.io.File;
 import java.util.List;
+
+import com.example.instagramclone.R;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.ViewHolder> {
 
@@ -58,10 +54,8 @@ public class CardStackAdapter extends RecyclerView.Adapter<CardStackAdapter.View
         void setData(ItemModel data) {
 
             Picasso.get()
-                    .load(new File(data.getImage()))
-
+                    .load(data.getImage())
                     .placeholder(R.drawable.baseline_add_a_photo_24)
-                    .rotate(90)
                     .fit()
                     .centerCrop()
                     .into(image);

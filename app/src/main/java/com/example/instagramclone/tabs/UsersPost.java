@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.tabs;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.instagramclone.R;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;

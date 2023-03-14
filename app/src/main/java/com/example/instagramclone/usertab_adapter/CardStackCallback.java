@@ -1,7 +1,9 @@
-package com.example.instagramclone;
+package com.example.instagramclone.usertab_adapter;
 import java.util.List;
 
 import androidx.recyclerview.widget.DiffUtil;
+
+import com.example.instagramclone.usertab_adapter.ItemModel;
 
 public class CardStackCallback extends DiffUtil.Callback {
 

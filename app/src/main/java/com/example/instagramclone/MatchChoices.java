@@ -3,7 +3,9 @@ package com.example.instagramclone;
         import androidx.appcompat.app.AppCompatActivity;
 
         import android.app.Activity;
+        import android.content.Context;
         import android.content.Intent;
+        import android.content.SharedPreferences;
         import android.graphics.Color;
         import android.os.Bundle;
         import android.util.DisplayMetrics;
@@ -14,13 +16,16 @@ package com.example.instagramclone;
         import android.widget.ImageButton;
         import android.widget.TableLayout;
 
+        import com.example.instagramclone.edit_profile.EditProfile;
+
         import java.util.ArrayList;
         import java.util.Arrays;
+        import java.util.Collections;
         import java.util.Objects;
 
 public class MatchChoices extends AppCompatActivity implements View.OnClickListener {
     public static boolean yes, no;
-
+    UsersTab usersTab;
     String[] interests,gender,counties;
 
     ButtonCreator buttonCreator;
@@ -35,6 +40,8 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
         counties = new String[]{"Antrim", "Armagh", "Carlow", "Cavan", "Clare", "Cork", "Derry", "Donegal", "Down", "Dublin", "Fermanagh", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Tyrone", "Waterford", "Westmeath", "Wexford", "Wicklow"};
         interests = new String[]{"Reading", "Writing", "Photography", "Traveling", "Cooking", "Hiking", "Yoga", "Painting", "Gaming", "Music", "Dancing", "Sports", "Fitness", "Meditation", "Coding", "Gardening", "Fishing", "Gym", "Surfing", "Netflix"};
 
+
+         usersTab = new UsersTab();
 
 
 
@@ -113,16 +120,56 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
             }
 
 
-
-
-
             QueryDatabase queryDatabase = new QueryDatabase(this);
 
-            queryDatabase.putQueryDatabase("chosencounties",chosenCounties,this);
             queryDatabase.putQueryDatabase("chosengender",chosenGender,this);
+            queryDatabase.putQueryDatabase("chosencounties",chosenCounties,this);
             queryDatabase.putQueryDatabase("choseninterest",chosenInterests,this);
 
-            closeActivity();
+
+// Store multiple string values in the preferences
+
+            if(chosenCounties.size() >0) {
+                SharedPreferences countieprefs = getSharedPreferences("countiesPrefs", Context.MODE_PRIVATE);
+// Get the editor object to make changes to the preferences
+                SharedPreferences.Editor countieseditor = countieprefs.edit();
+// Store multiple string values in the preferences
+                countieseditor.clear();
+                for (int i = 0; i < chosenCounties.size(); i++) {
+                    countieseditor.putString("ChosenCounty" + i, chosenCounties.get(i));
+
+                }
+                countieseditor.apply();
+            }
+
+            if(chosenInterests.size() >0) {
+                SharedPreferences interestsprefs = getSharedPreferences("choseninterests", Context.MODE_PRIVATE);
+// Get the editor object to make changes to the preferences
+                SharedPreferences.Editor interestseditor = interestsprefs.edit();
+// Store multiple string values in the preferences
+                interestseditor.clear();
+                for (int i = 0; i < chosenInterests.size(); i++) {
+                    interestseditor.putString("choseninterests" + i, chosenInterests.get(i));
+                }
+                interestseditor.apply();
+            }
+
+
+            if(chosenGender != null) {
+                SharedPreferences genderPrefs = getSharedPreferences("chosengenderPrefs", Context.MODE_PRIVATE);
+// Get the editor object to make changes to the preferences
+                SharedPreferences.Editor genderprefseditor = genderPrefs.edit();
+// Store multiple string values in the preferences
+                genderprefseditor.clear();
+                    genderprefseditor.putString("ChosenGender", chosenGender);
+                genderprefseditor.apply();
+            }
+// Save the changes
+
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+
             return;
         }
 
@@ -147,12 +194,6 @@ public class MatchChoices extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public void closeActivity() {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("result", "Data to be passed back to previous activity");
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish(); // Call the finish() method to close the activity
-    }
 
 
 

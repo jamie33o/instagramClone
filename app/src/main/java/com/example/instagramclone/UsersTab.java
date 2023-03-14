@@ -2,10 +2,12 @@ package com.example.instagramclone;
 
 import static android.content.ContentValues.TAG;
 
+import static androidx.core.app.ActivityCompat.recreate;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -18,6 +20,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 import android.util.Log;
@@ -28,8 +31,9 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.parse.ParseUser;
-import com.shashank.sony.fancytoastlib.FancyToast;
+import com.example.instagramclone.usertab_adapter.CardStackAdapter;
+import com.example.instagramclone.usertab_adapter.CardStackCallback;
+import com.example.instagramclone.usertab_adapter.ItemModel;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -38,11 +42,13 @@ import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 public class UsersTab extends Fragment {
+    private static final int REQUEST_CODE = 123;
 
+    boolean startPages;
     private CardStackLayoutManager manager;
     CardStackAdapter adapter;
     List<ItemModel> items;
-
+    QueryDatabase queryDatabase;
     View view;
 
     public UsersTab() {
@@ -59,7 +65,10 @@ public class UsersTab extends Fragment {
 
         init(view);
 
-        QueryDatabase queryDatabase = new QueryDatabase(getContext());
+
+        MatchChoices matchChoices = new MatchChoices();
+
+        queryDatabase = new QueryDatabase(getContext());
         queryDatabase.getQueryDatabaseCardview(this);
 
         return view;
@@ -123,14 +132,10 @@ public class UsersTab extends Fragment {
 */
 
                 if (position == items.size() - 1) {
-                   // clearItems();
+                    // pages();
 
-
-                    pages();
-
-                  //  newItems();
                     Intent intent = new Intent(getContext(), MatchChoices.class);
-                    startActivity(intent);//todo create pop up so they can change choices to get more
+                    startActivityForResult(intent, REQUEST_CODE);
                 }
 
 
@@ -153,7 +158,6 @@ public class UsersTab extends Fragment {
     }
 
     void pages() {
-        System.out.println("pages called");
         List<ItemModel> old = adapter.getItems();
         List<ItemModel> baru = new ArrayList<>(items);
         CardStackCallback callback = new CardStackCallback(old, baru);
@@ -164,29 +168,36 @@ public class UsersTab extends Fragment {
 
     }
 
-  /*  public void newItems(){
-        adapter.setItems(initialItems);
-    }*/
-
 
     public void setNewItems(List<ItemModel> newItems) {
         adapter.setItems(newItems);
     }
 
-    // Method to clear the current items in the adapter
-    public void clearItems() {
-        adapter.clearItems();
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Reload the activity here
+            queryDatabase.getQueryDatabaseCardview(this);
+
+            startPages = true;
+            //requireActivity().recreate();
+        }
     }
 
 
+    public void choicesPopUp(){
+        if(items.size()==0) {
+            Intent intent = new Intent(getContext(), MatchChoices.class);
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+
+}
 
 
-
-
-public void addList(String image,String name,String age,String county) {
-
+    public void addList(String image,String name,String age,String county) {
         items.add(new ItemModel(image,name,age,county));
-       // initialItems.add(new ItemModel(image,name,age,county));
 
     }
 

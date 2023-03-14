@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.login_signup;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,15 +13,19 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.instagramclone.QueryDatabase;
+import com.example.instagramclone.R;
+import com.example.instagramclone.main_class_s.SocialMediaActivity;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+import com.parse.SaveCallback;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edtUserNameSignUp,edtEmail,edtPasswordSignUp;
     private Button btnSignUp, btnLogin;
-
+    QueryDatabase queryDatabase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_sign_up);
 
         setTitle("Sign Up");
+
 
         edtUserNameSignUp = findViewById(R.id.edtUserNameSignUp);
         edtEmail = findViewById(R.id.loginedtEmail);
@@ -41,7 +46,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                if(keyCode == KeyEvent.KEYCODE_ENTER &&
                        event.getAction() == KeyEvent.ACTION_DOWN){
                    onClick(btnSignUp);
-                  // btnSignUp.animate().rotation(360).setDuration(10);
+                   btnSignUp.animate().rotation(360).setDuration(10);
                }
 
                 return false;
@@ -70,8 +75,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                //todo  edtUserNameSignUp.animate().rotation(360).setDuration(5000);
                 if(edtEmail.getText().toString().equals("") ||
-                        edtUserNameSignUp.getText().toString().equals("")||
-                        edtPasswordSignUp.getText().toString().equals("")) {
+                edtUserNameSignUp.getText().toString().equals("")||
+                edtPasswordSignUp.getText().toString().equals("")) {
 
                     Toast.makeText(SignUp.this,
                             "Email, Username,Password is required!",
@@ -79,10 +84,29 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                 }else {
 
+                    String username = edtUserNameSignUp.getText().toString();
+                    ParseObject object = new ParseObject("Profile");
+                    object.put("username", username);
+
+
+                    object.saveInBackground(e -> {
+                        if (e == null) {
+                            Toast.makeText(getApplication(), "profile created", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error creating profile", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    });
                     final ParseUser appUser = new ParseUser();//uploads info to data base
-                    appUser.setUsername(edtUserNameSignUp.getText().toString());
+                    appUser.setUsername(username);
                     appUser.setPassword(edtPasswordSignUp.getText().toString());
                     appUser.setEmail(edtEmail.getText().toString());
+
+
+
+
 
                     ProgressDialog progressDialog = new ProgressDialog(this);
                     progressDialog.setMessage("Signing up " + edtUserNameSignUp.getText().toString());
@@ -92,6 +116,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     appUser.signUpInBackground(e -> {
                         if (e == null) {
                             Toast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", Toast.LENGTH_SHORT).show();
+
 
                             transitionSocialMediaActivity();
                         } else {
@@ -106,7 +131,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 break;
             case R.id.loginbtnLogin:
 
-                Intent intent = new Intent(SignUp.this,Login_Activity.class);
+                Intent intent = new Intent(SignUp.this, Login_Activity.class);
                 startActivity(intent);
                 break;
         }

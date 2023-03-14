@@ -1,6 +1,4 @@
-package com.example.instagramclone;
-
-import static com.parse.Parse.getApplicationContext;
+package com.example.instagramclone.tabs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,21 +19,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.Toast;
 
-import com.parse.ParseFile;
+import com.example.instagramclone.ButtonCreator;
+import com.example.instagramclone.edit_profile.EditProfile;
+import com.example.instagramclone.QueryDatabase;
+import com.example.instagramclone.R;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.squareup.picasso.Picasso;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ProfileTab extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
 //Original myprofiletab
@@ -70,10 +61,14 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
 
 
 
+
         buttonCreator = new ButtonCreator(getContext(),this);
 
 
         queryDatabase = new QueryDatabase(getContext());
+
+
+
 
         imgViewShare = view.findViewById(R.id.imgViewShare);
 
@@ -101,6 +96,13 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
 
 
     }
+
+
+
+
+
+
+
 
 
 

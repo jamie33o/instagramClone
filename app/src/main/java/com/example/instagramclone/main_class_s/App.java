@@ -1,4 +1,4 @@
-package com.example.instagramclone;
+package com.example.instagramclone.main_class_s;
 
 import android.app.Application;
 
@@ -15,6 +15,8 @@ public class App extends Application {
                 .clientKey("4U0hOsiBfYBuQUcTctHWX4CdoPtU4kLrzbd6yK5b")
                 .server("https://parseapi.back4app.com/")
                 .build()
+
+
         );
     }
 

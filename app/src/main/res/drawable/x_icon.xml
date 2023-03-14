@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:strokeWidth=".8"
+        android:strokeColor="@color/white"
+        android:fillColor="@color/ActionBarTitleColor"
+        android:pathData="M12,1C6.48,1 2,5.48 2,11s4.48,10 10,10 10,-4.48 10,-10S17.52,1 12,1zm4.66,3.66c-0.39,-0.39 -1.02,-0.39 -1.41,0l-3.54,3.54l-3.54,-3.54c-0.39,-0.39 -1.02,-0.39 -1.41,0l-1.41,1.41c-0.39,0.39 -0.39,1.02 0,1.41l3.54,3.54l-3.54,3.54c-0.39,0.39 -0.39,1.02 0,1.41l1.41,1.41c0.39,0.39 1.02,0.39 1.41,0l3.54,-3.54l3.54,3.54c0.39,0.39 1.02,0.39 1.41,0l1.41,-1.41c0.39,-0.39 0.39,-1.02 0,-1.41l-3.54,-3.54l3.54,-3.54c0.39,-0.39 0.39,-1.02 0,-1.41l-1.41,-1.41z"
+       
+        />
+
+
+
+
+
+</vector>

@@ -1,9 +1,8 @@
-package com.example.instagramclone;
+package com.example.instagramclone.main_class_s;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.ProgressDialog;
@@ -14,10 +13,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.instagramclone.R;
+import com.example.instagramclone.login_signup.SignUp;
+import com.example.instagramclone.tabs.TabAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -37,7 +39,8 @@ public class SocialMediaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_social_media);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setTitle("Ignite");
 
         toolbar = findViewById(R.id.myToolbar);
@@ -83,7 +86,7 @@ public class SocialMediaActivity extends AppCompatActivity {
 
             ParseUser.getCurrentUser().logOut();
             finish();
-            Intent intent = new Intent(SocialMediaActivity.this,SignUp.class);
+            Intent intent = new Intent(SocialMediaActivity.this, SignUp.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
