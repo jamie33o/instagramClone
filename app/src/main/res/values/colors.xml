@@ -7,7 +7,19 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="buttonText">#9A2974F4</color>
-    <color name="ActionBarTitleColor">#fa8072</color>
+
+
+    <color name="buttonText">#F57D929A</color>
+    <color name="ActionBarTitleColor">#0C72AC</color>
+    <color name="small_buttons">#FF6C77</color>
+    <color name="large_buttons">#E6DFDF</color>
+    <color name="text_color">#040303</color>
+    <color name="button_stroke_color">#A6BFF3</color>
+    <color name="rows_background">#E6E8EA</color>
+    <color name="tab_menu_bar">#a5d4ff</color>
+    <color name="page_background">#FFFFFF</color>
+    <color name="selected_button">#D31515</color>
+    <color name="choices_tab_pages">#E9EBF4</color>
+    <color name="view_line">#030304</color>
 
 </resources>

@@ -22,4 +22,10 @@
     <string name="county">Counties</string>
     <string name="save_button">save button</string>
     <string name="back_button">back button</string>
+    <string name="profile_edit_button">profile edit button</string>
+    <string name="imageplaceholder">imageplaceholder</string>
+    <string name="scroll_view_options">scroll view options</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="view_pager">view Pager</string>
+    <string name="tab_layout">tab Layout</string>
 </resources>

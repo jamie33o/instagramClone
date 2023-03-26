@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-
     <application
         android:name=".main_class_s.App"
         android:allowBackup="true"
@@ -17,26 +16,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InstagramClone"
-
-
         tools:targetApi="31">
         <activity
-            android:name=".tabs.UsersPost"
+            android:name=".Height_pager"
+            android:exported="false" />
+        <activity
+            android:name=".Languages_i_Know_tab"
+            android:exported="false" />
+        <activity
+            android:name=".Personal_Details"
+            android:exported="false" />
+        <activity
+            android:name=".edit_profile_N_profile.ProfilePage"
+            android:exported="false" />
+        <activity
+            android:name=".main_tabs.UsersPost"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".edit_profile.EditProfile"
+            android:name=".edit_profile_N_profile.EditProfile"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
-            android:name=".main_class_s.SocialMediaActivity"
+            android:name=".main_tabs.SocialMediaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".choices_tabs.Choices_tabs_MainPage"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <meta-data
@@ -51,7 +67,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MatchChoices"
+            android:name=".reusable_code.MatchChoices"
             android:exported="false"
             android:theme="@style/Theme.Transparent">
             <meta-data

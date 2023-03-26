@@ -13,19 +13,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.instagramclone.QueryDatabase;
+import com.example.instagramclone.reusable_database_queries.ReusableQueries;
 import com.example.instagramclone.R;
-import com.example.instagramclone.main_class_s.SocialMediaActivity;
-import com.parse.ParseException;
+import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edtUserNameSignUp,edtEmail,edtPasswordSignUp;
     private Button btnSignUp, btnLogin;
-    QueryDatabase queryDatabase;
+    ReusableQueries queryDatabase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,10 +82,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                 }else {
 
-                    String username = edtUserNameSignUp.getText().toString();
-                    ParseObject object = new ParseObject("Profile");
+                 String username = edtUserNameSignUp.getText().toString();
+                       ParseObject object = new ParseObject("Profile");
                     object.put("username", username);
-
 
                     object.saveInBackground(e -> {
                         if (e == null) {

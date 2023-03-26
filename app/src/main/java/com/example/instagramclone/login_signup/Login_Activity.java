@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.instagramclone.R;
-import com.example.instagramclone.main_class_s.SocialMediaActivity;
+import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.parse.ParseUser;
 //import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -58,6 +58,7 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
                                     user.getUsername() + " is login in successfully",
                                     FancyToast.LENGTH_LONG, FancyToast.SUCCESS, true).show();
                          */   transitionSocialMediaActivity();
+
                         }
 
                     });
