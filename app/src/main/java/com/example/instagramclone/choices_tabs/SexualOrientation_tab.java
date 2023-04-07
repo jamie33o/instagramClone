@@ -1,6 +1,7 @@
 package com.example.instagramclone.choices_tabs;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,26 +14,29 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.realm.RealmManager;
+import com.example.instagramclone.realm.RealmModel;
+import com.example.instagramclone.reusable_code.AddBtnTxtToArray;
 import com.example.instagramclone.reusable_code.ButtonCreator;
-import com.example.instagramclone.reusable_database_queries.DataBaseUtils;
-import com.example.instagramclone.reusable_database_queries.ReusableQueries;
+import com.example.instagramclone.reusable_code.LightUpPreSelectedbtn;
+import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_database_queries.UtilsClass;
 import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
 import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
 
 public class SexualOrientation_tab extends Fragment implements View.OnClickListener {
 
     private ButtonCreator buttonCreator;
 
+    String sexualOrientationString;
 
     private SharedPreferencesManager sharedPreferencesManager;
     TextView txtview;
-    private ArrayList<String> chosenInterestsList, selectedButtonsList;
     private TableLayout tableLayout;
     private View view;
 
@@ -41,10 +45,12 @@ public class SexualOrientation_tab extends Fragment implements View.OnClickListe
     private String[] sexualOrientation;
     private LightUpPreSelectedbtn lightUpPreSelectedbtn;
 
+    List<Button> btnList;
 
+    ViewPager viewPager;
 
-
-
+    private Realm realm;
+    private RealmModel results;
     public SexualOrientation_tab() {
 
     }
@@ -58,7 +64,17 @@ public class SexualOrientation_tab extends Fragment implements View.OnClickListe
 
          view = inflater.inflate(R.layout.main_xml_for_choices_tab,//used to find view inside fragment
                 container, false);
-        sexualOrientation = new String[]{"Heterosexual", "Homosexual", "Bisexual", "Pansexual", "Asexual", "Demisexual", "Graysexual", "Queer", "Questioning"};
+
+        viewPager = ((Choices_tabs_MainPage) requireActivity()).getViewPager();
+
+        //get instance of realm
+        realm = RealmManager.getRealmInstance();
+
+        // Get the object you want to update
+        results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
+
+
+        sexualOrientation = new String[]{"Straight","Lesbian", "Gay", "Bisexual", "Pansexual", "Questioning"};
 
         sharedPreferencesManager = new SharedPreferencesManagerImpl(view.getContext(), "Profile", Context.MODE_PRIVATE);
 
@@ -74,24 +90,18 @@ public class SexualOrientation_tab extends Fragment implements View.OnClickListe
         view.findViewById(R.id.savebtn).setOnClickListener(this);
         //initialize and create the buttons
 
-        List<Button> btnList = new ArrayList<>();
+        btnList = new ArrayList<>();
         buttonCreator = new ButtonCreator(getContext(),btnList);
         buttonCreator.buttonCreator(tableLayout, this,"", sexualOrientation);
 
-        // chosenInterestsList = new ArrayList<>();
-        selectedButtonsList = new ArrayList<>();
-
-
-        String savedJsoninterest = sharedPreferencesManager.getString("sexualOrientation", ""); // Retrieve the JSON string from shared preferences for the "choseninterests" key
-        Gson gson2 = new Gson(); // Create a Gson instance
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> chosenInterests = gson2.fromJson(savedJsoninterest, type);
-
+        realm.beginTransaction();
+        sexualOrientationString = results.getSexualOrientaion();
+        realm.commitTransaction();
 
         //checks the choices thar are stored and lights up the buttons accordingly and
         // adds the to the selected button array
         lightUpPreSelectedbtn = new LightUpPreSelectedbtn(view.getContext());
-        lightUpPreSelectedbtn.lightUpPreSelectBtn(chosenInterests,btnList);
+        lightUpPreSelectedbtn.lightUpPreSelectBtn(sexualOrientationString,btnList);
         return view;//must return type view
 
 
@@ -108,30 +118,29 @@ public class SexualOrientation_tab extends Fragment implements View.OnClickListe
 
         if(!(v instanceof ImageButton)) {
 
-
-
-
-            addBtnTxtToArray.addBtnClickedTxtToArray(selectedButtonsList,null,v,4);
+           sexualOrientationString = addBtnTxtToArray.addBtnClickedTxttoString(sexualOrientationString,btnList,v);
 
         }
 
 
         if (buttonId == R.id.savebtn) {
 
-
-            DataBaseUtils queryDatabase = new ReusableQueries(view.getContext());
-
-            queryDatabase.uploadToDataBase("sexualOrientation", selectedButtonsList, view.getContext());
-
-            Gson gson1 = new Gson(); // Create a Gson instance
-            String jsoninterests = gson1.toJson(selectedButtonsList); // Convert the array of strings to a JSON string using Gson
-            if (selectedButtonsList.size() > 0) { // Check if the array contains any elements
-                sharedPreferencesManager.saveString("sexualOrientation", jsoninterests); // Store the JSON string in shared preferences for the "choseninterests" key
-            }
-
-
+               uploadToRealm();
+        viewPager.setCurrentItem(3);
         }
     }
 
+    public void uploadToRealm() {
+// Set the value of a dynamic property using reflection
+        if(results!=null) {
+        realm.beginTransaction();
+            results.setSexualOrientaion(sexualOrientationString);
+        realm.commitTransaction();
+        Snackbar_Dialog.showSnackbar(view.getContext(), "Success!!!", 2000);
 
+    }else {
+        Snackbar_Dialog.showSnackbar(view.getContext(), "Error saving selection!!", 2000);
+
+    }
+    }
 }

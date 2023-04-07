@@ -1,26 +1,26 @@
 package com.example.instagramclone.edit_profile_N_profile;
 
-import static android.app.PendingIntent.getActivity;
-
+import com.example.instagramclone.realm.RealmModel;
+import com.example.instagramclone.realm.RealmManager;
+import com.example.instagramclone.spotify.SpotifySongs;
+import com.example.instagramclone.reusable_code.SizeBasedOnDensity;
 import com.example.instagramclone.choices_tabs.Choices_tabs_MainPage;
 import com.example.instagramclone.reusable_code.ImageProcessor;
 import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
@@ -29,38 +29,47 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
-import android.widget.Toast;
 
+import android.widget.TextView;
+import android.widget.Toast;
 import com.example.instagramclone.reusable_code.ButtonCreator;
+import com.example.instagramclone.reusable_code.Snackbar_Dialog;
 import com.example.instagramclone.reusable_database_queries.DataBaseUtils;
 import com.example.instagramclone.reusable_database_queries.ReusableQueries;
 import com.example.instagramclone.R;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
+import com.example.instagramclone.reusable_database_queries.UtilsClass;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import io.realm.Realm;
+import io.realm.RealmList;
 
-public class EditProfile  extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener,DataBaseUtils {
+public class EditProfile  extends AppCompatActivity implements View.OnClickListener{
     ImageView v,xIcon;
-    SharedPreferencesManager sharedPreferencesManager;
+    String image1,image2,image3;
+    SizeBasedOnDensity sizeBasedOnDensity;
     public ImageView imgVeditPro1, imgVeditPro2, imgVeditPro3;
     public EditText edt_jobTitle_R_fieldofStudy, edtBio, edt_Company_R_Colledge;
     ImageButton backBtn;
     DataBaseUtils dataBaseUtils;
     PiccassoLoadToImageView piccassoLoadToImageView;
     ButtonCreator buttonCreator;
-    private TableLayout where_I_LiveLayout, myBasicsLayout, sexualOrientationLayout, languagesLayout, myLifestyleLayout, choseninterestsLayout;
-
+    private TableLayout where_I_LiveLayout, myBasicsLayout, sexualOrientationLayout, languagesLayout, myLifestyleLayout, choseninterestsLayout,myFavouriteSong;
     TableLayout clickedlayout;
     String tableClicked;
+    // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
+
     ImageView x_icon1, x_icon2, x_icon3;
     private ImageView clickedImageView;
     private String columnName_viewTag;
     QueriesEditProfile queryForProfile;
-
     ImageProcessor imageProcessor;
+    Realm realm;
 
+    RealmModel results;
+    Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +77,9 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        context=this;
 
-        sharedPreferencesManager = new SharedPreferencesManagerImpl(this,"Profile",Context.MODE_PRIVATE);
+        sizeBasedOnDensity = new SizeBasedOnDensity(this);
 
         //imageviews
         imgVeditPro1 = findViewById(R.id.imgV_edit_profile1);
@@ -92,19 +102,42 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
         //get all profile info from shared prefs
         queryForProfile = new QueriesEditProfile(this);
-        queryForProfile.getUserProfileFromSharedPrefs(this);
-
         dataBaseUtils = new ReusableQueries(this);
 
         //load images into image views
         piccassoLoadToImageView = new PiccassoLoadToImageView(this);
-        piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro1,"image1",280,450,30);
-        piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro2,"image2",280,450,30);
-        piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro3,"image3",280,450,30);
         buttonCreator = new ButtonCreator(this,new ArrayList<>());
+        realm = RealmManager.getRealmInstance();
+        results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
+        //back button in action bar
+        backBtn = findViewById(R.id.backbtn);
+        backBtn.setOnClickListener(this);
+
+        //edttext fields
+        edtBio = findViewById(R.id.edtBio);
+        edt_jobTitle_R_fieldofStudy = findViewById(R.id.job_title_R_fieldOfStudy);
+        edt_Company_R_Colledge = findViewById(R.id.company_R_colledge);
+
+        //tablelayouts
+        where_I_LiveLayout = findViewById(R.id.where_i_live);
+        languagesLayout = findViewById(R.id.languagesLayout);
+        choseninterestsLayout = findViewById(R.id.choseninterestsLayout);
+        sexualOrientationLayout = findViewById(R.id.sexualOrientation);
+        myBasicsLayout = findViewById(R.id.my_basics);
+        myLifestyleLayout = findViewById(R.id.my_lifestyle);
+        myFavouriteSong = findViewById(R.id.my_favourite_song);
+
+        myBasicsLayout.setOnClickListener(this);
+        where_I_LiveLayout.setOnClickListener(this);
+        sexualOrientationLayout.setOnClickListener(this);
+        languagesLayout.setOnClickListener(this);
+        choseninterestsLayout.setOnClickListener(this);
+        myLifestyleLayout.setOnClickListener(this);
+        myFavouriteSong.setOnClickListener(this);
 
 
-
+        //loads buttons edt txt etc....
+        loadViews();
 
         // wait  to check if images are in image views then rotate the plus/delete button accordingly
         Handler handler = new Handler();
@@ -123,65 +156,41 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
             }
 
         }, 1000);
-
-
-        //back button in action bar
-        backBtn = findViewById(R.id.backbtn);
-        backBtn.setOnClickListener(this);
-
-        //edttext fields
-        edtBio = findViewById(R.id.edtBio);
-        edt_jobTitle_R_fieldofStudy = findViewById(R.id.job_title_R_fieldOfStudy);
-        edt_Company_R_Colledge = findViewById(R.id.company_R_colledge);
-
-        edt_Company_R_Colledge.setOnFocusChangeListener(this);
-        edtBio.setOnFocusChangeListener(this);
-        edt_jobTitle_R_fieldofStudy.setOnFocusChangeListener(this);
-
-        //tablelayouts
-        where_I_LiveLayout = findViewById(R.id.where_i_live);
-        languagesLayout = findViewById(R.id.languagesLayout);
-        choseninterestsLayout = findViewById(R.id.choseninterestsLayout);
-        sexualOrientationLayout = findViewById(R.id.sexualOrientation);
-        myBasicsLayout = findViewById(R.id.my_basics);
-
-        myBasicsLayout.setOnClickListener(this);
-        where_I_LiveLayout.setOnClickListener(this);
-        sexualOrientationLayout.setOnClickListener(this);
-        languagesLayout.setOnClickListener(this);
-        choseninterestsLayout.setOnClickListener(this);
-
-
     }
 
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-            EditText editText = (EditText) v;//stote edittext id
-            String text = editText.getText().toString();//store editext text
-            String fieldName = editText.getTag().toString();//store edittext tag
-
-                // Upload text to database for the field that lost focus
-                dataBaseUtils.uploadToDataBase(fieldName, text, this);
-
-        }
-    }
 
     @Override
     public void onClick(View view) {
         int viewId = view.getId();//store clicked button id
-
 
         if (view instanceof TableLayout) {//check if clicked item is instance of tablelayout
             // The view is a TableLayout
             clickedlayout = (TableLayout) view;//if tableaout clicked store id
             tableClicked = (String) clickedlayout.getTag();//store clicked layout tag
 
+            //saves all inputs to realm database
+            uploadToRealm();
 
-                Intent intent = new Intent(this, Choices_tabs_MainPage.class);
+            //loads choices tabs if tablelayout press except favourite song
+            if(viewId!=myFavouriteSong.getId()) {
+
+                Intent intent = new Intent(context, Choices_tabs_MainPage.class);
                 intent.putExtra("com.example.instagram.layoutthatwasclicked", tableClicked);
-                startActivityForResult(intent,5000);
+                startActivityForResult(intent, 5000);
 
+            }
+
+
+            if(viewId==myFavouriteSong.getId()){
+
+
+                Intent intent = new Intent(context, SpotifySongs.class);
+                //intent.putExtra("com.example.instagram.layoutthatwasclicked", tableClicked);
+                startActivityForResult(intent, 7000);
+
+
+
+            }
 
         }
 
@@ -189,32 +198,61 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
             clickedImageView = (ImageView) view;
             columnName_viewTag = (String) clickedImageView.getTag();
             if (viewId == R.id.backbtn) {
-                finish();
+                if(results!=null) {
+                    uploadToRealm();
+                    Snackbar_Dialog.showSnackbar(this, "Success!!!\n Selection's saved", 2000);
+                }else{
+                    Snackbar_Dialog.showSnackbar(this, "Error!!!\n Selection's not saved", 2000);
+
+                }
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                },2000);
                 return;
             }
 
-                switch (columnName_viewTag) {
-                    case "image1":
-                        xIcon = x_icon1;
-                        v = imgVeditPro1;
-                        break;
-                    case "image2":
-                        xIcon = x_icon2;
-                        v = imgVeditPro2;
-                        break;
-                    case "image3":
-                        xIcon = x_icon3;
-                        v = imgVeditPro3;
-                        break;
+            switch (columnName_viewTag) {
+                case "image1":
+                    xIcon = x_icon1;
+                    v = imgVeditPro1;
+                    break;
+                case "image2":
+                    xIcon = x_icon2;
+                    v = imgVeditPro2;
+                    break;
+                case "image3":
+                    xIcon = x_icon3;
+                    v = imgVeditPro3;
+                    break;
             }
 
             if (clickedImageView.getRotation() > 5 && columnName_viewTag.matches("image[1-3]")) {
 
                 //if plus_x button is rotated then put back to 0 and delete image
                 clickedImageView.setRotation(0f);
+
+                realm.beginTransaction();
+
                 dataBaseUtils.deleteFileFromDatabase(columnName_viewTag);
 
-                piccassoLoadToImageView.getImageNloadIntoImageview(v, "", 280, 450, 20);
+                switch (columnName_viewTag){
+                    case "image1":
+                        results.setImage1Name("");
+                        break;
+                    case "image2":
+                        results.setImage2Name("");
+                        break;
+                    case "image3":
+                        results.setImage3Name("");
+                        break;
+                }
+                realm.commitTransaction();
+
+                piccassoLoadToImageView.getImageNloadIntoImageview(v, "null",columnName_viewTag, sizeBasedOnDensity.widthRatio(100),sizeBasedOnDensity.heightRatio(160), 20);
 
 
             } else if (columnName_viewTag.matches("image[1-3]")) {
@@ -222,6 +260,7 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                         ? Manifest.permission.READ_MEDIA_IMAGES : Manifest.permission.READ_EXTERNAL_STORAGE;
                 if (ContextCompat.checkSelfPermission(this, readImagePermission) == PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this, new String[]{readImagePermission}, 1000);
+
                 } else {
                     getChoosenImage();
                 }
@@ -238,8 +277,6 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -253,17 +290,10 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 5000){
 
-            Handler handler = new Handler();
+        if(requestCode == 5000) {
 
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    queryForProfile.getUserProfileFromSharedPrefs(EditProfile.this);
-                }
-            },100);
+            loadViews();
         }
         if(requestCode == 2000){
             if(resultCode == Activity.RESULT_OK){
@@ -274,14 +304,24 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
                 File imageFile = imageProcessor.createFileFromInputStream(selectedImage);
 
-                sharedPreferencesManager.saveString(columnName_viewTag,imageFile.getAbsolutePath());
-
-                if(columnName_viewTag.matches("image[1-3]")) {
-                    piccassoLoadToImageView.getImageNloadIntoImageview(v,imageFile.getAbsolutePath(),280,450,20);
+                switch (columnName_viewTag){
+                    case "image1":
+                        image1 = imageFile.getAbsolutePath();
+                        Snackbar_Dialog.showSnackbar(this, "Success!!!\n Image Saved", 2000);
+                        break;
+                    case "image2":
+                        image2 = imageFile.getAbsolutePath();
+                        Snackbar_Dialog.showSnackbar(this, "Success!!!\n Image Saved", 2000);
+                        break;
+                    case"image3":
+                        image3 = imageFile.getAbsolutePath();
+                        Snackbar_Dialog.showSnackbar(this, "Success!!!\n Image Saved", 2000);
+                        break;
                 }
 
-                imageProcessor.createParseImageUpload(selectedImage, columnName_viewTag);
-
+                if(columnName_viewTag.matches("image[1-3]")) {
+                    piccassoLoadToImageView.getImageNloadIntoImageview(v,imageFile.getAbsolutePath(),columnName_viewTag,sizeBasedOnDensity.widthRatio(100),sizeBasedOnDensity.heightRatio(160),20);
+                }
 
                 if (xIcon != null && xIcon.getRotation() == 0f) {
                     xIcon.setRotation(45f);
@@ -289,45 +329,128 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
             }
         }
+
+    }
+        public void setSong(String imageUrl,String albumName,String artistName,String trackName) {
+
+
+        TextView albumNametv = findViewById(R.id.albumName);
+        albumNametv.setText(albumName);
+            TextView artistNametv = findViewById(R.id.artistName);
+            artistNametv.setText(artistName);
+            TextView trackNametv = findViewById(R.id.trackName);
+            trackNametv.setText(trackName);
+            ImageView trackImage = findViewById(R.id.trackImage);
+// Create an ImageView object for the song image and add it to the TableRow
+            Picasso.get()
+                    .load(imageUrl)
+                    .resize(150,150)
+                    .centerCrop()
+                    .into(trackImage);
+
+
+
+
+        }
+
+
+    public void loadViews() {
+
+
+        if(results!=null) {
+
+            realm.beginTransaction();
+
+            RealmList<String> realmList = results.getPronounes();
+
+            List<String> mybasics = new ArrayList<>(realmList);
+
+            if(results.getRelationShipGoals()!=null)
+                mybasics.add(results.getRelationShipGoals());
+            if(results.getHometown()!=null)
+                mybasics.add(results.getHometown());
+            if(results.getReligion()!=null)
+                mybasics.add(results.getReligion());
+            if(results.getStarSign()!=null)
+                mybasics.add(results.getStarSign());
+            if(results.getGender()!=null)
+                mybasics.add(results.getGender());
+            if(results.getHeight()!=null)
+                mybasics.add(results.getHeight());
+
+            buttonCreator.buttonCreator(myBasicsLayout, this, "", mybasics.toArray(new String[0]));
+
+            RealmList<String> realmList1 = results.getWorkout();
+
+            List<String> myLifeStyle = new ArrayList<>(realmList1);
+            if(results.getPets()!=null)
+                myLifeStyle.add(results.getPets());
+            if(results.getSmoking()!=null)
+                myLifeStyle.add(results.getSmoking());
+            if(results.getDrinking()!=null)
+                myLifeStyle.add(results.getDrinking());
+            if(results.getDietary()!=null)
+                myLifeStyle.add(results.getDietary());
+            if(results.getSocialMedia()!=null)
+                myLifeStyle.add(results.getSocialMedia());
+            if(results.getKids()!=null)
+                myLifeStyle.add(results.getKids());
+
+
+            piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro1,results.getImage1Name(),"image1", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+            piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro2, results.getImage2Name(),"image2", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+            piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro3, results.getImage3Name(),"image3", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+
+
+            if (results.getBio() != null)
+                edtBio.setText(results.getBio());
+
+            if (results.getJobTitle_fieldOfStudy() != null)
+                edt_jobTitle_R_fieldofStudy.setText(results.getJobTitle_fieldOfStudy());
+            if (results.getCompanyRcolledge() != null)
+                edt_Company_R_Colledge.setText(results.getCompanyRcolledge());
+
+            if (results.getSexualOrientaion() != null) {
+                buttonCreator.buttonCreator(this.sexualOrientationLayout, null, "", results.getSexualOrientaion());
+            }
+            if (results.getWhereIlive() != null) {
+                buttonCreator.buttonCreator(where_I_LiveLayout, null, "", results.getWhereIlive());
+            }
+            if (results.getLanguages() != null) {
+                buttonCreator.buttonCreator(languagesLayout, null, "", results.getLanguages().toArray(new String[0]));
+            }
+            if (results.getInterests() != null)
+                buttonCreator.buttonCreator(choseninterestsLayout, null, "", results.getInterests().toArray(new String[0]));
+            if (!myLifeStyle.isEmpty())
+                buttonCreator.buttonCreator(myLifestyleLayout, null, "", myLifeStyle.toArray(new String[0]));
+
+            realm.commitTransaction();
+        }
     }
 
 
-    public void loadViews( String[] mybasics, String profileBio, String[] sexualOrientation, String gender, String profileProfession, String[] languages, String[] chosenInterests, String[] whereilive) {
 
+    public void uploadToRealm() {
 
+        realm.beginTransaction();
 
+        if (image1 != null && !image1.equals(""))
+            results.setImage1Name(image1);
+        if (image2 != null && !image2.equals(""))
+            results.setImage2Name(image2);
+        if (image3 != null && !image3.equals(""))
+            results.setImage3Name(image3);
+        results.setBio(edtBio.getText().toString());
+        results.setJobTitle_fieldOfStudy(edt_jobTitle_R_fieldofStudy.getText().toString());
+        results.setCompanyRcolledge(edt_Company_R_Colledge.getText().toString());
 
-        if(profileBio != null && !profileBio.isEmpty())
-            edtBio.setText(profileBio);
-        if(profileProfession != null && !profileProfession.isEmpty())
-            edt_Company_R_Colledge.setText(profileProfession);
+        realm.commitTransaction();
 
-        if (mybasics != null && mybasics.length > 0) {
-            buttonCreator.buttonCreator(myBasicsLayout, this, "mybasics", mybasics);
-        }
-       if(sexualOrientation != null && sexualOrientation.length > 0) {
+        queryForProfile.data_From_Realm_To_Database();
 
-            buttonCreator.buttonCreator(this.sexualOrientationLayout, this,"sexualOrientation", sexualOrientation);
-        }
-        if(whereilive != null && whereilive.length>0) {
-            buttonCreator.buttonCreator(where_I_LiveLayout, this,"whereilive", whereilive);
-        }
-        if (languages != null && languages.length > 0) {
-            buttonCreator.buttonCreator(languagesLayout, this,"languages", languages);
-        }
-         if (chosenInterests != null && chosenInterests.length > 0)
-            buttonCreator.buttonCreator(choseninterestsLayout,this,"interests", chosenInterests);
 
     }
 
 
-    @Override
-    public void deleteFileFromDatabase(String columnName) {
 
-    }
-
-    @Override
-    public void uploadToDataBase(String columnKey, Object columnValue, Context context) {
-
-    }
 }

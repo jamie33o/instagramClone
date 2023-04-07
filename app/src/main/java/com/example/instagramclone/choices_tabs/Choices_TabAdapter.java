@@ -69,4 +69,11 @@ public class Choices_TabAdapter extends FragmentPagerAdapter {
 
 
     }
+
+    public void setCurrentTab(int tabPosition) {
+        current_tab_count = tabPosition;
+        notifyDataSetChanged();
+    }
+
+
 }

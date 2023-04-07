@@ -1,120 +1,66 @@
 package com.example.instagramclone.reusable_database_queries;
 
 import android.content.Context;
+import android.view.ViewParent;
 
-import com.example.instagramclone.reusable_code.Dialogs;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
+import com.example.instagramclone.reusable_code.Snackbar_Dialog;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import io.realm.Realm;
 
 public class ReusableQueries implements DataBaseUtils {
-    SharedPreferencesManager sharedPreferencesManager;
+    Realm realm;
 
     Context context;
-    Dialogs dialogs;
 
-    public String imageUrl1,imageUrl;
     public ReusableQueries(Context context) {
         this.context = context;
-        sharedPreferencesManager = new SharedPreferencesManagerImpl(context,"Profile", Context.MODE_PRIVATE);
 
-        dialogs = new Dialogs();
+        // Get the object you want to update
+
 
     }
 
 
-
     public void deleteFileFromDatabase(String columnName) {
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Profile");
-        dialogs.showProgressDialog(context);
         query.whereEqualTo("username", UtilsClass.getCurrentUsername());
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
                     // Check if column exists in the object
-                    if (object.containsKey(columnName)) {
-                        object.remove(columnName);
 
-                        //deletes image filepath from preferences
-                        sharedPreferencesManager.saveString(columnName,"null");
-                        object.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
+                    object.remove(columnName);
 
-                                    dialogs.dismissProgressDialog(context, "Picture Deleted!", true);
+                    object.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
 
-                                } else {
-                                    dialogs.dismissProgressDialog(context, "Picture Couldnt be Deleted", false);
-                                }
+                                Snackbar_Dialog.showSnackbar(context,"Image deleted", 2000);
+
+                               // Snackbar_Dialog.showAlert(context, "Image deleted", 1, true);
+
+
+                            } else {
+                               // Snackbar_Dialog.showAlert(context, "Image Couldnt be Deleted", 2, true);
+                                Snackbar_Dialog.showSnackbar(context,"Error deleting image", 2000);
+
                             }
-                        });
-                    } else {
-                        // No image to delete
-                        dialogs.dismissProgressDialog(context, "Picture Deleted!", true);
-                    }
+                        }
+                    });
                 } else {
-                    // Error fetching object
-                    dialogs.dismissProgressDialog(context, "Picture Couldnt be Deleted", false);
+                 //   Snackbar_Dialog.showAlert(context, e.getMessage(), 2, true);
+                    Snackbar_Dialog.showSnackbar(context,"Error deleting image", 2000);
+
                 }
             }
+
         });
-    }
-
-
-    //uploads the user info one at a time
-
-    public void uploadToDataBase(String columnKey, Object columnValue, Context context) {
-
-
-        if (columnValue != null) {
-            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Profile");
-
-            query.whereEqualTo("username", UtilsClass.getCurrentUsername());
-
-            query.getFirstInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    if (e == null) {
-                        if (columnValue instanceof String) {
-                            sharedPreferencesManager.saveString(columnKey,columnValue.toString());
-                            object.put(columnKey, columnValue);
-                        } else if (columnValue instanceof List) {
-                            object.put(columnKey, Collections.singletonList(columnValue));
-                        } else if (columnValue instanceof ParseFile) {
-                            object.put(columnKey, columnValue);
-                        }else if (columnValue instanceof String[]) {
-                            object.put(columnKey, columnValue);
-                        }
-                        object.saveInBackground(new SaveCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null) {
-
-                                    if(columnKey.equals("username"))
-                                        Objects.requireNonNull(UtilsClass.getCurrentUser()).fetchInBackground();
-                                    FancyToast.makeText(context, "Success", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, true).show();
-                                } else {
-                                    FancyToast.makeText(context, e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, true).show();
-                                }
-                            }
-                        });
-                    } else {
-                        FancyToast.makeText(context, e.getMessage(), FancyToast.LENGTH_SHORT, FancyToast.ERROR, true).show();
-                    }
-                }
-            });
-        }
     }
 }

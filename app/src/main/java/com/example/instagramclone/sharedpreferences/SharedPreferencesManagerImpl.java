@@ -22,15 +22,40 @@ public class SharedPreferencesManagerImpl implements SharedPreferencesManager {
             return preferences.getString(key, defaultValue);
         }
 
-        @Override
-        public void saveStringSet(String key, Set<String> values) {
-            preferences.edit().putStringSet(key, values).apply();
-        }
+    @Override
+    public void saveInt(String key, Integer value) {
+        preferences.edit().putInt(key, value).apply();
 
-        @Override
+    }
+
+    @Override
+    public Integer getInt(String key, Integer defaultValue) {
+        return preferences.getInt(key, defaultValue);
+
+    }
+
+
+    @Override
+    public void saveBoolean(String key, boolean value) {
+        preferences.edit().putBoolean(key, value).apply();
+
+    }
+
+    @Override
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return preferences.getBoolean(key, defaultValue);
+    }
+
+    @Override
+    public void saveStringSet(String key, Set<String> values) {
+        preferences.edit().putStringSet(key, values).apply();
+    }
+    @Override
         public Set<String> getStringSet(String key, Set<String> defaultValue) {
             return preferences.getStringSet(key, defaultValue);
         }
+
+
 
         @Override
         public void clear() {

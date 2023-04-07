@@ -1,49 +1,36 @@
 package com.example.instagramclone.main_tabs;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.instagramclone.realm.RealmModel;
+import com.example.instagramclone.reusable_code.SizeBasedOnDensity;
 import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
 import com.example.instagramclone.edit_profile_N_profile.ProfilePage;
-import com.example.instagramclone.edit_profile_N_profile.QueriesEditProfile;
 import com.example.instagramclone.reusable_code.ButtonCreator;
 import com.example.instagramclone.edit_profile_N_profile.EditProfile;
-import com.example.instagramclone.reusable_database_queries.ReusableQueries;
 import com.example.instagramclone.R;
-import com.parse.ParseObject;
+import com.example.instagramclone.reusable_database_queries.UtilsClass;
 
 import java.util.ArrayList;
 
-public class ProfileTab extends Fragment implements View.OnClickListener, View.OnFocusChangeListener {
+import io.realm.Realm;
 
-
-
+public class ProfileTab extends Fragment implements View.OnClickListener {
 
     ButtonCreator buttonCreator;
 
-    ReusableQueries queryDatabase;
     public ImageView profileImgView,editProfilebtn;
-    String[] columnNames;
-    Bitmap receivedImageBitmap,bitmap1,bitmap2,bitmap3;
-    ParseObject userClass;
-    QueriesEditProfile queriesEditProfile;
+
     String image1;
     private LinearLayout dotsLayout;
     private ImageView image, image2, image3;
@@ -52,6 +39,8 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
     private int currentImage = 1;
     Handler handler1;
     Runnable runnable;
+    Realm realm;
+    RealmModel results;
 
     public ProfileTab() {
 
@@ -68,25 +57,31 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
                 container, false);
 
 
+        realm = Realm.getDefaultInstance();
 
-
+        results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
 
         buttonCreator = new ButtonCreator(getContext(),new ArrayList<>());
 
-
+        SizeBasedOnDensity sizeBasedOnDensity = new SizeBasedOnDensity(view.getContext());
         editProfilebtn = view.findViewById(R.id.editProfileBtn);
         editProfilebtn.setOnClickListener(this);
 
-        queryDatabase = new ReusableQueries(getContext());
 
         profileImgView = view.findViewById(R.id.profileImgView);
 
         profileImgView.setOnClickListener(this);
+
+
+        realm.beginTransaction();
+
+        if(results!= null)
+         image1 = results.getImage1Name();
+
         PiccassoLoadToImageView piccassoLoadToImageView = new PiccassoLoadToImageView(getContext());
-        piccassoLoadToImageView.getImageNloadIntoImageview(profileImgView,"image1",500,500,300);
+        piccassoLoadToImageView.getImageNloadIntoImageview(profileImgView,image1,"",sizeBasedOnDensity.widthRatio(220),sizeBasedOnDensity.heightRatio(220),300);
 
-
-
+        realm.commitTransaction();
 
         dotsLayout = view.findViewById(R.id.dotsLayout);
         image =  view.findViewById(R.id.image1);
@@ -124,16 +119,7 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
         handler1.removeCallbacksAndMessages(null);
         handler1.postDelayed(runnable, 3000);
 
-
-
-
-
-
-
-
         return view;//must return type view
-
-
 
     }
 
@@ -170,18 +156,12 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
 
 
 
-
-
-
-
     @Override
     public void onClick(View view) {//for uploading image
 
 
         int viewId = view.getId();
 
-     /*   clickedImageView = (ImageView) view;
-        columnName = (String) clickedImageView.getTag();*/
         if (viewId == R.id.editProfileBtn ) {
             Intent intent = new Intent(getContext(), EditProfile.class);
             startActivity(intent);
@@ -197,106 +177,4 @@ public class ProfileTab extends Fragment implements View.OnClickListener, View.O
 
     }
 
-
-
-
-
-
-   /* public void showProfileImages(Bitmap bitmap, String columnName){
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-           filename =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        }
-
-                    File file = new File(getApplicationContext().getCacheDir(), filename + IMAGE_EXTENSION);
-                     filePath = file.getAbsolutePath();
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(filePath);
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                    } catch (FileNotFoundException a) {
-                        a.printStackTrace();
-                    } finally {
-                        try {
-                            fos.close();
-                        } catch (IOException a) {
-                            a.printStackTrace();
-                        }
-                    }
-
-
-
-                    Picasso.get().load(filePath).into(clickedImageView);
-
-
-        }
-*/
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == 2000){
-            if(resultCode == Activity.RESULT_OK){
-
-
-                try {
-                    Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                            filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    receivedImageBitmap = BitmapFactory.decodeFile(picturePath);
-
-
-                    //createParseImageUpload(receivedImageBitmap,columnName);
-
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }
-
-/*
-
-    public void createParseImageUpload(Bitmap imageBitmap, String columnName) {
-        if (imageBitmap != null) {
-            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                byte[] bytes = outputStream.toByteArray();
-                ParseFile parseFile = new ParseFile(columnName + IMAGE_EXTENSION, bytes);//IMAGE_EXTENSION:.png
-                queryDatabase.putQueryDatabase(columnName, parseFile,getContext());
-
-            } catch (IOException e) {
-                // Handle the exception
-            }
-        }
-    }
-
-*/
-
-
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-                EditText editText = (EditText) v;
-                String text = editText.getText().toString();
-                String fieldName = editText.getTag().toString();
-
-                // Upload text to database for the field that lost focus
-
-                queryDatabase.uploadToDataBase(fieldName, text,getContext());
-
-            if(fieldName.equals("username")) {
-                    userClass.put("username", text);
-                }
-        }
-    }
 }

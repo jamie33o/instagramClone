@@ -235,7 +235,196 @@
                     </TableRow>
                 </TableLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#79AAAAAA"
+                    app:layout_constraintTop_toBottomOf="@+id/interestsLayoutProfile"
+                    app:layout_constraintBottom_toTopOf="@+id/myBasicsLayoutProfile" />
 
+                <TableLayout
+                    android:id="@+id/myBasicsLayoutProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/interestsLayoutProfile"
+                    app:layout_constraintTop_toBottomOf="@+id/interestsLayoutProfile">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="My Basic's"
+                            android:textColor="#070707"
+                            android:textSize="16sp"
+                            android:textStyle="bold|italic" />
+
+                    </TableRow>
+                </TableLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#79AAAAAA"
+                    app:layout_constraintTop_toBottomOf="@+id/myBasicsLayoutProfile"
+                    app:layout_constraintBottom_toTopOf="@+id/myLifestyleLayoutProfile" />
+
+                <TableLayout
+                    android:id="@+id/myLifestyleLayoutProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/myBasicsLayoutProfile"
+                    app:layout_constraintTop_toBottomOf="@+id/myBasicsLayoutProfile">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="My Lifestyle"
+                            android:textColor="#070707"
+                            android:textSize="16sp"
+                            android:textStyle="bold|italic" />
+
+                    </TableRow>
+                </TableLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#79AAAAAA"
+                    app:layout_constraintTop_toBottomOf="@+id/myLifestyleLayoutProfile"
+                    app:layout_constraintBottom_toTopOf="@+id/myFavouriteLayoutProfile" />
+
+                <TableLayout
+                    android:id="@+id/myFavouriteLayoutProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/myLifestyleLayoutProfile"
+                    app:layout_constraintTop_toBottomOf="@+id/myLifestyleLayoutProfile">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="My Favourite Song"
+                            android:textColor="#070707"
+                            android:textSize="16sp"
+                            android:textStyle="bold|italic" />
+
+                    </TableRow>
+
+
+                    <TableRow
+                        android:id="@+id/tableRow3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@+id/tableRow2"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/songImg"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="10dp" />
+
+                        <ImageButton
+                            android:id="@+id/playbtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="-10dp"
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@drawable/baseline_play_arrow_24" />
+
+                        <ImageButton
+                            android:id="@+id/pausebtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="-10dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@drawable/baseline_pause_24" />
+                        </FrameLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@+id/tableRow4"
+                        app:layout_constraintTop_toBottomOf="@+id/tableRow3">
+
+
+                        <TextView
+                            android:id="@+id/songNameTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/text_color"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@+id/tableRow5"
+                        app:layout_constraintTop_toBottomOf="@+id/tableRow2">
+
+                        <TextView
+                            android:id="@+id/albumNameTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_color"
+
+                            android:layout_marginStart="10dp"
+                            android:textSize="14sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tableRow5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tableRow4">
+
+                        <TextView
+                            android:id="@+id/artistNameTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_color"
+                            android:layout_marginBottom="100dp"
+                            android:layout_marginStart="10dp"
+                            android:textSize="14sp" />
+
+                    </TableRow>
+
+
+                </TableLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

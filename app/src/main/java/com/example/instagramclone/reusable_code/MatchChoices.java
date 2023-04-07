@@ -3,7 +3,6 @@ package com.example.instagramclone.reusable_code;
         import androidx.appcompat.app.AppCompatActivity;
 
         import android.app.Activity;
-        import android.content.Context;
         import android.content.Intent;
         import android.graphics.Color;
         import android.graphics.drawable.GradientDrawable;
@@ -13,38 +12,62 @@ package com.example.instagramclone.reusable_code;
         import android.view.View;
         import android.view.WindowManager;
         import android.widget.Button;
+        import android.widget.CompoundButton;
+        import android.widget.ImageButton;
+        import android.widget.SeekBar;
+        import android.widget.Switch;
         import android.widget.TableLayout;
+        import android.widget.TableRow;
         import android.widget.TextView;
 
         import com.example.instagramclone.R;
+        import com.example.instagramclone.realm.RealmManager;
+        import com.example.instagramclone.realm.RealmModel;
         import com.example.instagramclone.reusable_database_queries.DataBaseUtils;
         import com.example.instagramclone.reusable_database_queries.ReusableQueries;
-        import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
-        import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
-        import com.example.instagramclone.usertab_cardview_adapter.UsersTab;
-        import com.google.gson.Gson;
+        import com.example.instagramclone.reusable_database_queries.UtilsClass;
 
         import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.Objects;
-        import java.util.Set;
+        import java.util.List;
 
-public class MatchChoices extends AppCompatActivity {
-    UsersTab usersTab;
-    String[] interests, gender, counties, sexualOrientation;
+        import io.realm.Realm;
+        import io.realm.RealmList;
+public class MatchChoices extends AppCompatActivity implements View.OnClickListener {
+     AddBtnTxtToArray addBtnTxtToArray;
+     String[] countiesIreland;
+    private TableLayout tableLayout;
+    private DataBaseUtils queryDatabase;
+    List<Button> countieBtnList;
+    private String distance;
+    private int searchDistance = 0;
 
-    String tableClicked;
+    private TextView distanceText;
+     SeekBar startDistanceSeekBar;
 
+    TableRow tableRow;
+    ButtonCreator buttonCreator;
+    TextView textView;
+     Switch switchBtn;
+
+    List<String> chosenCountiesList;
+    RealmList<String> realmList ;
+    private Realm realm;
+    private RealmModel results;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_match_choices);
+        countiesIreland = new String[]{"Antrim", "Armagh", "Carlow", "Cavan", "Clare", "Cork", "Derry", "Donegal", "Down", "Dublin", "Fermanagh", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Tyrone", "Waterford", "Westmeath", "Wexford", "Wicklow"};
 
 
+        queryDatabase = new ReusableQueries(this);
+        realm = RealmManager.getRealmInstance();
+
+        results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
+        chosenCountiesList = new ArrayList<>();
 
 
-        usersTab = new UsersTab();
 
 
         DisplayMetrics dm = new DisplayMetrics();
@@ -60,56 +83,92 @@ public class MatchChoices extends AppCompatActivity {
         params.gravity = Gravity.CENTER;
         getWindow().setAttributes(params);
 
+        textView = findViewById(R.id.txtview_title);
+        findViewById(R.id.savebtn).setOnClickListener(this);
+        findViewById(R.id.backbtn).setOnClickListener(this);
+
+        tableLayout = findViewById(R.id.tablelayout);
+
+        GetUserLocation getUserLocation = new GetUserLocation(this, MatchChoices.this);
+        getUserLocation.onStart();
 
 
+        countieBtnList = new ArrayList<>();
+        buttonCreator = new ButtonCreator(this,countieBtnList);
+        buttonCreator.buttonCreator(tableLayout, this, "", countiesIreland);
+
+        addBtnTxtToArray = new AddBtnTxtToArray(this);
 
 
+        distanceText = findViewById(R.id.distance);
+        startDistanceSeekBar = findViewById(R.id.start_distance_seekbar);
 
-/*
 
+        textView.setText("Search");
 
-            if (tableClicked != null && tableClicked.equals("yourcounty")) {
-                buttonCreator.buttonCreator(tableLayout,this, counties);
-                txtview.setText("Choose Your County");
+        tableRow = findViewById(R.id.seekBar_row);
+        tableRow.setVisibility(View.GONE);
+
+        switchBtn = findViewById(R.id.switch_btn);
+
+        switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tableLayout.setVisibility(View.GONE);
+                    tableRow.setVisibility(View.VISIBLE);
+                    chosenCountiesList.clear();
+
+                } else {
+                    tableLayout.setVisibility(View.VISIBLE);
+                    tableRow.setVisibility(View.GONE);
+                    searchDistance = 0;
+
+                }
+            }
+        });
+
+        GradientDrawable gdDefault = new GradientDrawable();
+        gdDefault.setStroke(3,Color.GRAY,10,10);
+        gdDefault.setCornerRadius(15);
+        tableRow.setBackground(gdDefault);
+
+        startDistanceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                // Update start distance text
+                searchDistance = progress;
+                 distance = progress+"\n km";
+                distanceText.setText( distance);
             }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
-            if (cardview != null && cardview.equals("cardview")) {
-                buttonCreator.buttonCreator(tableLayout,this, counties);
-                txtview.setText("Choose area's or distance ");
-            }
-        if (tableClicked != null && tableClicked.equals("chosencountiesLayout")) {
-            buttonCreator.buttonCreator(tableLayout,this, counties);
-            txtview.setText("Choose area's or distance ");
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+
+
+        if(results!=null) {
+            realm.beginTransaction();
+            realmList = results.getChosenCounties();
+            chosenCountiesList = new ArrayList<>(realmList);
+            searchDistance = results.getSearchDistance();
+            realm.commitTransaction();
         }
 
+        LightUpPreSelectedbtn lightUpPreSelectedbtn = new LightUpPreSelectedbtn(this);
+        lightUpPreSelectedbtn.lightUpPreSelectBtn(chosenCountiesList,countieBtnList);
 
-            if(tableClicked != null && tableClicked.equals("sexualOrientation")) {
-                buttonCreator.buttonCreator(tableLayout,this, sexualOrientation);
-                txtview.setText("Sexual Orientation");
-            }
-        if(tableClicked != null && tableClicked.equals("Gender")) {
-            buttonCreator.buttonCreator(tableLayout,this, gender);
-            txtview.setText("Choose Your Gender");
-        }
-
-
-        if(tableClicked != null && tableClicked.equals("languages")) {
-            buttonCreator.buttonCreator(tableLayout,this, languages);
-            txtview.setText("Languages I Know");
-        }
+    }
 
 
 
 
-    private ArrayList<String> languagesList = new ArrayList<>();
-    private ArrayList<String> sexualOrientationList = new ArrayList<>();
-    String yourGender;
-    String yourCounty;
-    private ArrayList<String> chosenCountiesList = new ArrayList<>();
-*/
 
-/*
 
     @Override
     public void onClick(View v) {
@@ -118,127 +177,43 @@ public class MatchChoices extends AppCompatActivity {
             return;
         }
 
+        if (!(v instanceof ImageButton)) {
 
+            addBtnTxtToArray.addBtnClickedTxtToArray(chosenCountiesList, v, 4);
+
+
+        }
+
+        // Save the search prefs
         if (v.getId() == R.id.savebtn) {
-            for(String button : selectedButtonsList) {//sorts out which text should go in which array
-
-                if(tableClicked != null && tableClicked.equals("sexualOrientation")) {
-
-                    // Check if the button is contained in the gender array
-                    if (Arrays.asList(sexualOrientation).contains(button)) {
-                        // Add the button to the chosenGender array if it's not already there
-                        if (!sexualOrientationList.contains(button)) {
-                            sexualOrientationList.add(button);
-
-                        }
-                    }
-                }
 
 
-                if(tableClicked != null && tableClicked.equals("languages")) {
-
-                    // Check if the button is contained in the gender array
-                    if (Arrays.asList(languages).contains(button)) {
-                        // Add the button to the chosenGender array if it's not already there
-                        if (!languagesList.contains(button)) {
-                            languagesList.add(button);
-
-                        }
-                    }
-                }
-
-               if(tableClicked != null && tableClicked.equals("Gender")) {
-                   if (Arrays.asList(gender).contains(button)) {
-                       // Add the button to the chosenGender array if it's not already there
-                       if (!Objects.equals(yourGender, button)) {
-                           yourGender = button;
-                       }
-                   }
-               }
-
-                // Check if the button is contained in the counties array
-                if(tableClicked != null && tableClicked.equals("yourcounty")) {
-                    if (Arrays.asList(counties).contains(button)) {
-                        // Add the button to the chosenCounties array if it's not already there
-                        if (!Objects.equals(yourCounty, button)) {
-                            yourCounty = button;
-                        }
-                    }
-                }
-
-                if (tableClicked != null && tableClicked.equals("chosencountiesLayout"))
-                 if (Arrays.asList(counties).contains(button)) {
-                    // Add the button to the chosenCounties array if it's not already there
-                    if (!chosenCountiesList.contains(button)) {
-                        chosenCountiesList.add(button);
-
-                    }
-                }
-
-                if (cardview != null && cardview.equals("cardview"))
-                    if (Arrays.asList(counties).contains(button)) {
-                        // Add the button to the chosenCounties array if it's not already there
-                        if (!chosenCountiesList.contains(button)) {
-                            chosenCountiesList.add(button);
-
-                        }
-                    }
-
-                // Check if the button is contained in the interests array
-
-
-            DataBaseUtils queryDatabase = new ReusableQueries(this);
-
-            queryDatabase.uploadToDataBase("languages",languagesList,this);
-
-            queryDatabase.uploadToDataBase("yourGender",yourGender,this);
-
-
-            queryDatabase.uploadToDataBase("county",yourCounty,this);
-
-            queryDatabase.uploadToDataBase("sexualOrientation", sexualOrientationList,this);
-
-
-
-
-            Gson gson = new Gson(); // Create a Gson instance
-            String jsoncounties = gson.toJson(chosenCountiesList); // Convert the list of strings to a JSON string using Gson
-            if(chosenCountiesList.size() >0) { // Check if the list contains any elements
-                sharedPreferencesManager.saveString("chosenCounty", jsoncounties); // Store the JSON string in shared preferences for the "chosenCounty" key
-            }
-
-
-
-
-            Gson gson2 = new Gson(); // Create a Gson instance
-            String jsonsexOrientation = gson2.toJson(sexualOrientationList); // Convert the array of strings to a JSON string using Gson
-            if(sexualOrientationList != null) {
-                   sharedPreferencesManager.saveString("sexualOrientation", jsonsexOrientation);
-            }
-
-            Gson gson3 = new Gson(); // Create a Gson instance
-            String jsonlanguages = gson3.toJson(languagesList); // Convert the array of strings to a JSON string using Gson
-            if(languagesList != null) {
-                sharedPreferencesManager.saveString("languages", jsonlanguages);
-            }
-
-            if(yourGender != null) {
-// Get the editor object to make changes to the preferences
-// Store multiple string values in the preferences
-                sharedPreferencesManager.saveString("yourGender", yourGender);
-            }
-
-// Save the changes
+            uploadToRealm();
 
             Intent resultIntent = new Intent();
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+        }
 
-            return;*/
+
+
+    }
+
+    public void uploadToRealm() {
+// Set the value of a dynamic property using reflection
+        realmList = new RealmList<>();
+        realmList.addAll(chosenCountiesList);
+
+        realm.beginTransaction();
+
+        results.setChosenCounties(realmList);
+        results.setSearchDistance(searchDistance);
+
+        realm.commitTransaction();
+
     }
 
 
 }
-
 
 

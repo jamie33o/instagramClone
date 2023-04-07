@@ -2,10 +2,14 @@ package com.example.instagramclone.reusable_code;
 
 import android.content.Context;
 import android.net.Uri;
-
+/*
+import com.example.instagramclone.realm.RealmManager;
+import com.example.instagramclone.realm.RealmModel;*/
 import com.example.instagramclone.reusable_database_queries.DataBaseUtils;
 import com.example.instagramclone.reusable_database_queries.ReusableQueries;
+import com.example.instagramclone.reusable_database_queries.UtilsClass;
 import com.parse.ParseFile;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,6 +18,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+/*
+
+import io.realm.Realm;
+*/
 
 public class ImageProcessor {
     private static final String IMAGE_EXTENSION = ".png";
@@ -30,6 +38,8 @@ public class ImageProcessor {
 
     }
 
+
+
     public void createParseImageUpload(Uri imageUri, String columnName) {
         try (InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -39,12 +49,14 @@ public class ImageProcessor {
                 outputStream.write(buffer, 0, bytesRead);
             }
             byte[] bytes = outputStream.toByteArray();
-            ParseFile parseFile = new ParseFile(columnName + IMAGE_EXTENSION, bytes);
-            dataBaseUtils.uploadToDataBase(columnName, parseFile, context);
+
         } catch (IOException e) {
-            // Handle the exception
+            FancyToast.makeText(context,e.getMessage(),FancyToast.LENGTH_SHORT,FancyToast.ERROR,false).show();
         }
     }
+
+
+
 
 
     public File createFileFromInputStream(Uri filePath) {

@@ -260,9 +260,9 @@
                     android:layout_height="wrap_content"
 
                     android:ems="10"
-                    android:hint="Add Job title"
+                    android:hint="Add Job title or field of study"
                     android:inputType="textPersonName"
-                    android:tag="profession"
+                    android:tag="jobTitle_fieldOfStudy"
                     android:textColor="#070707"
                     android:textColorHint="#6A6868" />
 
@@ -305,9 +305,9 @@
                     android:layout_height="wrap_content"
 
                     android:ems="10"
-                    android:hint="Add company"
+                    android:hint="Add Company or colledge"
                     android:inputType="textPersonName"
-                    android:tag="profession"
+                    android:tag="companyRcolledge"
                     android:textColor="#070707"
                     android:textColorHint="#6A6868" />
 
@@ -602,6 +602,76 @@
                         android:layout_margin="4dp"
                         android:src="@drawable/baseline_add_24" />
                 </TableRow>
+                <TableRow
+                    android:id="@+id/tableRow3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/tableRow2"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/trackImage"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginStart="10dp"
+                        />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/tableRow4"
+                    app:layout_constraintTop_toBottomOf="@+id/tableRow3">
+
+
+                    <TextView
+                        android:id="@+id/trackName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/text_color"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/tableRow5"
+                    app:layout_constraintTop_toBottomOf="@+id/tableRow2">
+
+                    <TextView
+                        android:id="@+id/artistName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+
+                        android:layout_marginStart="10dp"
+                        android:textSize="14sp" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tableRow4">
+
+                    <TextView
+                        android:id="@+id/albumName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+
+                        android:layout_marginStart="10dp"
+                        android:textSize="14sp" />
+
+                </TableRow>
             </TableLayout>
 
             <TableLayout
@@ -634,6 +704,52 @@
                         android:textColor="#070707"
                         android:textSize="16sp"
                         android:textStyle="bold|italic" />
+
+
+
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_color"
+                        android:layout_weight="2"
+                        android:text="Dont show my age" />
+
+                    <Switch
+                        android:id="@+id/switch_btn1"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_height="wrap_content" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_color"
+                        android:layout_weight="2"
+                        android:text="Dont show my location" />
+
+                    <Switch
+                        android:id="@+id/switch_btn2"
+                        android:layout_width="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_height="wrap_content" />
 
 
 

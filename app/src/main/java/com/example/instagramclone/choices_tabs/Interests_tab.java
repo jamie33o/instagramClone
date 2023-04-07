@@ -1,5 +1,4 @@
 package com.example.instagramclone.choices_tabs;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,34 +9,46 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.realm.RealmManager;
+import com.example.instagramclone.realm.RealmModel;
+import com.example.instagramclone.reusable_code.AddBtnTxtToArray;
 import com.example.instagramclone.reusable_code.ButtonCreator;
-import com.example.instagramclone.reusable_database_queries.DataBaseUtils;
-import com.example.instagramclone.reusable_database_queries.ReusableQueries;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
+import com.example.instagramclone.reusable_code.LightUpPreSelectedbtn;
+import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_database_queries.UtilsClass;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmList;
 
 public class Interests_tab extends Fragment implements View.OnClickListener {
     private  ButtonCreator buttonCreator;
 
 
-   private SharedPreferencesManager sharedPreferencesManager;
     TextView txtview;
-    private ArrayList<String> chosenInterestsList, selectedButtonsList;
+    private List<String> interestsList;
     private TableLayout tableLayout;
     private View view;
 
     private AddBtnTxtToArray addBtnTxtToArray;
 
+
     private String[] interests;
     private LightUpPreSelectedbtn lightUpPreSelectedbtn;
+    Gson gson1 ;
+
+    ViewPager viewPager;
+
+    RealmList<String> realmList;
+
+    private Realm realm;
+    private RealmModel results;
 
     public Interests_tab() {
 
@@ -52,16 +63,27 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.main_xml_for_choices_tab,//used to find view inside fragment
                 container, false);
 
+        //used to change fragments when button clicked
+         viewPager = ((Choices_tabs_MainPage) requireActivity()).getViewPager();
+
 
         interests = new String[]{"Reading", "Writing", "Photography", "Traveling", "Cooking", "Hiking", "Yoga", "Painting", "Gaming", "Music", "Dancing", "Sports", "Fitness", "Meditation", "Coding", "Gardening", "Fishing", "Gym", "Surfing", "Netflix"};
-        sharedPreferencesManager = new SharedPreferencesManagerImpl(view.getContext(), "Profile", Context.MODE_PRIVATE);
 
+        //get instance of realm
+        realm = RealmManager.getRealmInstance();
+
+
+        // Get the object you want to update
+        results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
 
         txtview = view.findViewById(R.id.txtview_title);
         txtview.setText("Interests");
 
         tableLayout = view.findViewById(R.id.table_layout_1);
         addBtnTxtToArray = new AddBtnTxtToArray(view.getContext());
+
+        gson1 = new Gson(); // Create a Gson instance
+
 
 
         view.findViewById(R.id.savebtn).setOnClickListener(this);
@@ -71,20 +93,14 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
         buttonCreator = new ButtonCreator(getContext(),btnList);
         buttonCreator.buttonCreator(tableLayout, this, "",interests);
 
-       // chosenInterestsList = new ArrayList<>();
-        selectedButtonsList = new ArrayList<>();
-
-
-        String savedJsoninterest = sharedPreferencesManager.getString("interests", ""); // Retrieve the JSON string from shared preferences for the "choseninterests" key
-        Gson gson2 = new Gson(); // Create a Gson instance
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> chosenInterests = gson2.fromJson(savedJsoninterest, type);
-
-
+        realm.beginTransaction();
+        realmList = results.getInterests();
+        interestsList = new ArrayList<>(realmList);
+        realm.commitTransaction();
         //checks the choices thar are stored and lights up the buttons accordingly and
         // adds the to the selected button array
       lightUpPreSelectedbtn = new LightUpPreSelectedbtn(view.getContext());
-      lightUpPreSelectedbtn.lightUpPreSelectBtn(chosenInterests,btnList);
+      lightUpPreSelectedbtn.lightUpPreSelectBtn(interestsList,btnList);
         return view;//must return type view
 
 
@@ -101,30 +117,36 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
 
         if(!(v instanceof ImageButton)) {
 
-
-
-
-            addBtnTxtToArray.addBtnClickedTxtToArray(selectedButtonsList,null,v,4);
+            addBtnTxtToArray.addBtnClickedTxtToArray(interestsList,v,4);
 
         }
-
-
         if (buttonId == R.id.savebtn) {
 
 
-            DataBaseUtils queryDatabase = new ReusableQueries(view.getContext());
+            uploadToRealm();
+            //used to change fragments when button clicked
+            viewPager.setCurrentItem(1);
+        }
+    }
+    public void uploadToRealm() {
 
-            queryDatabase.uploadToDataBase("interests", selectedButtonsList, view.getContext());
+        if (results != null) {
+            realmList = new RealmList<>();
+            realmList.addAll(interestsList);
+            realm.beginTransaction();
+            results.setInterests(realmList);
+            realm.commitTransaction();
 
-            Gson gson1 = new Gson(); // Create a Gson instance
-            String jsoninterests = gson1.toJson(selectedButtonsList); // Convert the array of strings to a JSON string using Gson
-            if (selectedButtonsList.size() > 0) { // Check if the array contains any elements
-                sharedPreferencesManager.saveString("interests", jsoninterests); // Store the JSON string in shared preferences for the "choseninterests" key
-            }
+            Snackbar_Dialog.showSnackbar(view.getContext(), "Success!!!", 2000);
 
+        }else {
+            Snackbar_Dialog.showSnackbar(view.getContext(), "Error saving selection!!", 2000);
 
         }
     }
+
+
+
 
 
 }

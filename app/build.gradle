@@ -1,11 +1,14 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: "realm-android"
 
 android {
     namespace 'com.example.instagramclone'
     compileSdk 33
-
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
     defaultConfig {
         applicationId "com.example.instagramclone"
         minSdk 21
@@ -15,7 +18,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    realm {
+        syncEnabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -23,14 +28,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+        "-Xlint:deprecation"
+        // Add the following line to support older Android devices
+        coreLibraryDesugaringEnabled true
+    }
+}
+tasks.register('myTask') {
+    doLast {
+        def androidJacocoAnt = deferredConfiguration(configurations.androidJacocoAnt)
+        // Use the 'androidJacocoAnt' configuration here
+        def androidJdkImage = deferredConfiguration(configurations.androidJdkImage)
+        // Use the 'androidJdkImage' configuration here
+        def coreLibraryDesugaring = deferredConfiguration(configurations.coreLibraryDesugaring)
+        // Use the 'coreLibraryDesugaring' configuration here
+        def androidTestUtil = deferredConfiguration(configurations.androidTestUtil)
+        // Use the 'androidTestUtil' configuration here
+
     }
 }
 
 dependencies {
 
-
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
@@ -44,10 +65,18 @@ dependencies {
     api 'com.github.mjn1369:prettydialog:1.0.4'
     implementation 'io.github.shashank02051997:FancyToast:2.0.1'
     implementation 'com.github.yuyakaido:cardstackview:2.3.4'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     //noinspection GradleCompatible
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    //realm
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'io.realm:realm-gradle-plugin:10.11.1'
+    //snackbar
+    implementation 'com.github.Redman1037:TSnackBar:V2.0.0'
+    //spotify
+    implementation 'com.spotify.android:auth:1.2.5' // Maven dependency
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+    annotationProcessor "io.realm:realm-android-library:10.11.1"
 
 
 

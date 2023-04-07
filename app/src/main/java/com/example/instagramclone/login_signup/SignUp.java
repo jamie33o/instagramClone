@@ -13,17 +13,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.instagramclone.realm.RealmManager;
+import com.example.instagramclone.realm.RealmModel;
 import com.example.instagramclone.reusable_database_queries.ReusableQueries;
 import com.example.instagramclone.R;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.io.File;
+
+import io.realm.Realm;
+
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edtUserNameSignUp,edtEmail,edtPasswordSignUp;
     private Button btnSignUp, btnLogin;
     ReusableQueries queryDatabase;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +39,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         setTitle("Sign Up");
 
-
+        queryDatabase = new ReusableQueries(this);
+ String realmPath = Realm.getDefaultConfiguration().getPath();
+        File realmFile = new File(realmPath);
+        if (realmFile.exists()) {
+            realmFile.delete();
+        }
         edtUserNameSignUp = findViewById(R.id.edtUserNameSignUp);
         edtEmail = findViewById(R.id.loginedtEmail);
         edtPasswordSignUp = findViewById(R.id.loginedtPassword);
@@ -83,8 +95,20 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 }else {
 
                  String username = edtUserNameSignUp.getText().toString();
+// Get the default Realm instance
+                    // Get a reference to the default Realm instance
+                    Realm realm = RealmManager.getRealmInstance();
+// Begin a new write transactio
+                    realm.beginTransaction();
+// Create a new RealmModel object with a primary key value of "my_username"
+                    realm.createObject(RealmModel.class, username);
+// Commit the write transaction
+                    realm.commitTransaction();
+
+
                        ParseObject object = new ParseObject("Profile");
                     object.put("username", username);
+
 
                     object.saveInBackground(e -> {
                         if (e == null) {

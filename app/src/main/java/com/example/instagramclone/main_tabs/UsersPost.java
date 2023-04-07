@@ -46,7 +46,7 @@ public class UsersPost extends AppCompatActivity {
         setTitle(receivedUserName + "'s posts");//sets title at top of page
 
         //shows user profile when profile username clicked
-        ParseQuery<ParseObject> parseQuery = new ParseQuery<ParseObject>("User");
+        ParseQuery<ParseObject> parseQuery = new ParseQuery<ParseObject>("GetUserLocation");
         //parseQuery.whereEqualTo("username", receivedUserName);
         parseQuery.orderByDescending("createdAt");//gets created date and puts it up newiest first
 

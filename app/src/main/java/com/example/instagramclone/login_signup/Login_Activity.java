@@ -11,7 +11,6 @@ import android.widget.EditText;
 import com.example.instagramclone.R;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.parse.ParseUser;
-//import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class Login_Activity extends AppCompatActivity implements View.OnClickListener {
     private EditText loginedtPassword,loginedtEmail;

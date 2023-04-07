@@ -5,6 +5,19 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="com.spotify.music.permission.API_READ" />
+    <uses-permission android:name="com.spotify.music.permission.API_WRITE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+
+
 
     <application
         android:name=".main_class_s.App"
@@ -18,10 +31,7 @@
         android:theme="@style/Theme.InstagramClone"
         tools:targetApi="31">
         <activity
-            android:name=".Height_pager"
-            android:exported="false" />
-        <activity
-            android:name=".Languages_i_Know_tab"
+            android:name=".spotify.SpotifySongs"
             android:exported="false" />
         <activity
             android:name=".Personal_Details"
@@ -38,10 +48,21 @@
         </activity>
         <activity
             android:name=".edit_profile_N_profile.EditProfile"
-            android:exported="false">
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="callback"
+                    android:scheme="editprofile" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".main_tabs.SocialMediaActivity"
@@ -50,6 +71,9 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
         </activity>
         <activity
             android:name=".choices_tabs.Choices_tabs_MainPage"

@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.TableLayout;
 
 import com.example.instagramclone.R;
-import com.google.android.flexbox.AlignItems;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.JustifyContent;
@@ -24,6 +23,7 @@ public class ButtonCreator implements View.OnClickListener{
     Drawable drawable;
     Context context;
 
+    SizeBasedOnDensity sizeBasedOnDensity;
     //tablelayout = where u want the buttons---array = the array of button names
     //context = xml file where your puttin buttons
     public ButtonCreator( Context context,List<Button> btnList) {
@@ -31,12 +31,15 @@ public class ButtonCreator implements View.OnClickListener{
         this.btnList=btnList;
 
 
+        sizeBasedOnDensity = new SizeBasedOnDensity(context);
+
 
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public void buttonCreator(TableLayout tableLayout, View.OnClickListener listener,String btnName, String... array) {
         counter = 0;
+
         for (int i = 0; i < tableLayout.getChildCount(); i++) {
             View childView = tableLayout.getChildAt(i);
             if (childView instanceof FlexboxLayout) {
@@ -48,7 +51,8 @@ public class ButtonCreator implements View.OnClickListener{
                     if (buttonView instanceof Button) {
                         row.removeView(buttonView);
 
-                }
+                    }
+
             }
             }
         }
@@ -60,7 +64,9 @@ public class ButtonCreator implements View.OnClickListener{
         flexboxLayout.setJustifyContent(JustifyContent.CENTER);
        // flexboxLayout.setAlignItems(AlignItems.STRETCH);
 
+
         for (String s : array) {
+
             Button button = new Button(context);
             String n = btnName+s;
             button.setText(n);
@@ -99,7 +105,7 @@ public class ButtonCreator implements View.OnClickListener{
             gdDefault.setStroke(2, context.getResources().getColor(R.color.buttonText));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                gdDefault.setPadding(40, 20, 20, 20);
+                gdDefault.setPadding(40, 0, 20, 0);
             }
             button.setBackground(gdDefault);
             button.setTextColor(context.getResources().getColor(R.color.buttonText));
@@ -107,7 +113,7 @@ public class ButtonCreator implements View.OnClickListener{
 
             FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
                     FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                    90
+                    sizeBasedOnDensity.heightRatio(30)
             );
             layoutParams.setMargins(15, 20, 15, 20);
             btnList.add(button);

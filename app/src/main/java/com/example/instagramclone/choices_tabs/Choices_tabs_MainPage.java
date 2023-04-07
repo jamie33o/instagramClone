@@ -18,7 +18,7 @@ import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl
 import com.google.android.material.tabs.TabLayout;
 
 public class Choices_tabs_MainPage extends AppCompatActivity implements View.OnClickListener{
-    private ViewPager viewPager;
+    public static ViewPager viewPager;
     private Choices_TabAdapter choices_tabAdapter;
     String tableClicked;
 
@@ -45,7 +45,6 @@ public class Choices_tabs_MainPage extends AppCompatActivity implements View.OnC
             @Override
             public void onChanged() {
                 int currentFragmentIndex = choices_tabAdapter.getCurrent_tab_count();
-                System.out.println(currentFragmentIndex);
                 progressBar.setProgress(currentFragmentIndex * 100 / choices_tabAdapter.getCount());
             }
         });
@@ -82,5 +81,8 @@ public class Choices_tabs_MainPage extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
 
+    }
+    public ViewPager getViewPager(){
+        return viewPager;
     }
 }
