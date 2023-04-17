@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
-    tools:context=".main_tabs.ProfileTab">
+    tools:context=".main_tabs.ProfileTab.ProfileTab">
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -56,35 +56,16 @@
         <LinearLayout
             android:id="@+id/imageSlider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!-- Image 1 -->
-            <ImageView
-                android:id="@+id/image1"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:contentDescription="@string/scroll_view_options"
-                android:src="@drawable/baseline_add_a_photo_24" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
 
-            <!-- Image 2 -->
-            <ImageView
-                android:id="@+id/image2"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:contentDescription="@string/scroll_view_options"
-                android:src="@drawable/baseline_add_task_24" />
-
-
-            <!-- Image 3 -->
-            <ImageView
-                android:id="@+id/image3"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:contentDescription="@string/scroll_view_options"
-                android:src="@drawable/baseline_supervised_user_circle_24" />
 
         </LinearLayout>
 

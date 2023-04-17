@@ -1,26 +1,19 @@
 package com.example.instagramclone.choices_tabs;
 
-import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.instagramclone.R;
-import com.example.instagramclone.main_tabs.TabAdapter;
-import com.example.instagramclone.reusable_code.ButtonCreator;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManager;
-import com.example.instagramclone.sharedpreferences.SharedPreferencesManagerImpl;
-import com.google.android.material.tabs.TabLayout;
 
 public class Choices_tabs_MainPage extends AppCompatActivity implements View.OnClickListener{
-    public static ViewPager viewPager;
-    private Choices_TabAdapter choices_tabAdapter;
-    String tableClicked;
+    public static ViewPager2 viewPager;
+     Choices_TabAdapter choices_tabAdapter;
+    int tableClicked;
 
 
     @Override
@@ -31,58 +24,37 @@ public class Choices_tabs_MainPage extends AppCompatActivity implements View.OnC
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         viewPager = findViewById(R.id.viewPager_choices_tab);
-        choices_tabAdapter = new Choices_TabAdapter(getSupportFragmentManager());
+        choices_tabAdapter = new Choices_TabAdapter(this);
         viewPager.setAdapter(choices_tabAdapter);
-        tableClicked = getIntent().getStringExtra("com.example.instagram.layoutthatwasclicked");
+        tableClicked = getIntent().getIntExtra("tableclicked",0);
+        viewPager.setCurrentItem(tableClicked);
 
+        int totalItems = choices_tabAdapter.getItemCount();
 
+        int progessAmount = tableClicked == 0 ? 20:(int) ((tableClicked + 1) / (float) totalItems * 100);
 
-        choices_tabAdapter.getItem(getPos());
+        //
+        ProgressBar progressBar = findViewById(R.id.choice_tabs_progressBar);
+        progressBar.setProgress(progessAmount);
 
-        ProgressBar progressBar = findViewById(R.id.progressBar);
-        progressBar.setProgress(10); // set progress to 50%
-        choices_tabAdapter.registerDataSetObserver(new DataSetObserver() {
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onChanged() {
-                int currentFragmentIndex = choices_tabAdapter.getCurrent_tab_count();
-                progressBar.setProgress(currentFragmentIndex * 100 / choices_tabAdapter.getCount());
+            public void onPageSelected(int position) {
+                int progress = (int) ((position + 1) / (float) totalItems * 100);
+                float f = totalItems*100;
+                progressBar.setProgress(progress);
             }
+
+
         });
 
-    }
-
-    public int getPos(){
-
-        switch (tableClicked){
-            case "choseninterestsLayout":
-                return  0;
-            case "where_i_live":
-               return  1;
-
-            case "sexualOrientation":
-               return  2;
-
-            case "languages":
-                return  3;
-
-            case "my_basics":
-               return  4;
-
-            case "my_lifestyle":
-                return  5;
-            default:
-              return  0;
-
-        }
-
 
     }
+
 
     @Override
     public void onClick(View v) {
 
     }
-    public ViewPager getViewPager(){
-        return viewPager;
-    }
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -10,14 +10,10 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="com.spotify.music.permission.API_READ" />
     <uses-permission android:name="com.spotify.music.permission.API_WRITE" />
-
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
-
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".main_class_s.App"
@@ -29,26 +25,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.InstagramClone"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+        <activity
+            android:name=".braintree_payment.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".main_tabs.likedprofiles_tab.messsaging.Messaging_Activity"
+            android:exported="false" />
         <activity
             android:name=".spotify.SpotifySongs"
             android:exported="false" />
         <activity
-            android:name=".Personal_Details"
+            android:name=".choices_tabs.tabs.Personal_Details"
             android:exported="false" />
         <activity
-            android:name=".edit_profile_N_profile.ProfilePage"
+            android:name=".main_tabs.ProfileTab.profile_page.ProfilePage"
             android:exported="false" />
         <activity
-            android:name=".main_tabs.UsersPost"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".edit_profile_N_profile.EditProfile"
-            android:exported="true">
+            android:name=".main_tabs.ProfileTab.edit_profile.EditProfile"
+            android:exported="true" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -67,7 +62,7 @@
         <activity
             android:name=".main_tabs.SocialMediaActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -78,29 +73,29 @@
         <activity
             android:name=".choices_tabs.Choices_tabs_MainPage"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".login_signup.Login_Activity"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".reusable_code.MatchChoices"
+            android:name=".reusable_code.SearchPopUp"
             android:exported="false"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@style/Theme.Transparent" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".login_signup.SignUp"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

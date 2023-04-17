@@ -1,5 +1,8 @@
 package com.example.instagramclone.spotify;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.R;
-import com.example.instagramclone.realm.RealmModel;
-import com.example.instagramclone.realm.RealmManager;
-import com.example.instagramclone.reusable_database_queries.UtilsClass;
+import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import io.realm.Realm;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder> {
     private List<Song> songs;
@@ -67,11 +77,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             public TextView artistNameTextView;
             public TextView albumNametv;
             public ImageView imageView;
-            Realm realm;
+
             public interface OnCloseActivityListener {
                 void onCloseActivity();
             }
-            RealmModel results;
             private OnCloseActivityListener onCloseActivityListener;
 
 
@@ -81,19 +90,72 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                 songNameTextView = itemView.findViewById(R.id.songNameTextView);
                 artistNameTextView = itemView.findViewById(R.id.artistNameTextView);
                 albumNametv = itemView.findViewById(R.id.albumNameTv);
-                realm = RealmManager.getRealmInstance();
-                results = realm.where(RealmModel.class).equalTo("userName", UtilsClass.getCurrentUsername()).findFirst();
 
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
+                            @Override
+                            public void done(ParseModel parseModel, ParseException e) {
+                                if (e == null) {
+                                    parseModel.setSongName(songNameTextView.getText().toString());
+                                    parseModel.setArtistName(artistNameTextView.getText().toString());
+                                    parseModel.setAlbumName(albumNametv.getText().toString());
+
+                                    if (parseModel.getTrackImage()!=null) {
+                                        File oldFile = new File(parseModel.getTrackImage());
+                                        if (oldFile.exists()) {
+                                            boolean deleted = oldFile.delete();
+                                            if (!deleted) {
+                                                // handle error
+                                            }
+                                        }
+                                    }
+
+                                    Drawable drawable = imageView.getDrawable();
+
+                                    Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                                    // Assume that you have the image as a Bitmap object
+                                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+
+// Create a file to save the image
+                                    File file = new File(itemView.getContext().getCacheDir(), timeStamp + ".jpg");
+
+                                    try {
+                                        // Convert the bitmap to JPEG format and save it to the file
+                                        FileOutputStream fos = new FileOutputStream(file);
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                                        fos.flush();
+                                        fos.close();
+                                    } catch (IOException q) {
+                                        q.printStackTrace();
+                                    }
+
+// Now you can use the file as needed
+
+                                    parseModel.setTrackImage(file.getAbsolutePath());
+                                    // Save the object locally
+                                    parseModel.pinInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                // Display a toast message to indicate that the object has been saved locally
+                                                Snackbar_Dialog.showSnackbar(v.getContext(), "Success!!!\n Selection's saved", 2000);
+                                            } else {
+                                                Snackbar_Dialog.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
 
 
-                        realm.beginTransaction();
-                        results.setSongName(songNameTextView.getText().toString());
-                        results.setArtistName(artistNameTextView.getText().toString());
-                        realm.commitTransaction();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Snackbar_Dialog.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
+                                }
+                            }
+                        });
+
+
 
                         if (onCloseActivityListener != null) {
                             onCloseActivityListener.onCloseActivity();

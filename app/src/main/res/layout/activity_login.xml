@@ -16,6 +16,7 @@
         android:layout_marginEnd="99dp"
         android:ems="10"
         android:hint="Password"
+        android:textColor="@color/text_color"
         android:inputType="textPassword"
         android:textColorHint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/loginedtEmail"
@@ -59,7 +60,9 @@
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textColorHint="@color/white"
+        android:textColorHint="@color/text_color"
+        android:textColor="@color/text_color"
+
         app:layout_constraintBottom_toTopOf="@+id/loginbtnLogin"
         app:layout_constraintEnd_toEndOf="@+id/loginedtPassword"
         app:layout_constraintStart_toStartOf="@+id/loginedtPassword"

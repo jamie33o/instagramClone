@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/page_background"
     android:layout_width="match_parent"
@@ -10,10 +11,75 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="8dp"
+        android:elevation="2dp"
         android:clipToPadding="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/search_pop_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="Change distance/area "
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/refresh_btn"
+            app:layout_constraintStart_toStartOf="@+id/refresh_btn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </FrameLayout>
+
+
+
+    <FrameLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="3dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/dislike"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="start|bottom"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:layout_margin="20dp"
+            android:src="@drawable/xred" />
+        <ImageButton
+            android:id="@+id/rewind"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center|bottom"
+            android:layout_margin="20dp"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:src="@drawable/rewind" />
+        <ImageButton
+            android:id="@+id/like"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="20dp"
+            android:scaleType="centerInside"
+            android:background="@android:color/transparent"
+            android:src="@drawable/heartgreen" />
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

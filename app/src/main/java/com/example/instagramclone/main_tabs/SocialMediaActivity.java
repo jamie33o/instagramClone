@@ -3,39 +3,36 @@ package com.example.instagramclone.main_tabs;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.example.instagramclone.R;
-import com.example.instagramclone.realm.RealmManager;
 import com.example.instagramclone.login_signup.SignUp;
+import com.example.instagramclone.main_tabs.ProfileTab.profile_page.ProfilePage;
+import com.example.instagramclone.main_tabs.usertab_cardview_adapter.UsersTab;
+import com.example.instagramclone.reusable_code.GetUserLocation;
 import com.google.android.material.tabs.TabLayout;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import java.io.ByteArrayOutputStream;
 
 public class SocialMediaActivity extends AppCompatActivity {
     private androidx.appcompat.widget.Toolbar toolbar;
 
-    private ViewPager viewPager;
+    private ViewPager2 viewPager2;
     private TabLayout tabLayout;
     private TabAdapter tabAdapter;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +41,56 @@ public class SocialMediaActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setTitle("Ignite");
 
+
+
+
+
         toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
 
-        viewPager = findViewById(R.id.viewPager_heights);
-        tabAdapter = new TabAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(tabAdapter);
+        viewPager2 = findViewById(R.id.viewPager_main_tabs);
+        tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
+        viewPager2.setAdapter(tabAdapter);
 
         tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager, false);
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Users");
+                    break;
+                case 1:
+                    tab.setText("Messages");
+                    break;
+                case 2:
+                    tab.setText("Profile");
+                    break;
+            }
+        });
+        tabLayoutMediator.attach();
+
+
+
+        // Retrieve the data from the Intent
+        int data = getIntent().getIntExtra("data_key",0);
+
+        //set which fragment to land on
+      
+            viewPager2.setCurrentItem(data);
+
+
+        // Disable scrolling on specific page
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position <= 1) {
+                    viewPager2.setUserInputEnabled(false);
+                } else {
+                    viewPager2.setUserInputEnabled(true);
+                }
+            }
+        });        //Gets user location when they open the app
+        new GetUserLocation(this, SocialMediaActivity.this);
+
 
     }
 
@@ -120,59 +158,32 @@ public class SocialMediaActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 4000 && resultCode == RESULT_OK && data != null) {
-            try {
-                Uri capturedImage = data.getData();//this to capture image from user camera
-                Bitmap bitmap = MediaStore.Images.Media.
-                        getBitmap(this.getContentResolver(), capturedImage);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();//this is to turn to byte array for uploading to server
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] bytes = byteArrayOutputStream.toByteArray();
-
-                ParseFile parseFile = new ParseFile("img.png", bytes);////the img in bytes create parse the file
-                ParseObject parseObject = new ParseObject("Photo");//new parse object with class Photo
-                parseObject.put("picture", parseFile);//parse object and put column called picture
-                parseObject.put("username", ParseUser.getCurrentUser().getUsername());//adds username of current user
-
-                final ProgressDialog dialog = new ProgressDialog(this);//shows loading image
-                dialog.setMessage("Loading");
-                dialog.show();
-                parseObject.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-
-                        if (e == null) {
-                            Toast.makeText(SocialMediaActivity.this, "Done!!!", Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Toast.makeText(SocialMediaActivity.this, "Unknown Error: ", Toast.LENGTH_SHORT).show();
-
-                        }
-                        dialog.dismiss();
-                    }
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-       /* GetUserLocation getUserLocation = new GetUserLocation(this, SocialMediaActivity.this);
-        getUserLocation.onStart();*/
     }
 
     @Override
     public  void onDestroy() {
         super.onDestroy();
-            if(RealmManager.getRealmInstance()!=null&& !RealmManager.getRealmInstance().isClosed()) {
-                  RealmManager.closeRealmInstance();
-            }
+
+    }
+
+    @Override
+    protected void onPause() {
+        UsersTab.saveLikedProfileCards(this);
+        super.onPause();
     }
 
 
+
+    @Override
+    public void onBackPressed() {
+            super.onBackPressed();
+
+    }
 
 }

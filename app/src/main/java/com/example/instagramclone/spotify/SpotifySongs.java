@@ -130,7 +130,6 @@ public class SpotifySongs extends AppCompatActivity implements SongAdapter.SongV
                 return new ArrayList<>(Arrays.asList(trackPaging.getItems()));
 
             } catch (Exception e) {
-                System.out.println(e.getMessage()+"broke: ");
 
 
                 return null;

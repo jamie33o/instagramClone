@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.choices_tabs.tabs.Personal_Details;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.parse.ParseUser;
 
@@ -36,9 +37,12 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
         loginbtnLogin.setOnClickListener(this);
 
 
-        if(ParseUser.getCurrentUser() != null){//checks if user already logged in
+
+        if(ParseUser.getCurrentUser() != null&& (String)ParseUser.getCurrentUser().get("name")!=null){//checks if user already logged in
 
             transitionSocialMediaActivity();
+        } else if (ParseUser.getCurrentUser()!= null) {
+            transitionToPersonalDetails();
         }
     }
 
@@ -73,6 +77,13 @@ public class Login_Activity extends AppCompatActivity implements View.OnClickLis
 
                 break;
         }
+    }
+
+    private void transitionToPersonalDetails(){
+
+        Intent intent = new Intent(Login_Activity.this, Personal_Details.class);
+        startActivity(intent);
+        finish();
     }
     private void transitionSocialMediaActivity(){
 

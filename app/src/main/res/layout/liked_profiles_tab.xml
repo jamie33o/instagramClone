@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background"
+    tools:context=".main_tabs.likedprofiles_tab.LikedProfilesTab">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+        android:id="@+id/you_liked_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message someone you have liked"
+        android:textColor="@color/text_color"
+
+        app:layout_constraintBottom_toTopOf="@+id/likedProfiles_recyclerview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/liked_you_back_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message someone who liked your profile"
+        android:textColor="@color/text_color"
+        app:layout_constraintBottom_toTopOf="@+id/liked_you_recyclerview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/likedProfiles_recyclerview"
+        tools:text="Message people who liked your profile" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/likedProfiles_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/liked_you_back_tv"
+        app:layout_constraintTop_toBottomOf="@+id/you_liked_tv" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/liked_you_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/liked_you_back_tv" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

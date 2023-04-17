@@ -2,17 +2,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        google()
         maven {
             url "https://spotify.github.io/android-sdk/repository/"
-
-
         }
 
     }
-    dependencies {
 
-        classpath "io.realm:realm-gradle-plugin:10.11.1"
-    }
 }
 
 

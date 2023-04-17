@@ -13,17 +13,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.instagramclone.realm.RealmManager;
-import com.example.instagramclone.realm.RealmModel;
-import com.example.instagramclone.reusable_database_queries.ReusableQueries;
+import com.example.instagramclone.choices_tabs.tabs.Personal_Details;
+import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
+import com.example.instagramclone.reusable_code.ParseUtils.ReusableQueries;
 import com.example.instagramclone.R;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
+import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-
-import java.io.File;
-
-import io.realm.Realm;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,11 +37,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         setTitle("Sign Up");
 
         queryDatabase = new ReusableQueries(this);
- String realmPath = Realm.getDefaultConfiguration().getPath();
-        File realmFile = new File(realmPath);
-        if (realmFile.exists()) {
-            realmFile.delete();
-        }
+
         edtUserNameSignUp = findViewById(R.id.edtUserNameSignUp);
         edtEmail = findViewById(R.id.loginedtEmail);
         edtPasswordSignUp = findViewById(R.id.loginedtPassword);
@@ -69,10 +62,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         btnSignUp.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
 
-
-        if(ParseUser.getCurrentUser() != null){//gets token logs u straight in
+        if(ParseUser.getCurrentUser() != null&& (String)ParseUser.getCurrentUser().get("name")!=null){//checks if user already logged in
 
             transitionSocialMediaActivity();
+        } else if (ParseUser.getCurrentUser()!= null) {
+            transitionToPersonalDetails();
         }
 
 
@@ -95,31 +89,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 }else {
 
                  String username = edtUserNameSignUp.getText().toString();
-// Get the default Realm instance
-                    // Get a reference to the default Realm instance
-                    Realm realm = RealmManager.getRealmInstance();
-// Begin a new write transactio
-                    realm.beginTransaction();
-// Create a new RealmModel object with a primary key value of "my_username"
-                    realm.createObject(RealmModel.class, username);
-// Commit the write transaction
-                    realm.commitTransaction();
 
 
-                       ParseObject object = new ParseObject("Profile");
-                    object.put("username", username);
-
-
-                    object.saveInBackground(e -> {
-                        if (e == null) {
-                            Toast.makeText(getApplication(), "profile created", Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Error creating profile", Toast.LENGTH_SHORT).show();
-
-
-                        }
-                    });
                     final ParseUser appUser = new ParseUser();//uploads info to data base
                     appUser.setUsername(username);
                     appUser.setPassword(edtPasswordSignUp.getText().toString());
@@ -136,10 +107,18 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
                     appUser.signUpInBackground(e -> {
                         if (e == null) {
-                            Toast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", Toast.LENGTH_SHORT).show();
 
+                            ParseModel model = ParseObject.create(ParseModel.class);
+                            model.setUserClassPointer(UtilsClass.getCurrentUser());
+                            model.pinInBackground(a -> {
+                                if (a == null) {
+                                    Toast.makeText(SignUp.this, appUser.getUsername() + " is signed up successfully", Toast.LENGTH_SHORT).show();
+                                    transitionToPersonalDetails();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Error creating profile", Toast.LENGTH_SHORT).show();
 
-                            transitionSocialMediaActivity();
+                                }
+                            });
                         } else {
                             Toast.makeText(SignUp.this, e.getMessage(), Toast.LENGTH_LONG).show();
 
@@ -169,7 +148,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
       }
 
       }
+    private void transitionToPersonalDetails(){
 
+        Intent intent = new Intent(SignUp.this, Personal_Details.class);
+        startActivity(intent);
+        finish();
+    }
       private void transitionSocialMediaActivity(){
 
         Intent intent = new Intent(SignUp.this, SocialMediaActivity.class);

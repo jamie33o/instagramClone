@@ -2,27 +2,30 @@ package com.example.instagramclone.main_tabs;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.instagramclone.usertab_cardview_adapter.UsersTab;
+import com.example.instagramclone.main_tabs.ProfileTab.ProfileTab;
+import com.example.instagramclone.main_tabs.likedprofiles_tab.LikedProfilesTab;
+import com.example.instagramclone.main_tabs.usertab_cardview_adapter.UsersTab;
+public class TabAdapter extends FragmentStateAdapter {
 
-public class TabAdapter extends FragmentPagerAdapter {
-
-    public TabAdapter(@NonNull FragmentManager fm) {
-        super(fm);
+    public TabAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        super(fragmentManager, lifecycle);
     }
 
     @NonNull
     @Override
-    public Fragment getItem(int tabPosition) {
+    public Fragment createFragment(int position) {
 
-        switch (tabPosition){
+        switch (position){
             case 0:
-
                 return new UsersTab();
             case 1:
-                return new SharePictureTab();
+                return new LikedProfilesTab();
 
             case 2:
                 return new ProfileTab();
@@ -30,33 +33,13 @@ public class TabAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
-
-
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return 3;
     }
 
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-
-            case 0:
-                return "Users";
-
-
-            case 1:
-                return "Share Picture";
-
-            case 2:
-            return "Profile";
-
-            default:
-                return null;
-
-        }
-    }
 
 
 }
