@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.R;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
@@ -141,16 +141,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
                                         public void done(ParseException e) {
                                             if (e == null) {
                                                 // Display a toast message to indicate that the object has been saved locally
-                                                Snackbar_Dialog.showSnackbar(v.getContext(), "Success!!!\n Selection's saved", 2000);
+                                                Dialogs.showSnackbar(v.getContext(), "Success!!!\n Selection's saved", 2000);
                                             } else {
-                                                Snackbar_Dialog.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
+                                                Dialogs.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
 
 
                                             }
                                         }
                                     });
                                 } else {
-                                    Snackbar_Dialog.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
+                                    Dialogs.showSnackbar(v.getContext(), "Error!!!\n Selection's not saved", 2000);
                                 }
                             }
                         });

@@ -11,6 +11,8 @@ public class MessageQueries {
 
     //for getting all messages between 2 users
     public static ParseQuery<ParseMesssageModel> getMessagesQuery(ParseUser currentuser, ParseUser receiverUsername) {
+
+
         ParseQuery<ParseMesssageModel> querySent = ParseQuery.getQuery(ParseMesssageModel.class);
         querySent.whereEqualTo(ParseMesssageModel.KEY_SENDER_USERCLASS_POINTER, currentuser);
         querySent.whereEqualTo(ParseMesssageModel.KEY_RECIPIENT_USERCLASS_POINTER, receiverUsername);

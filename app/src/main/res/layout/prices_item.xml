@@ -12,36 +12,50 @@
         android:id="@+id/tv_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="20dp"
-        android:text="TextView" />
+        android:layout_margin="20dp" />
 
     <TextView
         android:id="@+id/tv_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
         android:textSize="30sp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/tv_value"
-        android:text="TextView" />
+        android:layout_below="@id/tv_value" />
 
     <TextView
         android:id="@+id/tv_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_month"
+        android:textColor="@color/text_color"
         android:textSize="20sp"
         android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:text="TextView" />
+        android:layout_margin="5dp" />
 
     <TextView
         android:id="@+id/tv_savings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_margin="20dp"
+        android:textColor="@color/text_color"
+        android:layout_margin="20dp"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
+
+
+
+    <Button
+        android:id="@+id/pay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Select"
+        android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
-        android:text="TextView" />
+        android:visibility="gone"/>
+
 </RelativeLayout>

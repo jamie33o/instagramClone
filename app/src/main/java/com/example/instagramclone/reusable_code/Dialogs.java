@@ -1,27 +1,21 @@
 package com.example.instagramclone.reusable_code;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.androidadvance.topsnackbar.TSnackbar;
 import com.example.instagramclone.R;
-import com.google.android.material.snackbar.Snackbar;
 
 
-public class Snackbar_Dialog {
-    public Snackbar_Dialog(){
+public class Dialogs {
+    public Dialogs(){
 
 
     };
@@ -57,5 +51,18 @@ public class Snackbar_Dialog {
 
     }
 
+    public static void showAlertDialog(Context context, String title, String message, DialogInterface.OnClickListener yesClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.personal_details_dialog);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("YES", yesClickListener)
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
 }

@@ -1,17 +1,15 @@
 package com.example.instagramclone.main_tabs.ProfileTab.edit_profile;
 
 import com.example.instagramclone.braintree_payment.PaymentActivity;
-import com.example.instagramclone.main_tabs.ProfileTab.ProfileTab;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.example.instagramclone.spotify.SpotifySongs;
 import com.example.instagramclone.reusable_code.SizeBasedOnDensity;
-import com.example.instagramclone.choices_tabs.Choices_tabs_MainPage;
+import com.example.instagramclone.choices_tabs.Choices_tabs_Activity;
 import com.example.instagramclone.reusable_code.ImageProcessor;
 import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,6 +18,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -30,14 +29,13 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.instagramclone.reusable_code.ButtonCreator;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.example.instagramclone.reusable_code.ParseUtils.DataBaseUtils;
-import com.example.instagramclone.reusable_code.ParseUtils.ReusableQueries;
+import com.example.instagramclone.reusable_code.ParseUtils.DeleteQuery;
 import com.example.instagramclone.R;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -50,6 +48,10 @@ import java.util.List;
 
 public class EditProfile  extends AppCompatActivity implements View.OnClickListener {
     private ImageView v, xIcon;
+    private static boolean hasimage1,hasimage2,hasimage3;
+    private boolean isPayed = false;
+    private boolean showAge = true;
+    private boolean showLocation = true;
     private String image1, image2, image3;
     private SizeBasedOnDensity sizeBasedOnDensity;
     public ImageView imgVeditPro1, imgVeditPro2, imgVeditPro3;
@@ -70,24 +72,22 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
     private ImageView trackImage;
     private TextView artistNametv;
     private TextView albumNametv;
-    Switch switch1,switch2;
-    private Context context;
+    SwitchCompat switch_show_age, switch_show_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile);
+        setContentView(R.layout.activity_edit_profile);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        context = this;
-
+        setTitle(null);
 
         //Toolbar
         Toolbar toolbar = findViewById(R.id.myToolbar);
         setSupportActionBar(toolbar);
         TextView toolbarTxt = toolbar.findViewById(R.id.toolbar_txt);
-        toolbarTxt.setText(R.string.profileToolBarTxt);
+        toolbarTxt.setText(R.string.editProfileToolbarTxt);
         backbtn = toolbar.findViewById(R.id.btnBackToolbar);
         backbtn.setVisibility(View.VISIBLE);
         backbtn.setOnClickListener(this);
@@ -112,15 +112,17 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
 
         //switch btns
-        switch1 = findViewById(R.id.switch_btn1);
-        switch1.setOnClickListener(this);
+        switch_show_age = findViewById(R.id.show_age_switch);
+        switch_show_age.setOnClickListener(this);
+        switch_show_location = findViewById(R.id.show_location_switch);
+        switch_show_location.setOnClickListener(this);
 
         //image processor create parse upload create file from image in galery
         imageProcessor = new ImageProcessor(this);
 
         //get all profile info from shared prefs
         queryForProfile = new QueriesEditProfile(this);
-        dataBaseUtils = new ReusableQueries(this);
+        dataBaseUtils = new DeleteQuery(this);
 
         //load images into image views
         piccassoLoadToImageView = new PiccassoLoadToImageView(this);
@@ -165,13 +167,13 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (PiccassoLoadToImageView.hasimage1) {
+                if (hasimage1) {
                     x_icon1.setRotation(45f);
                 }
-                if (PiccassoLoadToImageView.hasimage2) {
+                if (hasimage2) {
                     x_icon2.setRotation(45f);
                 }
-                if (PiccassoLoadToImageView.hasimage3) {
+                if (hasimage3) {
                     x_icon3.setRotation(45f);
                 }
             }
@@ -215,7 +217,7 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
             //loads choices tabs if tablelayout press except favourite song
             if (viewId != myFavouriteSong.getId()) {
 
-                Intent intent = new Intent(context, Choices_tabs_MainPage.class);
+                Intent intent = new Intent(EditProfile.this, Choices_tabs_Activity.class);
                 intent.putExtra("tableclicked", tableClicked);
                 startActivityForResult(intent, 5000);
 
@@ -223,20 +225,31 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
 
             if (viewId == myFavouriteSong.getId()) {
-
-
-                Intent intent = new Intent(context, SpotifySongs.class);
-                //intent.putExtra("com.example.instagram.layoutthatwasclicked", tableClicked);
+                Intent intent = new Intent(EditProfile.this, SpotifySongs.class);
                 startActivityForResult(intent, 5000);
-
-
             }
 
         }
 
-        if(view instanceof Switch){
-            if(viewId == switch1.getId()|| viewId == switch2.getId()){
-               startActivity(new Intent(this, PaymentActivity.class));
+        if(view instanceof SwitchCompat){
+
+            if(viewId == R.id.show_age_switch) {
+                if(!isPayed) {
+                    switch_show_age.setChecked(false);
+                    startActivity(new Intent(this, PaymentActivity.class));
+                }else {
+                    showLocation = !showLocation;
+                }
+
+            }
+            if(viewId == R.id.show_location_switch) {
+                if(!isPayed) {
+                    switch_show_location.setChecked(false);
+                    startActivity(new Intent(this, PaymentActivity.class));
+                }else {
+                    showAge = !showAge;
+                }
+
             }
 
         }
@@ -274,7 +287,7 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                 //delete image and the imagename which stores the local file path
                 dataBaseUtils.deleteFileFromDatabase(columnName_viewTag);
 
-                piccassoLoadToImageView.getImageNloadIntoImageview(v, "null", columnName_viewTag, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 20);
+                piccassoLoadToImageView.getImageNloadIntoImageview("null", v, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 20);
 
 
             } else if (columnName_viewTag.matches("image[1-3]")) {
@@ -342,7 +355,7 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                 queryForProfile.uploadImages(imageFile, columnName_viewTag);
 
                 if (columnName_viewTag.matches("image[1-3]")) {
-                    piccassoLoadToImageView.getImageNloadIntoImageview(v, imageFile.getAbsolutePath(), columnName_viewTag, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 20);
+                    piccassoLoadToImageView.getImageNloadIntoImageview(imageFile.getAbsolutePath(), v, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 20);
                 }
 
                 if (xIcon != null && xIcon.getRotation() == 0f) {
@@ -366,35 +379,45 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
                     List<String> mybasics = new ArrayList<>();
 
-                    if (parseModel.getRelationshipGoals() != null)
+                    if(parseModel.getIsPayed()){
+                        isPayed = true;
+                    }
+                    if(parseModel.getBoolShowAge()){
+                        switch_show_age.setChecked(false);
+                        showAge = parseModel.getBoolShowAge();
+                    }
+                    if(parseModel.getBoolShowLocation()){
+                        switch_show_location.setChecked(false);
+                        showLocation = parseModel.getBoolShowLocation();
+                    }
+
+                    if (parseModel.getRelationshipGoals()!= null && !parseModel.getRelationshipGoals().equals(""))
                         mybasics.add(parseModel.getRelationshipGoals());
-                    if (parseModel.getHometown() != null)
-                        mybasics.add(parseModel.getHometown());
-                    if (parseModel.getReligion() != null)
+                    if (parseModel.getReligion()!= null &&!parseModel.getReligion().equals(""))
                         mybasics.add(parseModel.getReligion());
-                    if (parseModel.getStarSign() != null)
+                    if (parseModel.getStarSign()!= null &&!parseModel.getStarSign().equals(""))
                         mybasics.add(parseModel.getStarSign());
-                    if (parseModel.getGender() != null)
+                    if (parseModel.getGender()!= null &&!parseModel.getGender().equals(""))
                         mybasics.add(parseModel.getGender());
-                    if (parseModel.getHeight() != null)
+                    if (parseModel.getHeight()!= null && !parseModel.getHeight().equals(""))
                         mybasics.add(parseModel.getHeight());
 
-                    buttonCreator.buttonCreator(myBasicsLayout, EditProfile.this, "", mybasics.toArray(new String[0]));
+                    buttonCreator.buttonCreator(myBasicsLayout, EditProfile.this,  mybasics.toArray(new String[0]));
 
 
 
                     List<String> myLifeStyle = new ArrayList<>();
-                    if (parseModel.getPets() != null)
+                    if (parseModel.getPets()!= null && !parseModel.getPets().equals(""))
                         myLifeStyle.add(parseModel.getPets());
-                    if (parseModel.getSmoking() != null)
+                    if (parseModel.getSmoking()!= null && !parseModel.getSmoking().equals(""))
                         myLifeStyle.add(parseModel.getSmoking());
-                    if (parseModel.getDrinking() != null)
+                    if (parseModel.getDrinking()!= null && !parseModel.getDrinking().equals(""))
                         myLifeStyle.add(parseModel.getDrinking());
-                    if (parseModel.getDietary() != null)
+                    if (parseModel.getDietary()!= null && !parseModel.getDietary().equals(""))
                         myLifeStyle.add(parseModel.getDietary());
-                    if (parseModel.getSocialMedia() != null)
+                    if (parseModel.getSocialMedia()!= null && !parseModel.getSocialMedia().equals(""))
                         myLifeStyle.add(parseModel.getSocialMedia());
-                    if (parseModel.getKids() != null)
+                    if (parseModel.getKids()!= null && !parseModel.getKids().equals(""))
                         myLifeStyle.add(parseModel.getKids());
 
                     albumNametv.setText(parseModel.getAlbumName());
@@ -402,11 +425,19 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                     trackNametv.setText(parseModel.getSongName());
 
                     // Create an ImageView object for the song image and add it to the TableRow
-                    piccassoLoadToImageView.getImageNloadIntoImageview(trackImage, parseModel.getTrackImage(), "", sizeBasedOnDensity.widthRatio(30), sizeBasedOnDensity.heightRatio(30), 10);
+                    if(parseModel.getTrackImage() != null)
+                       piccassoLoadToImageView.getImageNloadIntoImageview(parseModel.getTrackImage(), trackImage, sizeBasedOnDensity.widthRatio(30), sizeBasedOnDensity.heightRatio(30), 10);
 
-                    piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro1, parseModel.getImage1Name(), "image1", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
-                    piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro2, parseModel.getImage2Name(), "image2", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
-                    piccassoLoadToImageView.getImageNloadIntoImageview(imgVeditPro3, parseModel.getImage3Name(), "image3", sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+                    piccassoLoadToImageView.getImageNloadIntoImageview(parseModel.getImage1Name(), imgVeditPro1, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+                    piccassoLoadToImageView.getImageNloadIntoImageview(parseModel.getImage2Name(), imgVeditPro2, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+                    piccassoLoadToImageView.getImageNloadIntoImageview(parseModel.getImage3Name(), imgVeditPro3, sizeBasedOnDensity.widthRatio(100), sizeBasedOnDensity.heightRatio(160), 30);
+
+                    if(parseModel.getImage1Data() != null)
+                        hasimage1 = true;
+                    if(parseModel.getImage2Data() != null)
+                        hasimage2 = true;
+                    if(parseModel.getImage3Data() != null)
+                        hasimage3 = true;
 
 
                     if (parseModel.getBio() != null)
@@ -417,19 +448,19 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                     if (parseModel.getCompanyRcolledge() != null)
                         edt_Company_R_Colledge.setText(parseModel.getCompanyRcolledge());
 
-                    if (parseModel.getSexualOrientation() != null) {
-                        buttonCreator.buttonCreator(sexualOrientationLayout, null, "", parseModel.getSexualOrientation());
+                    if (parseModel.getSexualOrientation() != null&& !parseModel.getSexualOrientation().equals("")) {
+                        buttonCreator.buttonCreator(sexualOrientationLayout, null, parseModel.getSexualOrientation());
                     }
-                    if (parseModel.getWhereILive() != null) {
-                        buttonCreator.buttonCreator(where_I_LiveLayout, null, "", parseModel.getWhereILive());
+                    if (parseModel.getWhereILive() != null && !parseModel.getWhereILive().equals("")) {
+                        buttonCreator.buttonCreator(where_I_LiveLayout, null,  parseModel.getWhereILive());
                     }
                     if (parseModel.getLanguages() != null) {
-                        buttonCreator.buttonCreator(languagesLayout, null, "", parseModel.getLanguages().toArray(new String[0]));
+                        buttonCreator.buttonCreator(languagesLayout, null,  parseModel.getLanguages().toArray(new String[0]));
                     }
                     if (parseModel.getInterests() != null)
-                        buttonCreator.buttonCreator(choseninterestsLayout, null, "", parseModel.getInterests().toArray(new String[0]));
+                        buttonCreator.buttonCreator(choseninterestsLayout, null,  parseModel.getInterests().toArray(new String[0]));
                     if (!myLifeStyle.isEmpty())
-                        buttonCreator.buttonCreator(myLifestyleLayout, null, "", myLifeStyle.toArray(new String[0]));
+                        buttonCreator.buttonCreator(myLifestyleLayout, null,  myLifeStyle.toArray(new String[0]));
 
                 }
             }
@@ -444,6 +475,8 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
             public void done(ParseModel parseModel, ParseException e) {
                 if (e == null) {
 
+                    parseModel.setBoolShowAge(showAge);
+                    parseModel.setBoolShowLocation(showLocation);
                     if(image1 != null && !image1.equals(""))
                         parseModel.setImage1Name(image1);
                     if(image2 != null && !image2.equals(""))
@@ -454,7 +487,7 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                     parseModel.setJobTitleFieldOfStudy(edt_jobTitle_R_fieldofStudy.getText().toString());
                     parseModel.setCompanyRcolledge(edt_Company_R_Colledge.getText().toString());
 
-                    parseModel.saveEventually();
+                    parseModel.saveInBackground();
 
                     // Save the object locally
                     parseModel.pinInBackground(new SaveCallback() {
@@ -462,18 +495,18 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                         public void done(ParseException e) {
                             if (e == null) {
                                 // Display a toast message to indicate that the object has been saved locally
-                                Snackbar_Dialog.showSnackbar(EditProfile.this, "Success!!!\n Selection's saved", 2000);
+                                Dialogs.showSnackbar(EditProfile.this, "Success!!!\n Selection's saved", 2000);
 
 
                             } else {
-                                Snackbar_Dialog.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
+                                Dialogs.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
 
                                 // Handle the error
                             }
                         }
                     });
                 } else {
-                    Snackbar_Dialog.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
+                    Dialogs.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
                 }
             }
         });

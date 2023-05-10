@@ -1,19 +1,22 @@
 package com.example.instagramclone.braintree_payment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagramclone.R;
-
-
+import com.example.instagramclone.main_tabs.ProfileTab.ProfileTab;
+import com.example.instagramclone.main_tabs.ProfileTab.profile_page.ImageAdapter;
+import com.example.instagramclone.main_tabs.ProfileTab.profile_page.ProfilePage;
 
 
 import java.util.List;
@@ -23,9 +26,13 @@ import java.util.List;
         private final Context context;
         private final List<PricesModel> pricesModelList;
 
+        public PricesAdapter.PricesViewHolder holder;
+        View.OnClickListener listener;
         String text;
-        public PricesAdapter(Context context, List<PricesModel> pricesModelList) {
+        View view;
+        public PricesAdapter(Context context, List<PricesModel> pricesModelList,View.OnClickListener listener) {
             this.context = context;
+            this.listener = listener;
             this.pricesModelList = pricesModelList;
         }
 
@@ -33,14 +40,16 @@ import java.util.List;
         @Override
         public PricesAdapter.PricesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.prices_item, parent, false);
-            return new PricesAdapter.PricesViewHolder(view,this);
+             view = inflater.inflate(R.layout.prices_item, parent, false);
+            return new PricesAdapter.PricesViewHolder(view,context,listener);
         }
         @Override
         public void onBindViewHolder(@NonNull PricesAdapter.PricesViewHolder holder, int position) {
             holder.setData(pricesModelList.get(position));
 
         }
+
+
 
         public void setText(String text){
             this.text=text;
@@ -54,19 +63,32 @@ import java.util.List;
             return pricesModelList.size();
         }
 
+
         public static class PricesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private final TextView month, price, value,saving;
-            private final PricesAdapter adapter;
-            public PricesViewHolder(View itemView, PricesAdapter adapter) {
+            private final Context context;
+            Button pay_btn;
+
+            public PricesViewHolder(View itemView, Context context,View.OnClickListener listener) {
                 super(itemView);
-                this.adapter =adapter;
+
+                this.context =context;
                 month = itemView.findViewById(R.id.tv_month);
                 price = itemView.findViewById(R.id.tv_price);
                 saving = itemView.findViewById(R.id.tv_savings);
                 value = itemView.findViewById(R.id.tv_value);
+                pay_btn = itemView.findViewById(R.id.pay_button);
+                pay_btn.setOnClickListener(listener);
+                if (context instanceof PaymentActivity) {
+                    pay_btn.setVisibility(View.VISIBLE);
+                }
 
             }
 
+
+            public String getPrice(){
+                return price.getText().toString();
+            }
 
             public void setData(PricesModel data) {
 
@@ -80,8 +102,10 @@ import java.util.List;
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(view.getContext(), PaymentActivity.class);
-                view.getContext().startActivity(intent);
+                if (!(context instanceof PaymentActivity)) {
+                    Intent intent = new Intent(view.getContext(), PaymentActivity.class);
+                    view.getContext().startActivity(intent);
+                }
             }
         }
     }

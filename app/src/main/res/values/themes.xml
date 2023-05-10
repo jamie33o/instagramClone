@@ -52,4 +52,35 @@
     <style name="Theme.InstagramClone.AppBarOverlay"
         parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.InstagramClone.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- styles.xml -->
+    <!-- styles.xml -->
+    <!-- styles.xml -->
+    <style name="BottomPageDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item> <!-- Set the background to transparent -->
+        <item name="android:windowIsFloating">true</item> <!-- Set windowIsFloating to false to make it a full-screen bottom sheet -->
+        <item name="android:windowAnimationStyle">@style/BottomPageDialogAnimation</item> <!-- Set a custom window animation style -->
+    </style>
+
+    <!-- styles.xml -->
+    <style name="TransparentBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+<!--settings page-->
+    <style name="BottomPageDialogAnimation">
+        <!-- Customize the window animation attributes for the bottom page dialog fragment -->
+        <item name="android:windowEnterAnimation">@anim/slide_up</item> <!-- Set a custom enter animation -->
+        <item name="android:windowExitAnimation">@anim/slide_down</item> <!-- Set a custom exit animation -->
+    </style>
+
+<!--personal details page-->
+    <style name="personal_details_dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Customize the appearance of the dialog here -->
+        <item name="android:background">@color/rows_background</item>
+        <item name="android:textColor">@color/text_color</item>
+        <!-- Add other style attributes as desired -->
+    </style>
+
+
 </resources>

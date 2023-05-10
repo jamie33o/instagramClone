@@ -1,6 +1,8 @@
 package com.example.instagramclone.main_tabs.usertab_cardview_adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.util.Half;
 import android.view.View;
 
 
@@ -8,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.instagramclone.main_tabs.ItemModel;
-import com.example.instagramclone.main_tabs.likedprofiles_tab.LikedProfilesTab;
+import com.example.instagramclone.main_tabs.likedprofiles_tab.MessagesTab;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.GetFileCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -21,25 +24,27 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
 
 public class QueryForCardView {
-    private List<String> chosenCountiesListCardView;
     private String genderPref;
     private List<String> chosenCountiesList;
    Context context;
+    int index;
 
     public QueryForCardView(Context context) {
         this.context = context;
 
-        chosenCountiesListCardView = new ArrayList<>();
 
     }
 
     public void getQueryForCardView(List<ItemModel> itemmodelList,CardStackAdapter adapters,UsersTab usersTab) {
         //check so doesnt bring back same profiles
+
+         index = 0;
 
 
         if(itemmodelList!=null&&itemmodelList.size()>0)
@@ -55,7 +60,7 @@ public class QueryForCardView {
 
                         ParseQuery<ParseModel> parseQuery = ParseModel.getQuery(false);
 
-                    if (parseModel.getGender() != null && parseModel.getGender() != null)
+                    if (parseModel.getGender() != null)
                         genderPref = parseModel.getGender().equals("Male") ? "Female" : "Male";
 
                     //sex orientation search
@@ -75,7 +80,6 @@ public class QueryForCardView {
                                 break;
                             case "Bisexual":
                                 parseQuery.whereEqualTo("gender", genderPref);
-
                                 if (parseModel.getGender().equals("Male")) {
                                     parseQuery.whereEqualTo("sexualOrientaion", "Gay");
 
@@ -112,25 +116,64 @@ public class QueryForCardView {
                                             String county = parsemodel.getWhereILive();
                                             ParseUser userclassPointer = parsemodel.getUserClaassPointer();
 
-                                            ParseFile imageFile = null;
+                                            itemmodelList.add(new ItemModel(name, age, county, userclassPointer, parseModel.getIsPayed(),parseModel.getBoolShowLocation(),parseModel.getBoolShowAge()));
+
+                                            String imageUr1 = null;
+                                            ParseFile imageFile1;
                                             if (parsemodel.getImage1Data() != null) {
-                                                imageFile = parsemodel.getImage1Data();
+                                                imageFile1 = parsemodel.getImage1Data();
+                                                int count = index;
+                                                imageFile1.getFileInBackground(new GetFileCallback() {
+                                                    @Override
+                                                    public void done(File file, ParseException e) {
+                                                        itemmodelList.get(count).setImage1(file.getAbsolutePath());
+                                                    }
+                                                });
                                             }
-
                                             String imageUr2 = null;
-                                            if (imageFile != null) {
-                                                imageUr2 = imageFile.getUrl();
+                                            ParseFile imageFile2;
+                                            if (parsemodel.getImage2Data() != null) {
+                                                imageFile2 = parsemodel.getImage2Data();
+                                                int count = index;
+                                                imageFile2.getFileInBackground(new GetFileCallback() {
+                                                    @Override
+                                                    public void done(File file, ParseException e) {
+                                                        itemmodelList.get(count).setImage2(file.getAbsolutePath());
+                                                    }
+                                                });
                                             }
-                                            itemmodelList.add(new ItemModel(imageUr2, name, age, county, userclassPointer));
-
+                                            String imageUr3 = null;
+                                            ParseFile imageFile3;
+                                            if (parsemodel.getImage3Data() != null) {
+                                                imageFile3 = parsemodel.getImage3Data();
+                                                int count = index;
+                                                imageFile3.getFileInBackground(new GetFileCallback() {
+                                                    @Override
+                                                    public void done(File file, ParseException e) {
+                                                        itemmodelList.get(count).setImage3(file.getAbsolutePath());
+                                                    }
+                                                });
+                                            }
+                                            index++;
                                             if (itemmodelList.size() == parseModels.size()) {
+                                                android.os.Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        adapters.notifyDataSetChanged();
 
-                                                adapters.notifyDataSetChanged();
+                                                    }
+                                                },600);
                                                 if(itemmodelList.size()>0){
+
                                                     usersTab.searchPopUpBtn.setVisibility(View.GONE);
+                                                    usersTab.like.setVisibility(View.VISIBLE);
+                                                    usersTab.dislike.setVisibility(View.VISIBLE);
+                                                    usersTab.rewind.setVisibility(View.VISIBLE);
 
                                                 }
                                             }
+
                                         }
                                     }
                                 }
@@ -142,7 +185,7 @@ public class QueryForCardView {
         });
     }
 
-    public void queryForLikedProfiles(List<ItemModel> itemmodelList, RecyclerView.Adapter<?> adapters, LikedProfilesTab tab) {
+    public void queryForLikedProfiles(List<ItemModel> itemmodelList, RecyclerView.Adapter<?> adapters, MessagesTab tab) {
 
         //query user profile
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
@@ -186,7 +229,7 @@ public class QueryForCardView {
                                             if (imageFile != null) {
                                                 imageUrllikeU = imageFile.getUrl();
                                             }
-                                            itemmodelList.add(new ItemModel(imageUrllikeU, name, age, county, userclassPointer));
+                                            itemmodelList.add(new ItemModel(name, age, county, userclassPointer, parseModel.getIsPayed(),parseModel.getBoolShowLocation(),parseModel.getBoolShowAge()));
 
                                             if (itemmodelList.size() == parseModels.size()) {
 
@@ -209,7 +252,7 @@ public class QueryForCardView {
         });
     }
 
-    public void queryUserLikedMe(List<ItemModel> itemmodelList,RecyclerView.Adapter<?> adapters,LikedProfilesTab tab) {
+    public void queryUserLikedMe(List<ItemModel> itemmodelList, RecyclerView.Adapter<?> adapters, MessagesTab tab) {
 
         //query user profile
         ParseModel.getQuery(true).getFirstInBackground(new GetCallback<ParseModel>() {
@@ -234,6 +277,7 @@ public class QueryForCardView {
                                             String name = parsemodel.getName();
                                             String age = parsemodel.getAge() + "";
                                             String county = parsemodel.getWhereILive();
+                                            boolean isPayed = parsemodel.getIsPayed();
                                             ParseUser userclassPointer = parsemodel.getUserClaassPointer();
                                             ParseFile imageFile = null;
                                             if (parsemodel.getImage1Data() != null) {
@@ -244,7 +288,7 @@ public class QueryForCardView {
                                             if (imageFile != null) {
                                                 imageUrllikeMe = imageFile.getUrl();
                                             }
-                                            itemmodelList.add(new ItemModel(imageUrllikeMe, name, age, county, userclassPointer));
+                                            itemmodelList.add(new ItemModel(name, age, county, userclassPointer,isPayed,parseModel.getBoolShowLocation(),parseModel.getBoolShowAge()));
 
                                             if (itemmodelList.size() == parseModels.size()) {
 
@@ -252,12 +296,12 @@ public class QueryForCardView {
 
                                             }
                                         }
+                                    }else {
+                                        tab.peopleWhoLikedYouTV.setText("Sorry no like's yet!! \n check back later....");
                                     }
                                 }
                             }
                         });
-                    } else {
-                        tab.peopleWhoLikedYouTV.setText("Sorry no like's yet!! \n check back later....");
                     }
                 }
 

@@ -13,12 +13,18 @@
         android:iconifiedByDefault="false"
         android:layout_margin="10dp"
         app:queryHint="Search for songs" />
-
+    <Button
+        android:id="@+id/delete_song"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Don't show song" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/page_background"/>
+
+
 
 </LinearLayout>

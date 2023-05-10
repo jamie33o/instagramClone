@@ -9,18 +9,16 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.instagramclone.choices_tabs.Choices_tabs_MainPage;
+import com.example.instagramclone.ButtonTxtArraysSingleton;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.R;
 import com.example.instagramclone.reusable_code.AddBtnTxtToArray;
 import com.example.instagramclone.reusable_code.ButtonCreator;
 import com.example.instagramclone.reusable_code.LightUpPreSelectedbtn;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 
-import com.google.gson.Gson;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
@@ -29,23 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Interests_tab extends Fragment implements View.OnClickListener {
-    private  ButtonCreator buttonCreator;
 
 
-    TextView txtview;
-    private List<String> interestsList;
-    private TableLayout tableLayout;
+    private List<String> interestsList,oldInterestList;
     private View view;
-
     private AddBtnTxtToArray addBtnTxtToArray;
-
-
-    private String[] interests;
     private LightUpPreSelectedbtn lightUpPreSelectedbtn;
-    Gson gson1 ;
-
-    ViewPager2 viewPager;
-
+    private ViewPager2 viewPager;
 
     public Interests_tab() {
 
@@ -57,32 +45,29 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        view = inflater.inflate(R.layout.main_xml_for_choices_tab,//used to find view inside fragment
+        view = inflater.inflate(R.layout.fragment_choices_tab,//used to find view inside fragment
                 container, false);
 
          viewPager = requireActivity().findViewById(R.id.viewPager_choices_tab);
 
 
-        interests = new String[]{"Reading", "Writing", "Photography", "Traveling", "Cooking", "Hiking", "Painting", "Gaming", "Music", "Dancing", "Sports", "Fitness", "Meditation", "Coding", "Gardening", "Fishing", "Gym", "Surfing", "Netflix"};
 
-        txtview = view.findViewById(R.id.txtview_title);
+        TextView txtview = view.findViewById(R.id.txtview_title);
         txtview.setText("Interests");
 
-        tableLayout = view.findViewById(R.id.table_layout_1);
+        TableLayout tableLayout = view.findViewById(R.id.table_layout_1);
         addBtnTxtToArray = new AddBtnTxtToArray(view.getContext());
-
-        gson1 = new Gson(); // Create a Gson instance
-
 
 
         view.findViewById(R.id.savebtn).setOnClickListener(this);
         //initialize and create the buttons
+        ButtonTxtArraysSingleton singletonInstance = ButtonTxtArraysSingleton.getInstance();
 
         List<Button> btnList = new ArrayList<>();
-        buttonCreator = new ButtonCreator(getContext(),btnList);
-        buttonCreator.buttonCreator(tableLayout, this, "",interests);
+        ButtonCreator buttonCreator = new ButtonCreator(getContext(), btnList);
+        buttonCreator.buttonCreator(tableLayout, this, singletonInstance.interests);
         interestsList = new ArrayList<>();
-
+        oldInterestList = new ArrayList<>();
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel parseModel, ParseException e) {
@@ -93,7 +78,7 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
                         // adds the to the selected button array
                         lightUpPreSelectedbtn = new LightUpPreSelectedbtn(view.getContext());
                         lightUpPreSelectedbtn.lightUpPreSelectBtn(interestsList, btnList);
-
+                        oldInterestList = new ArrayList<>(interestsList);
                     }
 
                 }
@@ -120,10 +105,14 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
         }
         if (buttonId == R.id.savebtn) {
 
+            if(interestsList != null && !interestsList.isEmpty() && !oldInterestList.equals(interestsList)  ) {
+                saveToParse();
+                //used to change fragments when button clicked
+                viewPager.setCurrentItem(1);
+            }else if (interestsList != null && !interestsList.isEmpty()){
+                viewPager.setCurrentItem(1);
 
-            saveToParse();
-            //used to change fragments when button clicked
-            viewPager.setCurrentItem(1);
+            }
         }
     }
 
@@ -140,16 +129,16 @@ public class Interests_tab extends Fragment implements View.OnClickListener {
                         public void done(ParseException e) {
                             if (e == null) {
                                 // Display a toast message to indicate that the object has been saved locally
-                                Snackbar_Dialog.showSnackbar(view.getContext(), "Success!!!\n Selection's saved", 2000);
+                                Dialogs.showSnackbar(view.getContext(), "Success!!!\n Selection's saved", 2000);
                             } else {
-                                Snackbar_Dialog.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
+                                Dialogs.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
 
 
                             }
                         }
                     });
                 } else {
-                    Snackbar_Dialog.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
+                    Dialogs.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
                 }
             }
         });

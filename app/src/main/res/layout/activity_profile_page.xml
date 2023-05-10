@@ -1,63 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/page_background"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:toolbarId="@+id/toolbar">
-           <include
-               layout="@layout/my_toolbar"
-               android:id="@+id/myToolbar"/>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:background="@color/page_background"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
             android:orientation="vertical">
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            <ProgressBar
-                android:id="@+id/image_profile_progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:layout_margin="25dp"
-                android:maxWidth="50dp"
-                android:minWidth="50dp"
-                android:elevation="3dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progress_bar_loading"
-                android:visibility="visible" />
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager_profile_page"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+
+                <!-- Dots Indicator -->
+                <LinearLayout
+                    android:id="@+id/dotsLayout"
+                    android:elevation="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <!-- Dot 1 -->
+                    <View
+                        android:id="@+id/dot1"
+                        android:layout_width="40dp"
+                        android:layout_height="10dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/rounded_coner_shape_grey"
+                        android:contentDescription="@string/scroll_view_options"/>
+
+                    <!-- Dot 2 -->
+                    <View
+                        android:id="@+id/dot2"
+                        android:layout_width="40dp"
+                        android:layout_height="10dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/rounded_coner_shape_grey"
+                        android:contentDescription="@string/scroll_view_options" />
+
+                    <!-- Dot 3 -->
+                    <View
+                        android:id="@+id/dot3"
+                        android:layout_width="40dp"
+                        android:layout_height="10dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/rounded_coner_shape_grey"
+                        android:contentDescription="@string/scroll_view_options" />
+
+                </LinearLayout>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager_profile_page"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <ImageButton
+                    android:id="@+id/back_btn"
+                    android:layout_width="48dp"
+                    android:elevation="5dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="-20dp"
+                    android:layout_gravity="bottom|end"
+                    android:rotation="-90"
+                    android:background="@drawable/rounded_corners_backround"
+                    android:contentDescription="@string/back_button"
+                    android:src="@drawable/baseline_arrow_back_24"
+                    android:visibility="gone"/>
             </FrameLayout>
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,6 +109,11 @@
                         android:textSize="30sp" />
                 </RelativeLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#79AAAAAA" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -99,9 +129,9 @@
                         android:id="@+id/title_at_company"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginStart="2dp"
-                        android:layout_alignBottom="@id/logo_title_company"
+                        android:layout_marginBottom="5dp"
                         android:layout_toEndOf="@id/logo_title_company"
                         android:textColor="@color/text_color" />
 
@@ -110,25 +140,29 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:id="@+id/logo_whereilive"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         app:srcCompat="@drawable/whereilive" />
+
                     <TextView
                         android:id="@+id/lives_in"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
+                        android:layout_centerVertical="true"
                         android:layout_marginStart="2dp"
-                        android:layout_alignBottom="@id/logo_whereilive"
+                        android:layout_marginBottom="3dp"
                         android:layout_toEndOf="@id/logo_whereilive"
                         android:textColor="@color/text_color" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp">
+
                     <ImageView
                         android:id="@+id/logo_person"
                         android:layout_width="30dp"
@@ -139,10 +173,10 @@
                         android:id="@+id/my_gender_N_pronouns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
                         android:layout_marginStart="2dp"
                         android:layout_marginBottom="3dp"
                         android:layout_toEndOf="@+id/logo_person"
-                        android:layout_alignBottom="@id/logo_person"
                         android:textColor="@color/text_color" />
 
                 </RelativeLayout>
@@ -159,11 +193,13 @@
                     android:textStyle="bold|italic"
                     app:layout_constraintStart_toStartOf="@+id/tvBio"
                     app:layout_constraintTop_toBottomOf="@+id/first_line" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#79AAAAAA"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:background="#79AAAAAA" />
+
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -175,9 +211,8 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
                         android:textColor="@color/text_color"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp" />
                 </TableRow>
-
 
 
                 <TableLayout
@@ -194,11 +229,12 @@
                         android:textColor="@color/buttonText"
                         android:textSize="20sp"
                         android:textStyle="bold|italic" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#79AAAAAA"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:background="#79AAAAAA" />
                 </TableLayout>
 
 
@@ -217,13 +253,13 @@
                         android:textColor="@color/buttonText"
                         android:textSize="20sp"
                         android:textStyle="bold|italic" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#79AAAAAA"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:background="#79AAAAAA" />
                 </TableLayout>
-
 
 
                 <TableLayout
@@ -245,8 +281,8 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#79AAAAAA"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:background="#79AAAAAA" />
 
                 </TableLayout>
 
@@ -264,19 +300,18 @@
                         android:textColor="@color/buttonText"
                         android:textSize="20sp"
                         android:textStyle="bold|italic" />
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#79AAAAAA"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:background="#79AAAAAA" />
 
                 </TableLayout>
 
 
-
-
                 <RelativeLayout
-                    android:id="@+id/tableRow2"
+                    android:id="@+id/songLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -295,86 +330,83 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_below="@+id/fav_song_text"
-                        android:background="#79AAAAAA"
-                        android:layout_marginBottom="10dp"/>
+                        android:layout_marginBottom="10dp"
+                        android:background="#79AAAAAA" />
 
-                        <FrameLayout
-                            android:id="@+id/song_frame"
-                            android:layout_marginTop="10dp"
+                    <FrameLayout
+                        android:id="@+id/song_frame"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/fav_song_text"
+                        android:layout_marginTop="10dp">
+
+                        <ImageView
+                            android:id="@+id/songImg"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp" />
+
+                        <ImageButton
+                            android:id="@+id/playbtn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/fav_song_text">
+                            android:layout_gravity="center"
 
-                            <ImageView
-                                android:id="@+id/songImg"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp" />
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@drawable/baseline_play_arrow_24" />
 
-                            <ImageButton
-                                android:id="@+id/playbtn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-
-                                android:background="@android:color/transparent"
-                                app:srcCompat="@drawable/baseline_play_arrow_24" />
-
-                            <ImageButton
-                                android:id="@+id/pausebtn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-
-                                android:background="@android:color/transparent"
-                                app:srcCompat="@drawable/baseline_pause_24" />
-                        </FrameLayout>
-
-
-
-
-
-                        <TextView
-                            android:id="@+id/songNameTv"
-                            android:layout_width="match_parent"
+                        <ImageButton
+                            android:id="@+id/pausebtn"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_color"
-                            android:layout_below="@+id/song_frame"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:layout_gravity="center"
+
+                            android:background="@android:color/transparent"
+                            app:srcCompat="@drawable/baseline_pause_24" />
+                    </FrameLayout>
+
+
+                    <TextView
+                        android:id="@+id/songNameTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/song_frame"
+                        android:textColor="@color/text_color"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/artistNameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/songNameTv"
                         android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        android:layout_below="@+id/songNameTv" />
+                        android:textSize="14sp" />
+
                     <TextView
                         android:id="@+id/albumNameTv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/artistNameTv"
                         android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        android:layout_below="@+id/artistNameTv" />
+                        android:textSize="14sp" />
 
 
+                </RelativeLayout>
 
-            </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#79AAAAAA"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="100dp" />
+                    android:layout_marginBottom="100dp"
+                    android:background="#79AAAAAA" />
 
-                </TableLayout>
-
+            </TableLayout>
 
 
         </LinearLayout>
 
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
 
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagramclone.R;
 import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private List<String> mImages;
-    PiccassoLoadToImageView picasso;
-    public ImageAdapter(List<String> images, Context context) {
+    private final List<String> mImages;
+    private final PiccassoLoadToImageView picasso;
+    private final int screenWidth;
+    public ImageAdapter(List<String> images, Context context,int screenWidth) {
+        this.screenWidth = screenWidth;
         mImages = images;
         picasso = new PiccassoLoadToImageView(context);
     }
@@ -27,13 +28,17 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Picasso.get().load(mImages.get(position)).placeholder(R.drawable.instagramlogo).centerCrop().fit().into(holder.mImageView);
+        if(screenWidth != 0) {
+            picasso.getImageNloadIntoImageview(mImages.get(position), holder.mImageView, screenWidth, 1125, 0);
+        }else {
+            picasso.getImageNloadIntoImageview(mImages.get(position), holder.mImageView);
+        }
     }
 
     @Override

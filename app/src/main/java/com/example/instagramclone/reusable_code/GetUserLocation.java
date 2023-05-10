@@ -52,7 +52,7 @@ public class GetUserLocation {
                             if (e == null) {
                                 ParseGeoPoint location = new ParseGeoPoint(mLocation.getLatitude(),mLocation.getLongitude());
                                 parseModel.setLocation(location);
-                                parseModel.saveInBackground(new SaveCallback() {
+                                parseModel.pinInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e == null) {

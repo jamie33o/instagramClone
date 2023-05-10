@@ -14,27 +14,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.instagramclone.main_tabs.ItemModel;
-import com.example.instagramclone.main_tabs.ProfileTab.edit_profile.QueriesEditProfile;
 import com.example.instagramclone.main_tabs.usertab_cardview_adapter.QueryForCardView;
-import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
-import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
 import com.example.instagramclone.R;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LikedProfilesTab extends Fragment implements View.OnClickListener {
+public class MessagesTab extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerViewLikedProfiles,liked_you_recyclerview;
-    private LikedProfilesAdapter adapterLikedProfile;
+    private Liked_Profile_Adapter adapterLikedProfile;
     private Profiles_liked_you_back_Adapter profiles_liked_you_back_adapter;
 
     private List<ItemModel> likedProfileModelList,likedYouBackList;
@@ -43,7 +33,7 @@ public class LikedProfilesTab extends Fragment implements View.OnClickListener {
 
     private QueryForCardView queryForCardView;
 
-    public LikedProfilesTab() {
+    public MessagesTab() {
         // Required empty public constructor
     }
 
@@ -52,7 +42,7 @@ public class LikedProfilesTab extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.liked_profiles_tab, container, false);
+        View view = inflater.inflate(R.layout.fragment_liked_profiles_tab, container, false);
 
         peopleWhoLikedYouTV = view.findViewById(R.id.liked_you_back_tv);
         peopleYouLikedTV = view.findViewById(R.id.you_liked_tv);
@@ -63,7 +53,7 @@ public class LikedProfilesTab extends Fragment implements View.OnClickListener {
         // Get a reference to the RecyclerView
         recyclerViewLikedProfiles = view.findViewById(R.id.likedProfiles_recyclerview);
         // Create a new instance of the adapter and set it on the RecyclerView
-        adapterLikedProfile = new LikedProfilesAdapter(getContext(), likedProfileModelList);
+        adapterLikedProfile = new Liked_Profile_Adapter(getContext(), likedProfileModelList);
         // Set the layout manager on the RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewLikedProfiles.setLayoutManager(layoutManager);

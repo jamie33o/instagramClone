@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/ActionBarTitleColor" />
+    <item android:top="53dp">
+        <shape   android:shape="rectangle">
+            <gradient
+                android:startColor="#80504F4F"
+                android:endColor="#00000000"
+                android:angle="90"/>
+            <size android:height="5dp" />
+        </shape>
+    </item>
+</layer-list>

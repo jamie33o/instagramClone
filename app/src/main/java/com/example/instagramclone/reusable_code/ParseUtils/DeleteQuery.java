@@ -2,17 +2,17 @@ package com.example.instagramclone.reusable_code.ParseUtils;
 
 import android.content.Context;
 
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 
-public class ReusableQueries implements DataBaseUtils {
+public class DeleteQuery implements DataBaseUtils {
 
     Context context;
 
-    public ReusableQueries(Context context) {
+    public DeleteQuery(Context context) {
         this.context = context;
 
     }
@@ -32,16 +32,16 @@ public class ReusableQueries implements DataBaseUtils {
                         public void done(ParseException e) {
                             if (e == null) {
 
-                                Snackbar_Dialog.showSnackbar(context,"Image deleted", 2000);
+                                Dialogs.showSnackbar(context,"Image deleted", 2000);
 
                             } else {
-                                Snackbar_Dialog.showSnackbar(context,"Error deleting image", 2000);
+                                Dialogs.showSnackbar(context,"Error deleting image", 2000);
 
                             }
                         }
                     });
                 } else {
-                    Snackbar_Dialog.showSnackbar(context,"Error deleting image", 2000);
+                    Dialogs.showSnackbar(context,"Error deleting image", 2000);
 
                 }
             }

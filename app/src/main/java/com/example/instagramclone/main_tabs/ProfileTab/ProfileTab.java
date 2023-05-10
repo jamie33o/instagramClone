@@ -3,13 +3,8 @@ package com.example.instagramclone.main_tabs.ProfileTab;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
@@ -17,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.instagramclone.braintree_payment.PricesAdapter;
 import com.example.instagramclone.braintree_payment.PricesModel;
@@ -30,8 +23,11 @@ import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
 import com.example.instagramclone.reusable_code.ButtonCreator;
 import com.example.instagramclone.R;
 import com.parse.GetCallback;
+import com.parse.GetFileCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +38,6 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
     public ImageView profileImgView,editProfilebtn;
 
     String image1;
-    private LinearLayout dotsLayout;
-    private View dot1, dot2, dot3;
 
     private ViewPager2 viewPager;
     private int currentPage = 0;
@@ -87,12 +81,16 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
             public void done(ParseModel parseModel, ParseException e) {
                 if (e == null) {
                     if (parseModel.getImage1Data() != null) {
-                        image1 = parseModel.getImage1Name();
+                        ParseFile img1 = parseModel.getImage1Data();
+                        img1.getFileInBackground(new GetFileCallback() {
+                            @Override
+                            public void done(File file, ParseException e) {
+                                piccassoLoadToImageView.getImageNloadIntoImageview(file.getAbsolutePath(), profileImgView, sizeBasedOnDensity.widthRatio(220), sizeBasedOnDensity.heightRatio(220), 300);
+                            }
+                        });
+
                     }
-                    piccassoLoadToImageView.getImageNloadIntoImageview(profileImgView, image1, "", sizeBasedOnDensity.widthRatio(220), sizeBasedOnDensity.heightRatio(220), 300);
-
-                }
-
+            }
             }
         });
 
@@ -105,26 +103,21 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
 
 
 
-        dotsLayout = view.findViewById(R.id.dotsLayout);
 
-        dot1 =  view.findViewById(R.id.dot1);
-        dot2 =  view.findViewById(R.id.dot2);
-        dot3 =  view.findViewById(R.id.dot3);
+        View dot1 = view.findViewById(R.id.dot1);
+        View dot2 = view.findViewById(R.id.dot2);
+        View dot3 = view.findViewById(R.id.dot3);
 
-        // Set initial state
-
-           dot1.setBackgroundColor(getResources().getColor(R.color.purple_200));;
-           dot2.setBackgroundColor(getResources().getColor(R.color.purple_200));
-           dot3.setBackgroundColor(getResources().getColor(R.color.purple_200));
 
            List<View> dots = new ArrayList<>();
            dots.add(dot1);
            dots.add(dot2);
            dots.add(dot3);
+        dots.get(0).setBackground(ResourcesCompat.getDrawable(getResources(),R.drawable.rounded_corner_shape_red,null));
 
         // Initialize ViewPager and set up PagerAdapter
         viewPager = view.findViewById(R.id.viewPager2);
-        PricesAdapter pagerAdapter = new PricesAdapter(getContext(),pricesModelListProfilepg);
+        PricesAdapter pagerAdapter = new PricesAdapter(getContext(),pricesModelListProfilepg,null);
         viewPager.setAdapter(pagerAdapter);
 
         // Set up auto-scrolling using Handler
@@ -137,9 +130,15 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
                 } else {
                     currentPage++;
                 }
-                dots.get(currentPage == 0 ? 2 : currentPage-1).setBackgroundColor(getResources().getColor(R.color.purple_200));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dots.get(currentPage == 0 ? 2 : currentPage-1).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(),R.drawable.rounded_coner_shape_grey,null));
 
-                dots.get(currentPage).setBackgroundColor(getResources().getColor(R.color.black));
+                    }
+                },300);
+
+                dots.get(currentPage).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(),R.drawable.rounded_corner_shape_red,null));
                 viewPager.setCurrentItem(currentPage, true);
                 handler.postDelayed(this, AUTO_SCROLL_DELAY);
             }
@@ -180,5 +179,7 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
 
 
     }
+
+
 
 }

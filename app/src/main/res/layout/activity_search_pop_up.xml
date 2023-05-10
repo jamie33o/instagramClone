@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="Area" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

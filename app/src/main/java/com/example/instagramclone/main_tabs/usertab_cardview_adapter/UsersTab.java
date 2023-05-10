@@ -29,9 +29,10 @@ import android.view.animation.LinearInterpolator;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.instagramclone.main_tabs.ItemModel;
-import com.example.instagramclone.main_tabs.ProfileTab.profile_page.ProfilePage;
+import com.example.instagramclone.main_tabs.ProfileTab.profile_page.ImageAdapter;
 import com.example.instagramclone.reusable_code.SearchPopUp;
 import com.example.instagramclone.R;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
@@ -50,16 +51,14 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 public class UsersTab extends Fragment implements View.OnClickListener {
     private static final int REQUEST_CODE = 123;
-    // boolean startPages;
     private CardStackLayoutManager manager;
     private CardStackAdapter adapter;
+    private CardStackView cardStackView;
     private List<ItemModel> items;
     private QueryForCardView queryForCardView;
     private View view;
-
     public Button searchPopUpBtn;
-    private ImageButton dislike, like, rewind;
-
+    public ImageButton dislike, like, rewind;
     static List<ParseUser> likedCards;
     private List<ParseUser> dislikedCards;
     private List<ParseUser> cardsToViewLater;
@@ -88,16 +87,19 @@ public class UsersTab extends Fragment implements View.OnClickListener {
 
                     }
                 }
-                }
-            });
+            }
+        });
         init(view);
 
         cardsToViewLater = new ArrayList<>();
         dislike = view.findViewById(R.id.dislike);
+        dislike.setVisibility(View.GONE);
         dislike.setOnClickListener(this);
         rewind = view.findViewById(R.id.rewind);
+        rewind.setVisibility(View.GONE);
         rewind.setOnClickListener(this);
         like = view.findViewById(R.id.like);
+        like.setVisibility(View.GONE);
         like.setOnClickListener(this);
         searchPopUpBtn = view.findViewById(R.id.search_pop_up);
         searchPopUpBtn.setOnClickListener(this);
@@ -114,7 +116,7 @@ public class UsersTab extends Fragment implements View.OnClickListener {
 
     public void init(View view) {
 
-        CardStackView cardStackView = view.findViewById(R.id.card_stack_view);
+        cardStackView = view.findViewById(R.id.card_stack_view);
         manager = new CardStackLayoutManager(view.getContext(), new CardStackListener() {
 
             @Override
@@ -144,7 +146,7 @@ public class UsersTab extends Fragment implements View.OnClickListener {
 
                 }
                 if (direction == Direction.Top) {
-                   // cardsToViewLater.add(adapter.getItems().get(manager.getTopPosition() - 1).getUserClassPointer());
+                    // cardsToViewLater.add(adapter.getItems().get(manager.getTopPosition() - 1).getUserClassPointer());
                 }
                 if (direction == Direction.Left) {
                     //dislikedCards.add(adapter.getItems().get(manager.getTopPosition()).getUserClassPointer());
@@ -185,8 +187,10 @@ public class UsersTab extends Fragment implements View.OnClickListener {
                 dislike.setImageResource(R.drawable.xred);
                 if (position == items.size() - 1) {
                     // pages();
-                  searchPopUp();
-
+                    searchPopUp();
+                    like.setVisibility(View.GONE);
+                    dislike.setVisibility(View.GONE);
+                    rewind.setVisibility(View.GONE);
                 }
             }
         });
@@ -200,21 +204,19 @@ public class UsersTab extends Fragment implements View.OnClickListener {
         manager.setCanScrollHorizontal(true);
         manager.setSwipeableMethod(SwipeableMethod.Manual);
         manager.setOverlayInterpolator(new LinearInterpolator());
-        RewindAnimationSetting setting = new RewindAnimationSetting.Builder()
-                .setDirection(Direction.Bottom)
-                .setDuration(Duration.Normal.duration)
-                .setInterpolator(new DecelerateInterpolator())
-                .build();
-        manager.setRewindAnimationSetting(setting);
-        adapter = new CardStackAdapter(items);
+
+        adapter = new CardStackAdapter(items,manager.getTopPosition());
         cardStackView.setLayoutManager(manager);
         cardStackView.setAdapter(adapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
 
 
+
+
+
     }
 
-    void pages() {
+    void paginate() {
         List<ItemModel> old = adapter.getItems();
         List<ItemModel> newItems = new ArrayList<>(items);
         CardStackCallback callback = new CardStackCallback(old, newItems);
@@ -261,6 +263,8 @@ public class UsersTab extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
 
+
+
         if(id == searchPopUpBtn.getId()){
             searchPopUp();
         }
@@ -271,16 +275,18 @@ public class UsersTab extends Fragment implements View.OnClickListener {
 
         } else if (id == like.getId()) {
             likedCards.add(adapter.getItems().get(manager.getTopPosition()).getUserClassPointer());
-
             adapter.notifyItemRemoved(manager.getTopPosition());
-
         } else if (id == rewind.getId()) {
+            RewindAnimationSetting settings = new RewindAnimationSetting.Builder()
+                    .setDirection(Direction.Bottom)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator( new DecelerateInterpolator())
+                    .build();
 
-            // adapter.notifyItemInserted(manager.getTopPosition());
-            adapter.notifyItemMoved(manager.getTopPosition() - 1, manager.getTopPosition());
-
-
-            //cardStackView.swipe();
+            CardStackLayoutManager cardStackLayoutManager2 = new CardStackLayoutManager(getContext());
+            cardStackLayoutManager2.setRewindAnimationSetting(settings);
+            cardStackView.setLayoutManager(cardStackLayoutManager2);
+            cardStackView.smoothScrollToPosition(manager.getTopPosition()-1);
         }
     }
 
@@ -300,13 +306,8 @@ public class UsersTab extends Fragment implements View.OnClickListener {
 
                             }
                         });
-
-
                     }
-
                 }
-
-
             });
         }
     }

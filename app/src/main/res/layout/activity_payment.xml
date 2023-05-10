@@ -8,29 +8,223 @@
     tools:context=".braintree_payment.PaymentActivity">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/payment_recyclerview"
+    <include
+        android:id="@+id/myToolbar"
+        layout="@layout/my_toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:clipToPadding="false"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/paypal_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/paypal_button"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="beginPayment"
-        android:text="Pay with PayPal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/payment_recyclerview" />
+        app:layout_constraintTop_toBottomOf="@+id/myToolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
+            <RelativeLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#B4EBED">
+
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="45dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="45dp"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="@string/payment_activity_text"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp"
+                    android:textStyle="normal" />
+                <View
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#0B0A0A"
+                    android:layout_marginBottom="10dp"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/txt_select_plan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+
+                android:fontFamily="@font/abril_fatface"
+                android:gravity="center_horizontal"
+                android:text="Select a plan"
+                android:textColor="@color/text_color"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/payment_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="5dp"
+                android:clipToPadding="false"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:scrollbars="vertical" />
+
+            <!-- Dots Indicator -->
+            <LinearLayout
+                android:id="@+id/dotsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Dot 1 -->
+                <View
+                    android:id="@+id/dot1"
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/rounded_coner_shape_grey"
+                    android:contentDescription="@string/scroll_view_options"/>
+
+                <!-- Dot 2 -->
+                <View
+                    android:id="@+id/dot2"
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/rounded_coner_shape_grey"
+                    android:contentDescription="@string/scroll_view_options" />
+
+                <!-- Dot 3 -->
+                <View
+                    android:id="@+id/dot3"
+                    android:layout_width="20dp"
+                    android:layout_height="10dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/rounded_coner_shape_grey"
+                    android:contentDescription="@string/scroll_view_options" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="70dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/message_background">
+
+                <TextView
+                    android:id="@+id/txtv0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/message_background"
+                    android:elevation="5dp"
+                    android:textColor="@color/text_color"
+                    android:text="What You Get With A Membership"
+                    android:textStyle="normal" />
+
+
+                <TextView
+                    android:id="@+id/txtv1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv0"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    See Who Likes You"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txtv2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv1"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    Unlimited Rewinds"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txtv3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv2"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    Message Someone You Liked"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txtv4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv3"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    Message Someone Who Liked You"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txtv5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv4"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    Hide Ads"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/txtv6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/txtv5"
+                    android:fontFamily="@font/abril_fatface"
+                    android:gravity="center_horizontal"
+                    android:text="\u2022    Control What Others Can See"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp"
+                    android:textStyle="normal" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

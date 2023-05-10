@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
-                android:text="Basic detail's"
+                android:text="@string/basic_detail_s_title"
                 android:textAlignment="center"
                 android:textColor="@color/text_color"
                 android:textSize="30sp" />
@@ -55,9 +55,10 @@
             android:elevation="2dp" />
 
         <TableRow
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:gravity="center"
             android:layout_marginBottom="20dp">
 
             <TextView
@@ -65,9 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_weight="1"
                 android:background="#E40505"
-                android:text="These fields can only be updated by request \n so please enter carefully!!!"
+                android:text="@string/warning_on_personal_details_page"
                 android:textAlignment="center"
                 android:textColor="#F3FFFFFF"
                 android:textSize="24sp"

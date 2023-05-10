@@ -2,27 +2,29 @@ package com.example.instagramclone.main_tabs.ProfileTab.profile_page;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.R;
-import com.example.instagramclone.reusable_code.SizeBasedOnDensity;
+import com.example.instagramclone.reusable_code.DotsIndicator;
 import com.example.instagramclone.reusable_code.ButtonCreator;
 import com.neovisionaries.i18n.CountryCode;
 import com.parse.GetCallback;
+import com.parse.GetFileCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.spotify.sdk.android.auth.AuthorizationClient;
@@ -30,6 +32,7 @@ import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -46,20 +49,20 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
 
     private ImageView backbtn;
     private TextView tvName, tvAge, tvBio,tital_at_company,where_i_live,myGender_N_pronouns;
-    List<String> languageslist;
+    private List<String> languageslist;
     private TableLayout interestsLayoutProfile, languagesLayoutProfile, mybasicsLayoutProfile, mylifestyleLayoutProfile;
-    SizeBasedOnDensity sizeBasedOnDensity;
-    List<String> images;
-    List<String> interestsList;
+    private List<String> images;
+    private ImageAdapter adapter;
+
+    private List<String> interestsList;
     private GetTrackTask getTrackTask;
-    ViewPager2 viewPager;
-    String artisrName,songName;
+    private ViewPager2 viewPager;
+    private String artisrName,songName;
     private ImageButton pauseButton,playButton;
     private static final int REQUEST_CODE = 1337;
     private static final String CLIENT_ID = "857b49fc34f84d8a91f7baf4faa63acd";
     private static final String REDIRECT_URI = "editprofile:/callback";
-    private static final String CLIENT_SECRET = "6fad0bc190fc484cbf8bb7bc734e23b1";
-
+    private int screenWidth;
     private ParseUser otherUserProfile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +70,29 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_profile_page);
         setTitle(null);
 
+        //used to set the images in image adapter to full screen
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
 
-
-        sizeBasedOnDensity = new SizeBasedOnDensity(this);
         ButtonCreator buttonCreator = new ButtonCreator(this, new ArrayList<>());
 
         viewPager = findViewById(R.id.view_pager_profile_page);
 
-        //toolbar
-        Toolbar toolbar = findViewById(R.id.myToolbar);
-        setSupportActionBar(toolbar);
-        backbtn = toolbar.findViewById(R.id.btnBackToolbar);
+
+        backbtn = findViewById(R.id.back_btn);
         backbtn.setVisibility(View.VISIBLE);
         backbtn.setOnClickListener(this);
-        TextView toolbarTxt = toolbar.findViewById(R.id.toolbar_txt);
-        toolbarTxt.setText(R.string.editProfileToolbarTxt);
 
+
+        //dots to show which image user is on
+        View dot1 = findViewById(R.id.dot1);
+        dot1.setVisibility(View.GONE);
+        View dot2 = findViewById(R.id.dot2);
+        dot2.setVisibility(View.GONE);
+        View dot3 = findViewById(R.id.dot3);
+        dot3.setVisibility(View.GONE);
+        List<View> dots = new ArrayList<>();
 
 
 
@@ -108,7 +118,7 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
         builder.setScopes(new String[]{"user-library-read", "streaming", "user-follow-read", "user-top-read", "user-read-private", "playlist-read-private", "user-read-playback-state", "playlist-read-collaborative"});
         AuthorizationRequest request = builder.build();
 
-        AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request);
+
 
         //tablelayouts
         languagesLayoutProfile = findViewById(R.id.languagesLayoutProfile);
@@ -143,8 +153,15 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
                         languageslist = parseModel.getLanguages();
 
 
-                    artisrName = parseModel.getArtistName();
-                    songName = parseModel.getSongName();
+                    if(parseModel.getArtistName() != null) {
+                        artisrName = parseModel.getArtistName();
+                        songName = parseModel.getSongName();
+                        AuthorizationClient.openLoginActivity(ProfilePage.this, REQUEST_CODE, request);
+                    }else{
+                        View songLayout = findViewById(R.id.songLayout);
+                        songLayout.setVisibility(View.GONE);
+                    }
+
                     List<String> myLifeStyle = new ArrayList<>();
 
                     if (parseModel.getWorkout() != null) {
@@ -152,76 +169,111 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
                         myLifeStyle.addAll(wl);
                     }
 
-                    if (parseModel.getPets() != null)
+                    if (parseModel.getPets()!= null && !parseModel.getPets().equals(""))
                         myLifeStyle.add(parseModel.getPets());
-                    if (parseModel.getSmoking() != null)
+                    if (parseModel.getSmoking()!= null && !parseModel.getSmoking().equals(""))
                         myLifeStyle.add(parseModel.getSmoking());
-                    if (parseModel.getDrinking() != null)
+                    if (parseModel.getDrinking()!= null && !parseModel.getDrinking().equals(""))
                         myLifeStyle.add(parseModel.getDrinking());
-                    if (parseModel.getDietary() != null)
+                    if (parseModel.getDietary()!= null && !parseModel.getDietary().equals(""))
                         myLifeStyle.add(parseModel.getDietary());
-                    if (parseModel.getSocialMedia() != null)
+                    if (parseModel.getSocialMedia()!= null && !parseModel.getSocialMedia().equals(""))
                         myLifeStyle.add(parseModel.getSocialMedia());
-                    if (parseModel.getKids() != null)
+                    if (parseModel.getKids()!= null && !parseModel.getKids().equals(""))
                         myLifeStyle.add(parseModel.getKids());
 
 
                     List<String> mybasics = new ArrayList<>();
 
-                    if (parseModel.getRelationshipGoals() != null)
+                    if (parseModel.getRelationshipGoals()!= null && !parseModel.getRelationshipGoals().equals(""))
                         mybasics.add(parseModel.getRelationshipGoals());
-                    if (parseModel.getReligion() != null)
+                    if (parseModel.getReligion()!= null &&!parseModel.getReligion().equals(""))
                         mybasics.add(parseModel.getReligion());
-                    if (parseModel.getStarSign() != null)
+                    if (parseModel.getStarSign()!= null &&!parseModel.getStarSign().equals(""))
                         mybasics.add(parseModel.getStarSign());
-                    if (parseModel.getHeight() != null)
+                    if (parseModel.getGender()!= null &&!parseModel.getGender().equals(""))
+                        mybasics.add(parseModel.getGender());
+                    if (parseModel.getHeight()!= null && !parseModel.getHeight().equals(""))
                         mybasics.add(parseModel.getHeight());
 
 
-// Convert the RealmList to an array of strings
 
                     if (interestsList != null) {
                         String[] interestsArray = interestsList.toArray(new String[0]);
-                        buttonCreator.buttonCreator(interestsLayoutProfile, ProfilePage.this, "", interestsArray);
+                        buttonCreator.buttonCreator(interestsLayoutProfile, ProfilePage.this, interestsArray);
                     }
                     if (myLifeStyle.size() > 0)
-                        buttonCreator.buttonCreator(mylifestyleLayoutProfile, ProfilePage.this, "", myLifeStyle.toArray(new String[0]));
+                        buttonCreator.buttonCreator(mylifestyleLayoutProfile, ProfilePage.this,  myLifeStyle.toArray(new String[0]));
 
                     if (mybasics.size() > 0)
-                        buttonCreator.buttonCreator(mybasicsLayoutProfile, ProfilePage.this, "", mybasics.toArray(new String[0]));
+                        buttonCreator.buttonCreator(mybasicsLayoutProfile, ProfilePage.this, mybasics.toArray(new String[0]));
 
                     if (languageslist != null) {
                         String[] languagesArray = languageslist.toArray(new String[0]);
-                        buttonCreator.buttonCreator(languagesLayoutProfile, ProfilePage.this, "languages", languagesArray);
+                        buttonCreator.buttonCreator(languagesLayoutProfile, ProfilePage.this, languagesArray);
                     }
                      images = new ArrayList<>();
                     if (parseModel.getImage1Data() != null) {
-                        images.add(parseModel.getImage1Data().getUrl());
+                        ParseFile img1 = parseModel.getImage1Data();
+                        img1.getFileInBackground(new GetFileCallback() {
+                            @Override
+                            public void done(File file, ParseException e) {
+                                images.add(file.getAbsolutePath());
+                                dot1.setVisibility(View.VISIBLE);
+
+                                dots.add(dot1);
+
+                            }
+                        });
                     }
                     if (parseModel.getImage2Data() != null) {
-                        images.add(parseModel.getImage2Data().getUrl());
-                    }
+                        ParseFile img1 = parseModel.getImage2Data();
+                        img1.getFileInBackground(new GetFileCallback() {
+                            @Override
+                            public void done(File file, ParseException e) {
+                                images.add(file.getAbsolutePath());
+                                dot2.setVisibility(View.VISIBLE);
+
+                                dots.add(dot2);
+
+                            }
+                        });                    }
                     if (parseModel.getImage3Data() != null) {
-                        images.add(parseModel.getImage3Data().getUrl());
+                        ParseFile img1 = parseModel.getImage3Data();
+                        img1.getFileInBackground(new GetFileCallback() {
+                            @Override
+                            public void done(File file, ParseException e) {
+                                images.add(file.getAbsolutePath());
+                                dot3.setVisibility(View.VISIBLE);
+                                dots.add(dot3);
+
+                            }
+                        });
                     }
 
-                    ImageAdapter adapter = new ImageAdapter(images,ProfilePage.this);
-                    viewPager.setAdapter(adapter);
 
 
-                    ProgressBar progressBar = findViewById(R.id.image_profile_progressBar);
-                    progressBar.setProgress(10);
-
-                    viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                     adapter = new ImageAdapter(images,ProfilePage.this,screenWidth);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
                         @Override
-                        public void onPageSelected(int position) {
-                            int totalItems = adapter.getItemCount();
-                            int progress = (int) ((position + 1) / (float) totalItems * 100);
-                            progressBar.setProgress(progress);
+                        public void run() {
+                            viewPager.setAdapter(adapter);
+
                         }
+                    },100);
 
 
-                    });
+
+                    Handler handler1 = new Handler();
+                    handler1.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            new DotsIndicator(dots,ProfilePage.this,viewPager);
+
+                        }
+                    },300);
+
 
 
 
@@ -230,7 +282,7 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
                     String name = parseModel.getName() + ", ";
                     tvName.setText(name);
 
-                    if (parseModel.getAge() > 0) {
+                    if (parseModel.getAge() > 0 && !parseModel.getBoolShowAge()) {
                         String age = parseModel.getAge() + "";
                         tvAge.setText(age);
                     }
@@ -239,11 +291,12 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
 
 
                     //where i live/hometown string
-                    String whereilive = (parseModel.getWhereILive().length()>1&&parseModel.getHometown().length()>1)
-                            ? "I live in " + parseModel.getWhereILive() + " i'm from " + parseModel.getHometown()
-                            : (parseModel.getWhereILive().length()>1) ? "I live in " + parseModel.getWhereILive()
-                            : (parseModel.getHometown().length()>1) ? "I'm from " + parseModel.getHometown()
-                            : null;
+
+                    String whereilive = (parseModel.getWhereILive()!=null && parseModel.getHometown().length() > 1)
+                                ? "I live in " + parseModel.getWhereILive() + " i'm from " + parseModel.getHometown()
+                                : (parseModel.getWhereILive() != null) ? "I live in " + parseModel.getWhereILive()
+                                : (parseModel.getHometown().length() > 1) ? "I'm from " + parseModel.getHometown()
+                                : null;
 
 
                     if(whereilive!=null){
@@ -255,7 +308,7 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
 
 
                     //gender and pronounds string
-                    String gender_N_pronouns = (parseModel.getGender().length()>1&&parseModel.getPronouns().size()>1)
+                    String gender_N_pronouns = (parseModel.getGender()!= null && parseModel.getPronouns().size()>0)
                             ? "I am a " + parseModel.getGender() + " my pronouns are " + parseModel.getPronouns()
                             : (parseModel.getGender()!=null) ? "I am a " + parseModel.getGender()
                             : (parseModel.getPronouns()!=null) ? "My pronouns are " + parseModel.getPronouns()
@@ -269,9 +322,10 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
 
 
 
-                String title_or_fofStudy = parseModel.getJobTitleFieldOfStudy() + " at " + parseModel.getCompanyRcolledge();
 
-                if (parseModel.getCompanyRcolledge().length() >= 1 || parseModel.getJobTitleFieldOfStudy().length() >= 1) {
+
+                if ((parseModel.getCompanyRcolledge() != null && parseModel.getCompanyRcolledge().length() >= 1) || (parseModel.getJobTitleFieldOfStudy() != null && parseModel.getJobTitleFieldOfStudy().length() >= 1)) {
+                    String title_or_fofStudy = parseModel.getJobTitleFieldOfStudy() + " at " + parseModel.getCompanyRcolledge();
                     tital_at_company.setText(title_or_fofStudy);
                 } else {
                     tital_at_company.setVisibility(View.GONE);
@@ -334,7 +388,7 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        if (viewId == R.id.btnBackToolbar) {
+        if (viewId == backbtn.getId()) {
             finish();
         }
 
@@ -358,8 +412,6 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
 
 
     public void setSong(String imageUrl, String albumName, String artistName, String trackName) {
-
-
         TextView albumNametv = findViewById(R.id.albumNameTv);
         albumNametv.setText(albumName);
         TextView artistNametv = findViewById(R.id.artistNameTv);
@@ -373,7 +425,6 @@ public class ProfilePage extends AppCompatActivity implements View.OnClickListen
                 .resize(150, 150)
                 .centerCrop()
                 .into(trackImage);
-
 
     }
 

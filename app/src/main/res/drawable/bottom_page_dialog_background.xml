@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bottom_page_dialog_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF"/> <!-- Set a solid color for the background, replace #FFFFFF with your desired color code -->
+    <corners android:radius="59dp"/> <!-- Set the corner radius for the background, adjust the value to achieve the desired rounded corners -->
+</shape>

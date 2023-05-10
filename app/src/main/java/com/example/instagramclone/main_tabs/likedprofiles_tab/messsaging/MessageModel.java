@@ -2,14 +2,14 @@ package com.example.instagramclone.main_tabs.likedprofiles_tab.messsaging;
 
 import com.parse.ParseUser;
 
-public class Message {
+public class MessageModel {
     private String messageText;
     private String messageTime;
 
     private ParseUser userClassPointer;
 
 
-    public Message(String messageText, String messageTime,ParseUser userClassPointer) {
+    public MessageModel(String messageText, String messageTime, ParseUser userClassPointer) {
         this.messageText = messageText;
         this.messageTime = messageTime;
         this.userClassPointer=userClassPointer;

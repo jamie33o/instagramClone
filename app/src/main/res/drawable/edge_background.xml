@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFFFFF" /> <!-- White background color -->
+    <corners android:radius="8dp" /> <!-- Rounded corners with a radius of 8dp -->
+    <padding
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp" /> <!-- Padding to create edge effect -->
+    <gradient
+        android:type="radial"
+        android:gradientRadius="240"
+        android:startColor="#ECECEC"
+        android:endColor="#FFFFFF"
+        android:centerX="0.5"
+        android:centerY="0.5" /> <!-- Radial gradient for edge effect -->
+</shape>

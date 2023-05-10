@@ -15,13 +15,13 @@ import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Message> messages;
+    private List<MessageModel> messages;
     private Context context;
 
     private final int TYPE_RECEIVED = 0;
     private final int TYPE_SENT = 1;
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    public MessageAdapter(Context context, List<MessageModel> messages) {
         this.context = context;
         this.messages = messages;
     }
@@ -42,11 +42,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Message message = messages.get(position);
+        MessageModel message = messages.get(position);
         if (holder.getItemViewType() == TYPE_RECEIVED) {
-            ((ReceivedMessageHolder) holder).bind((Message) message);
+            ((ReceivedMessageHolder) holder).bind((MessageModel) message);
         } else {
-            ((SentMessageHolder) holder).bind((Message) message);
+            ((SentMessageHolder) holder).bind((MessageModel) message);
         }
     }
 
@@ -73,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             timeText = itemView.findViewById(R.id.message_time);
         }
 
-        void bind(Message message) {
+        void bind(MessageModel message) {
             messageText.setText(message.getMessageText());
             timeText.setText(message.getMessageTime());
         }
@@ -88,7 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             timeText = itemView.findViewById(R.id.message_time);
         }
 
-        void bind(Message message) {
+        void bind(MessageModel message) {
             messageText.setText(message.getMessageText());
             timeText.setText(message.getMessageTime());
         }

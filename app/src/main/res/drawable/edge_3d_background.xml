@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/rows_background" /> <!-- Fill color for the rectangle (white in this example) -->
+    <corners android:radius="1dp" /> <!-- No rounded corners -->
+    <stroke
+        android:color="#000000"
+        android:width="1dp" /> <!-- Stroke color (black in this example) and width (2dp) -->
+</shape>

@@ -40,4 +40,308 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="email">Ignite@gmail.com</string>
+    <string name="last_updated">21/04/2023</string>
+
+    <string name="privacyPolicyHeader">Privacy policy</string>
+    <string name="privacyPolicy"><![CDATA[
+    Privacy Policy
+Last Updated: %1s
+\n
+\n
+Information Collection\n
+We may collect various types of information from users of our dating app, including but not limited to:\n
+Personal information such as name, email address, and phone number
+Profile information such as gender, age, location, and interests
+User-generated content such as profile pictures, messages, and comments
+Usage data such as app usage statistics, device information, and log files\n
+\n
+Information Use\n
+We may use the collected information for the following purposes:\n
+Providing and improving our dating app, including personalized features and recommendations
+Communicating with users, such as responding to inquiries and sending notifications
+Enforcing our terms of service and preventing fraud, abuse, and other illegal activities
+Conducting research and analysis to improve user experience and understand user preferences\n
+\n
+Information Sharing\n
+We may share the collected information with the following parties:\n
+Service providers and partners who assist us in operating our dating app
+Other users of our dating app, such as when users interact with each other
+Law enforcement agencies, government officials, or legal entities in response to legal requests
+Third parties in connection with a business transaction, such as a merger or acquisition
+\n
+Data Security\n
+We take reasonable measures to protect the information collected from our users from unauthorized access, loss, or disclosure. However, please note that no method of transmission over the internet or method of electronic storage is 100% secure.\n
+\n
+Third-Party Links and Ads\n
+Our dating app may contain links to third-party websites or advertisements from third-party advertisers. We are not responsible for the privacy practices or content of these third-party websites or advertisers. Users should review the privacy policies of these third parties before providing any personal information.
+\n
+\n
+Children\'s Privacy\n
+Our dating app is not intended for users under the age of 18. We do not knowingly collect personal information from children. If we become aware that we have collected personal information from a child without parental consent, we will take steps to delete the information as soon as possible.
+\n
+\n
+Changes to Privacy Policy\n
+We reserve the right to update or modify this privacy policy at any time without prior notice. Users are encouraged to review this privacy policy periodically for any changes.
+\n
+\n
+Contact Us\n
+If you have any questions or concerns about our privacy policy, please contact us at [ %2s].
+]]></string>
+
+
+    <string name="signUpInstructionHeader">Sign up/Sign in instructions</string>
+    <string name="signUpInstruction"><![CDATA[
+
+Sign-up Instruction:\n
+\n
+1. Visit the dating site\'s homepage.\n
+\n
+2. Click on the \"Sign Up\" or \"Register\" button to start the registration process.\n
+\n
+3. Provide your basic information, such as your name, age, gender, and email address.\n
+\n
+4. Choose a unique username and password for your account.\n
+\n
+5. Complete your profile by adding a profile picture and providing additional details about yourself, such as your interests, hobbies, and relationship preferences.\n
+\n
+6. Review and accept the terms of service and privacy policy.\n
+\n
+7. Complete any additional steps, such as email verification or phone number verification, if required.\n
+\n
+8. Customize your privacy settings to control what information you want to share with other users.\n
+\n
+9. Explore the dating site\'s features, such as searching for other users, sending messages, and updating your profile.\n
+\n
+10. Start connecting with other users and enjoy using the dating site to find potential matches!\n
+\n
+Sign-in Instruction\n
+\n
+1. Go to the dating site\'s homepage.\n
+\n
+2. Click on the "Sign In" or "Log In" button.\n
+\n
+3. Enter your registered email address or username and password.\n
+\n
+4. Click on the \"Sign In\" or \"Log In\" button to access your account.\n
+\n
+5. Optionally, you may need to complete additional security steps, such as solving a CAPTCHA or entering a verification code, if prompted.\n
+\n
+6. Once signed in, you can access your profile, search for other users, send messages, and use other features of the dating site to connect with potential matches.\n
+
+]]></string>
+
+<string name="refundPolicyHeader">Refund Policy</string>
+    <string name="refundPolicy"><![CDATA[
+Last Updated: [%1s]\n
+\n
+1. Refund Eligibility\n
+We do not offer refunds for any purchases made within the app, including but not limited to premium subscriptions, virtual currency, or in-app purchases. All purchases are final and non-refundable.
+\n
+2. Cancellation of Subscription\n
+If you have subscribed to a premium subscription plan, you may cancel your subscription at any time through the app store or platform where you made the purchase. Please note that cancelling your subscription will not entitle you to a refund for any unused portion of the subscription period.
+\n
+3. Disputed Charges\n
+If you believe that you have been charged in error or have unauthorized charges, please contact our customer support at [CONTACT EMAIL] within [NUMBER] days of the charge. We will investigate the issue and work with you to resolve it as soon as possible.
+\n
+4. Changes to Refund Policy\n
+We reserve the right to update or modify this refund policy at any time without prior notice. Users are encouraged to review this refund policy periodically for any changes.
+\n
+5. Contact Us\n
+If you have any questions or concerns about our refund policy, please contact us at [%2s].
+]]></string>
+
+
+    <string name="termsOfServiceHeader">Terms of Service</string>
+    <string name="termsOfService"><![CDATA[
+
+Welcome to our dating app! By using our app, you agree to comply with and be bound by the following terms and conditions:\n
+\n
+1. Age Requirement\n
+You must be at least 18 years old to use our dating app. By creating an account or using our services, you represent and warrant that you are at least 18 years old.\n
+\n
+2. User Conduct\n
+You agree to use our dating app in a responsible and lawful manner. You will not use our app for any illegal, harmful, or unauthorized purpose. You will not impersonate others, harass or stalk other users, post offensive or inappropriate content, or engage in any activity that violates the rights of others.\n
+\n
+3. Account Creation and Security\n
+You are responsible for maintaining the confidentiality and security of your account credentials. You will not share your account information with others, and you will promptly notify us of any unauthorized use or breach of security.\n
+\n
+4. Content Ownership\n
+You retain ownership of the content you create and post on our dating app. However, by using our services, you grant us a non-exclusive, worldwide, royalty-free, sublicensable, and transferable license to use, reproduce, modify, publish, display, and distribute your content for the purpose of operating and promoting our app.\n
+\n
+5. Privacy Policy\n
+By using our dating app, you acknowledge and agree to our privacy policy, which governs the collection, use, and disclosure of your personal information.\n
+\n
+6. Disclaimers\n
+Our dating app is provided "as is" and without any warranty or representation of any kind. We do not guarantee the accuracy, completeness, reliability, or availability of our app, and we disclaim all warranties, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.\n
+\n
+7. Limitation of Liability\n
+We are not liable for any direct, indirect, incidental, consequential, or special damages arising out of or in connection with your use of our dating app. This includes but is not limited to damages for loss of profits, data, or goodwill, and any other losses or damages that may result from the use or inability to use our app.\n
+\n
+8. Modifications and Termination\n
+We reserve the right to modify or terminate our dating app, its features, or these terms of service at any time without notice. You agree that we are not liable for any modification, suspension, or termination of our app or its features.\n
+\n
+9. Governing Law\n
+These terms of service are governed by the laws of [Your Country/Region/State], without regard to its conflicts of laws principles.\n
+\n
+10. Contact Us\n
+If you have any questions, comments, or concerns about our terms of service or our dating app, please contact us at [%2s].]]></string>
+
+
+    <string name="communityGuidelinesHeader">Community Guidelines</string>
+    <string name="communityGuidelines"><![CDATA[
+
+Our dating app is built on the principles of respect, safety, and inclusivity. To ensure a positive experience for all users, we ask that you adhere to the following community guidelines:\n
+\n
+1. Respect Others\n
+Treat all users with respect and kindness. Do not engage in discriminatory, offensive, or harmful behavior, including but not limited to harassment, bullying, hate speech, or violence.\n
+\n
+2. Use Appropriate Language\n
+Do not use offensive, vulgar, or inappropriate language in your profile, messages, or interactions with other users. Keep your communication polite and respectful.\n
+\n
+3. No Unauthorized Content\n
+Do not post or share content that violates the rights of others, including but not limited to copyrighted material, private information, explicit or sexually suggestive content, or illegal content.\n
+\n
+4. Report Violations\n
+If you encounter any user or content that violates these guidelines or our terms of service, please report it to us immediately using the in-app reporting feature or contact us at [%2s].\n
+\n
+5. Protect Your Privacy\n
+Do not share personal information, such as your full name, address, phone number, or financial information, with other users. Be cautious and use common sense when interacting with strangers online.\n
+\n
+6. Be Genuine\n
+Do not create fake profiles or impersonate others. Use your real identity and be truthful in your profile and interactions with other users.\n
+\n
+7. Follow Applicable Laws\n
+Obey all applicable laws and regulations while using our dating app. This includes but is not limited to laws related to age, consent, privacy, and online conduct.\n
+\n
+8. Prohibited Activities\n
+Do not use our app for any illegal, harmful, or malicious activities, including but not limited to spamming, phishing, spreading malware or viruses, or engaging in fraudulent or deceptive behavior.\n
+\n
+9. Be Mindful of Others\n
+Respect the boundaries, preferences, and choices of other users. Do not pressure or coerce others into unwanted actions or behaviors.\n
+\n
+10. Consequences of Violations\n
+Violating these community guidelines or our terms of service may result in various consequences, including but not limited to suspension or termination of your account, removal of your content, and legal actions.\n
+\n
+Thank you for being a part of our dating app community! Let\'s create a safe, enjoyable, and respectful environment for everyone.]]></string>
+
+
+    <string name="safetyTipsHeader">Safety tips</string>
+    <string name="safetyTips"><![CDATA[
+    Your safety is our top priority. Please keep the following safety tips in mind while using our dating app:\n
+    \n
+    1. Protect Your Personal Information\n
+    Do not share your personal information, such as your full name, address, phone number, or financial information, with other users. Be cautious and use common sense when sharing any personal details.\n
+    \n
+    2. Verify Profiles and Interactions\n
+    Be cautious of fake profiles and scammers. Verify the authenticity of other users before sharing personal information or meeting in person. Report any suspicious profiles or interactions to us immediately.\n
+    \n
+    3. Use Caution with Photos and Content\n
+    Be mindful of the photos and content you share on your profile. Avoid sharing explicit, provocative, or sensitive content that may compromise your safety or privacy.\n
+    \n
+    4. Be Cautious when Meeting in Person\n
+    If you decide to meet someone in person, choose a public place and let someone you trust know about your plans. Use your own transportation and do not share personal information, such as your home address, until you feel comfortable.\n
+    \n
+    5. Trust Your Instincts\n
+    Trust your instincts and be cautious of anyone who seems suspicious or makes you uncomfortable. If something doesn\'t feel right, end the conversation or interaction.\n
+    \n
+    6. Report Violations\n
+    If you encounter any user or content that violates our community guidelines or terms of service, please report it to us immediately using the in-app reporting feature or contact us at [%2s].\n
+    \n
+    7. Educate Yourself on Online Safety\n
+    Stay informed about online safety best practices and educate yourself about potential risks and red flags associated with online dating.\n
+    \n
+    Remember, while we strive to create a safe environment, it\'s important to exercise caution and use your best judgment when interacting with others online. Your safety is in your hands!\n
+    \n
+    Thank you for using our dating app and taking steps to ensure your safety.\n
+]]></string>
+
+    <string name="faqHeader">F.A.Q</string>
+    <string name="faq"><![CDATA[
+    Welcome to our FAQ \n
+    \n
+    If you have questions or need assistance with our dating app, please refer to the following frequently asked questions and answers:\n
+    \n
+    Q: How do I create an account?\n
+    A: To create an account, simply download our app from the app store, follow the on-screen prompts, and provide the required information, including your email or phone number, and a password.\n
+    \n
+    Q: How do I edit my profile?\n
+    A: To edit your profile, go to the profile section of the app and select the "Edit" option. You can update your profile picture, bio, interests, and other details as needed.\n
+    \n
+    Q: How do I search for other users?\n
+    A: You can search for other users by using the search feature in the app. You can specify criteria such as age, location, interests, and more to find matches that meet your preferences.\n
+    \n
+    Q: How do I send a message to another user?\n
+    A: To send a message to another user, go to their profile and select the "Message" option. You can then type and send your message in the in-app messaging feature.\n
+    \n
+    Q: How do I report a user or content?\n
+    A: If you encounter a user or content that violates our community guidelines or terms of service, please report it to us immediately using the in-app reporting feature or contact us at [%2s]. We take user safety seriously and will investigate and take appropriate actions.\n
+    \n
+    Q: How do I delete my account?\n
+    A: To delete your account, go to the account settings section of the app and select the "Delete Account" option. Follow the prompts to confirm the deletion. Please note that deleting your account will permanently remove all your data and cannot be undone.\n
+    \n
+    If you have other questions or need further assistance, please contact our support team at [%2s] or refer to our terms of service and privacy policy for more information.\n
+    \n
+    Thank you for using our dating app!\n
+]]></string>
+
+
+
+    <string name="billingPaymentHeader">Billing and Payment</string>
+    <string name="billingPayment"><![CDATA[
+
+    Thank you for using our dating app! Here are some important information about billing and payment:\n
+    \n
+    Subscription Plans\n
+    Our app offers subscription plans that provide premium features and benefits to enhance your dating experience. Subscription plans are available for purchase in the app and are billed on a recurring basis.\n
+    \n
+    Payment Methods\n
+    We accept various payment methods, including credit cards, debit cards, and other forms of electronic payment. Payment processing is handled securely by our trusted payment partners to ensure the safety of your personal and financial information.\n
+    \n
+    Billing Cycles\n
+    Subscription plans are billed on a recurring basis according to the billing cycle chosen during the purchase. You will be charged automatically at the beginning of each billing cycle until you cancel your subscription.\n
+    \n
+    Cancellation and Refunds\n
+    You can cancel your subscription at any time through the app or by contacting our support team at [%2s]. Please note that cancellation does not entitle you to a refund for any unused portion of your subscription period.\n
+    \n
+    Billing Inquiries\n
+    If you have questions or concerns about your billing, payment, or subscription, please contact our support team at [%2s]. We will be happy to assist you with any inquiries or issues.\n
+    \n
+    Note: Billing and payment information may be subject to change. Please refer to our terms of service and privacy policy for the most up-to-date information.\n
+]]></string>
+    <string name="contact_form"><![CDATA[
+    Welcome to our contact page!
+    \n
+    \nWe\'re here to help you with any questions, concerns, or issues you might have while using our dating site.
+    \nOur contact form is a safe and secure way to communicate with us and other users, and we encourage you to use it whenever you need to reach out.
+\n
+\n
+Here are a few ways you might use the contact form:
+\n
+\n
+1.To ask questions about another user\'s interests, hobbies, or anything else you might be curious about.
+\n
+\n
+2.To report any issues or suspicious behavior you\'ve noticed while using the site
+\n
+\n
+3.To provide feedback about our site\'s features, functionality, and user experience
+\n
+\n
+We\'re committed to providing a safe, positive, and enjoyable experience for all of our users, and we appreciate your help in making that happen.\n
+ If you have any questions or concerns that aren\'t addressed on our FAQ page,
+please don\'t hesitate to contact us using the form below. We\'ll get back to you as soon as we can.
+\n
+Thank you for choosing our dating site, and we hope you find what you\'re looking for!
+
+]]></string>
+
+
+
+    <string name="basic_detail_s_title">Basic detail\'s</string>
+    <string name="warning_on_personal_details_page">These fields can\'t be changed\' \n so please enter carefully!!!</string>
+    <string name="payment_activity_text">Unlock all features when you pay,\n It doesn\'t matter which plan you choose....</string>
+
+
 </resources>

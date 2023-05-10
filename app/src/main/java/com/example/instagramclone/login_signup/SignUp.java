@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.instagramclone.choices_tabs.tabs.Personal_Details;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
-import com.example.instagramclone.reusable_code.ParseUtils.ReusableQueries;
+import com.example.instagramclone.reusable_code.ParseUtils.DeleteQuery;
 import com.example.instagramclone.R;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
 import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
@@ -26,7 +26,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edtUserNameSignUp,edtEmail,edtPasswordSignUp;
     private Button btnSignUp, btnLogin;
-    ReusableQueries queryDatabase;
+    DeleteQuery queryDatabase;
 
 
     @Override
@@ -36,7 +36,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         setTitle("Sign Up");
 
-        queryDatabase = new ReusableQueries(this);
+        queryDatabase = new DeleteQuery(this);
 
         edtUserNameSignUp = findViewById(R.id.edtUserNameSignUp);
         edtEmail = findViewById(R.id.loginedtEmail);
@@ -61,14 +61,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         btnSignUp.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
-
         if(ParseUser.getCurrentUser() != null&& (String)ParseUser.getCurrentUser().get("name")!=null){//checks if user already logged in
 
             transitionSocialMediaActivity();
         } else if (ParseUser.getCurrentUser()!= null) {
             transitionToPersonalDetails();
         }
-
 
     }
 

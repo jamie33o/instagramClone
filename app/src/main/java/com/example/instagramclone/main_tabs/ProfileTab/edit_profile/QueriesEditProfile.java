@@ -3,7 +3,7 @@ package com.example.instagramclone.main_tabs.ProfileTab.edit_profile;
 import android.content.Context;
 
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.parse.GetCallback;
 
 import com.parse.ParseException;
@@ -49,20 +49,20 @@ public class QueriesEditProfile {
                                     @Override
                                     public void done(ParseException e) {
                                         if (e == null) {
-                                            Snackbar_Dialog.showSnackbar(context, "Success!!!\n Image saved", 2000);
+                                            Dialogs.showSnackbar(context, "Success!!!\n Image saved", 2000);
                                         } else {
-                                            Snackbar_Dialog.showSnackbar(context, "Error!!!\n Image not saved", 2000);
+                                            Dialogs.showSnackbar(context, "Error!!!\n Image not saved", 2000);
                                         }
                                     }
                                 });
                             } else {
-                                Snackbar_Dialog.showSnackbar(context, "Error!!!\n File not saved", 2000);
+                                Dialogs.showSnackbar(context, "Error!!!\n File not saved", 2000);
                             }
                         }
                     });
 
                 } else {
-                    Snackbar_Dialog.showSnackbar(context, e.getMessage(), 2000);
+                    Dialogs.showSnackbar(context, e.getMessage(), 2000);
                 }
             }
         });

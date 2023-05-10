@@ -3,6 +3,8 @@ package com.example.instagramclone.spotify;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagramclone.R;
+import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.neovisionaries.i18n.CountryCode;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
@@ -32,9 +39,8 @@ public class SpotifySongs extends AppCompatActivity implements SongAdapter.SongV
     private static final String CLIENT_ID = "857b49fc34f84d8a91f7baf4faa63acd";
     private static final String REDIRECT_URI = "editprofile:/callback";
 
-    private RecyclerView songsRecyclerView;
     private SongAdapter songAdapter;
-    private List<Song> songs = new ArrayList<>();
+    private final List<Song> songs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +56,48 @@ public class SpotifySongs extends AppCompatActivity implements SongAdapter.SongV
         AuthorizationClient.openLoginActivity(this, REQUEST_CODE, request);
 
 
-        songsRecyclerView = findViewById(R.id.songsRecyclerView);
+        RecyclerView songsRecyclerView = findViewById(R.id.songsRecyclerView);
         songAdapter = new SongAdapter(songs);
         songsRecyclerView.setAdapter(songAdapter);
         songsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         songAdapter.setViewHolderOnCloseActivityListener(this);
 
+        Button deleteSong = findViewById(R.id.delete_song);
 
+        deleteSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
+                    @Override
+                    public void done(ParseModel parseModel, ParseException e) {
+                        if (e == null) {
+                            // Check if column exists in the object
+
+                            parseModel.remove(ParseModel.ALBUM_NAME);
+                            parseModel.remove(ParseModel.ARTIST_NAME);
+                            parseModel.remove(ParseModel.TRACK_IMAGE);
+                            parseModel.remove(ParseModel.SONG_NAME);
+                            parseModel.pinInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if (e == null) {
+
+                                        Dialogs.showSnackbar(SpotifySongs.this,"Song deleted", 2000);
+
+                                    } else {
+                                        Dialogs.showSnackbar(SpotifySongs.this,"Error deleting song", 2000);
+
+                                    }
+                                }
+                            });
+                        } else {
+                            Dialogs.showSnackbar(SpotifySongs.this,"Error deleting song", 2000);
+
+                        }
+                    }
+
+                });   }
+        });
     }
 
     @Override

@@ -14,15 +14,15 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.example.instagramclone.choices_tabs.Choices_tabs_MainPage;
+import com.example.instagramclone.ButtonTxtArraysSingleton;
 import com.example.instagramclone.main_tabs.ProfileTab.edit_profile.EditProfile;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.R;
-import com.example.instagramclone.main_tabs.SocialMediaActivity;
+
 import com.example.instagramclone.reusable_code.AddBtnTxtToArray;
 import com.example.instagramclone.reusable_code.ButtonCreator;
 import com.example.instagramclone.reusable_code.LightUpPreSelectedbtn;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -34,22 +34,21 @@ import java.util.List;
 
 public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
 
-    List<String> workoutList;
-    List<Button> kidsbtnList, smokingbtnList, workoutbtnList, dietarybtnList, socialmediabtnList, petsbtnList, drinkingbtnList;
-    TableLayout tableLayout1, table_layout_2, table_layout_3, table_layout_4, table_layout_5, table_layout_6, table_layout_7;
-    ButtonCreator buttonCreatorSmoking, buttonCreatorPets, buttonCreatorWorkout, buttonCreatorDrinking, buttonCreatorDietary, buttonCreatorKids, buttonCreatorsocialMedia;
+    private boolean choiceIsChanged = false;
+    private List<String> workoutList;
+    private List<Button> kidsbtnList, smokingbtnList, workoutbtnList, dietarybtnList, socialmediabtnList, petsbtnList, drinkingbtnList;
 
-    String petsString, smokingString, drinkingString, dietryString, socialMediaString, kidsString;
+    private String petsString, smokingString, drinkingString, dietryString, socialMediaString, kidsString;
 
-    TextView txtview;
-     View view;
+    private View view;
+    private ButtonTxtArraysSingleton singletonInstance;
 
     private AddBtnTxtToArray addBtnTxtToArray, addBtnTxtToArray1, addBtnTxtToArray2, addBtnTxtToArray3, addBtnTxtToArray4, addBtnTxtToArray5, addBtnTxtToArray6;
 
     private LightUpPreSelectedbtn lightUpPreSelectedbtn;
 
-    String[] petsArray, smokingArray, kidsArray, drinkingArray, dietaryArray, workoutArray, socialmediaArray;
-    String myVariable;
+    private String[] petsArray, smokingArray, kidsArray, drinkingArray, dietaryArray, workoutArray, socialmediaArray;
+   private String myVariable;
     public My_Lifestyle_tab() {
 
     }
@@ -60,25 +59,14 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        view = inflater.inflate(R.layout.main_xml_for_choices_tab,//used to find view inside fragment
+        view = inflater.inflate(R.layout.fragment_choices_tab,//used to find view inside fragment
                 container, false);
-
-
-
-        smokingArray = new String[]{"Don't smoke", "When Stressed", "Sometimes", "Only when drinking"};
-        petsArray = new String[]{"Like them have none", "Have a dog", "Have a cat", "Love them", "Not an animal lover", "Have loads"};
-        workoutArray = new String[]{"Bodybuilder", "Physique model", "Daily", "when i can", "Running", "Play sports", "Cardio", "Strength training", "HIIT", "Yoga", "Pilates", "CrossFit", "Cycling", "Swimming", "Rowing", "Boxing", "Martial arts", "Dance", "Barre", "Bodyweight training", "Resistance band training", "TRX training", "Calisthenics"};
-        drinkingArray = new String[]{"Weekends", "regular", "Special occasion", "Don't drink"};
-        socialmediaArray = new String[]{"Passive scroller", "Addicted", "Rare", "Casual"};
-        kidsArray = new String[]{"One child", "two kids", "Three kids", "Four kids", "Five kids", "Love kids have none", "Never", "Maybe", "Love too", "Someday", "Definetly someday"};
-        dietaryArray = new String[]{"Vegetarian", "Vegan", "Ketogenic", "Paleo", "Gluten-free", "Low-carb", "Mediterranean", "DASH", "Flexitarian", "Raw food", "Intermittent fasting", "Whole30", "Atkins", "South Beach", "Weight Watchers", "Zone"};
-
 
         view.findViewById(R.id.savebtn).setOnClickListener(this);
 
 
         //set the text views
-        txtview = view.findViewById(R.id.txtview_title);
+        TextView txtview = view.findViewById(R.id.txtview_title);
         txtview.setText("My Lifestyle");
 
         TextView textViewHeight = view.findViewById(R.id.txtview_choice0);
@@ -118,13 +106,13 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
 
         //initialize table layouts
         // tableLayout = view.findViewById(R.id.table_layout_1);
-        tableLayout1 = view.findViewById(R.id.table_layout);
-        table_layout_2 = view.findViewById(R.id.table_layout_2);
-        table_layout_3 = view.findViewById(R.id.table_layout_3);
-        table_layout_4 = view.findViewById(R.id.table_layout_4);
-        table_layout_5 = view.findViewById(R.id.table_layout_5);
-        table_layout_6 = view.findViewById(R.id.table_layout_6);
-        table_layout_7 = view.findViewById(R.id.table_layout_7);
+        TableLayout tableLayout1 = view.findViewById(R.id.table_layout);
+        TableLayout table_layout_2 = view.findViewById(R.id.table_layout_2);
+        TableLayout table_layout_3 = view.findViewById(R.id.table_layout_3);
+        TableLayout table_layout_4 = view.findViewById(R.id.table_layout_4);
+        TableLayout table_layout_5 = view.findViewById(R.id.table_layout_5);
+        TableLayout table_layout_6 = view.findViewById(R.id.table_layout_6);
+        TableLayout table_layout_7 = view.findViewById(R.id.table_layout_7);
 
         workoutList = new ArrayList<>();
 
@@ -137,28 +125,29 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
         kidsbtnList = new ArrayList<>();
         drinkingbtnList = new ArrayList<>();
 
+         singletonInstance = ButtonTxtArraysSingleton.getInstance();
 
         //initialize and create the buttons
-        buttonCreatorPets = new ButtonCreator(view.getContext(), petsbtnList);
-        buttonCreatorPets.buttonCreator(tableLayout1, this, "", petsArray);
+        ButtonCreator buttonCreatorPets = new ButtonCreator(view.getContext(), petsbtnList);
+        buttonCreatorPets.buttonCreator(tableLayout1, this, singletonInstance.petsArray);
 
-        buttonCreatorSmoking = new ButtonCreator(view.getContext(), smokingbtnList);
-        buttonCreatorSmoking.buttonCreator(table_layout_2, this, "", smokingArray);
+        ButtonCreator buttonCreatorSmoking = new ButtonCreator(view.getContext(), smokingbtnList);
+        buttonCreatorSmoking.buttonCreator(table_layout_2, this, singletonInstance.smokingArray);
 
-        buttonCreatorWorkout = new ButtonCreator(view.getContext(), workoutbtnList);
-        buttonCreatorWorkout.buttonCreator(table_layout_3, this, "", workoutArray);
+        ButtonCreator buttonCreatorWorkout = new ButtonCreator(view.getContext(), workoutbtnList);
+        buttonCreatorWorkout.buttonCreator(table_layout_3, this, singletonInstance.workoutArray);
 
-        buttonCreatorDrinking = new ButtonCreator(view.getContext(), drinkingbtnList);
-        buttonCreatorDrinking.buttonCreator(table_layout_4, this, "", drinkingArray);
+        ButtonCreator buttonCreatorDrinking = new ButtonCreator(view.getContext(), drinkingbtnList);
+        buttonCreatorDrinking.buttonCreator(table_layout_4, this, singletonInstance.drinkingArray);
 
-        buttonCreatorDietary = new ButtonCreator(view.getContext(), dietarybtnList);
-        buttonCreatorDietary.buttonCreator(table_layout_5, this, "", dietaryArray);
+        ButtonCreator buttonCreatorDietary = new ButtonCreator(view.getContext(), dietarybtnList);
+        buttonCreatorDietary.buttonCreator(table_layout_5, this, singletonInstance.dietaryArray);
 
-        buttonCreatorKids = new ButtonCreator(view.getContext(), kidsbtnList);
-        buttonCreatorKids.buttonCreator(table_layout_7, this, "", kidsArray);
+        ButtonCreator buttonCreatorKids = new ButtonCreator(view.getContext(), kidsbtnList);
+        buttonCreatorKids.buttonCreator(table_layout_7, this, singletonInstance.kidsArray);
 
-        buttonCreatorsocialMedia = new ButtonCreator(view.getContext(), socialmediabtnList);
-        buttonCreatorsocialMedia.buttonCreator(table_layout_6, this, "", socialmediaArray);
+        ButtonCreator buttonCreatorsocialMedia = new ButtonCreator(view.getContext(), socialmediabtnList);
+        buttonCreatorsocialMedia.buttonCreator(table_layout_6, this, singletonInstance.socialmediaArray);
 
 
         addBtnTxtToArray5 = new AddBtnTxtToArray(view.getContext());
@@ -214,31 +203,32 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
 
         if (!(v instanceof ImageButton)) {
 
+            choiceIsChanged = true;
             Button btn = view.findViewById(buttonId);
             String btnTxt = btn.getText().toString();
 
 
-            if (Arrays.asList(kidsArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.kidsArray).contains(btnTxt))
                 kidsString = addBtnTxtToArray1.addBtnClickedTxttoString(kidsString, kidsbtnList, v);
-            if (Arrays.asList(smokingArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.smokingArray).contains(btnTxt))
                 smokingString = addBtnTxtToArray2.addBtnClickedTxttoString(smokingString, smokingbtnList, v);
-            if (Arrays.asList(socialmediaArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.socialmediaArray).contains(btnTxt))
                 socialMediaString = addBtnTxtToArray3.addBtnClickedTxttoString(socialMediaString, socialmediabtnList, v);
-            if (Arrays.asList(drinkingArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.drinkingArray).contains(btnTxt))
                 drinkingString = addBtnTxtToArray4.addBtnClickedTxttoString(drinkingString, drinkingbtnList, v);
-            if (Arrays.asList(petsArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.petsArray).contains(btnTxt))
                 petsString = addBtnTxtToArray6.addBtnClickedTxttoString(petsString, petsbtnList, v);
-            if (Arrays.asList(dietaryArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.dietaryArray).contains(btnTxt))
                 dietryString = addBtnTxtToArray5.addBtnClickedTxttoString(dietryString, dietarybtnList, v);
-            if (Arrays.asList(workoutArray).contains(btnTxt))
+            if (Arrays.asList(singletonInstance.workoutArray).contains(btnTxt))
                 addBtnTxtToArray.addBtnClickedTxtToArray(workoutList, v, 3);
 
 
         }
         if (v.getId() == R.id.savebtn) {
 
-
-            uploadToRealm();
+            if(choiceIsChanged)
+                saveToParse();
             //todo go back to editprofile page mite need to use intent on activity results to update info???
             android.os.Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
@@ -257,7 +247,7 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void uploadToRealm() {
+    public void saveToParse() {
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel parseModel, ParseException e) {
@@ -283,16 +273,16 @@ public class My_Lifestyle_tab extends Fragment implements View.OnClickListener {
                         public void done(ParseException e) {
                             if (e == null) {
                                 // Display a toast message to indicate that the object has been saved locally
-                                Snackbar_Dialog.showSnackbar(view.getContext(), "Success!!!\n Selection's saved", 2000);
+                                Dialogs.showSnackbar(view.getContext(), "Success!!!\n Selection's saved", 2000);
                             } else {
-                                Snackbar_Dialog.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
+                                Dialogs.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
 
 
                             }
                         }
                     });
                 } else {
-                    Snackbar_Dialog.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
+                    Dialogs.showSnackbar(view.getContext(), "Error!!!\n Selection's not saved", 2000);
                 }
             }
         });

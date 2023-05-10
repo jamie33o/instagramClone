@@ -8,7 +8,7 @@ import com.example.instagramclone.main_tabs.ItemModel;
 
 import java.util.List;
 
-public class Profiles_liked_you_back_Adapter extends LikedProfilesAdapter{
+public class Profiles_liked_you_back_Adapter extends Liked_Profile_Adapter {
     public Profiles_liked_you_back_Adapter(Context context, List<ItemModel> likedProfiles) {
         super(context, likedProfiles);
     }

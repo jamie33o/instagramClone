@@ -2,20 +2,24 @@ package com.example.instagramclone.choices_tabs.tabs;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.instagramclone.R;
-import com.example.instagramclone.choices_tabs.Choices_tabs_MainPage;
+import com.example.instagramclone.choices_tabs.Choices_tabs_Activity;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -25,6 +29,8 @@ import java.util.Date;
 
 public class Personal_Details extends AppCompatActivity implements View.OnClickListener {
 
+    String name,hometownString,dateString;
+    int value;
     ImageButton savebtn;
     AutoCompleteTextView edtTxtHomeCountry;
     EditText ageEdt, nameEdt, d_o_bEdt;
@@ -32,6 +38,8 @@ public class Personal_Details extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_details);
+
+        //for hiding the keyboard
 
         savebtn = findViewById(R.id.savebtnPersonalDetails);
         savebtn.setOnClickListener(this);
@@ -102,31 +110,57 @@ public class Personal_Details extends AppCompatActivity implements View.OnClickL
 // Step 4: Set the adapter for the AutoCompleteTextView
         edtTxtHomeCountry.setAdapter(adapter);
 
-
     }
 
     @Override
     public void onClick(View v) {
-        if(!ageEdt.getText().toString().equals("")&& !d_o_bEdt.getText().toString().equals("")&& !nameEdt.getText().toString().equals("")&&!edtTxtHomeCountry.getText().toString().equals("")) {
-            saveToParse();
-            startActivity(new Intent(this, Choices_tabs_MainPage.class));
-            finish();
+
+
+        if (!ageEdt.getText().toString().equals("") && !d_o_bEdt.getText().toString().equals("") && !nameEdt.getText().toString().equals("") && !edtTxtHomeCountry.getText().toString().equals("")) {
+            value = Integer.parseInt(ageEdt.getText().toString());
+            name = nameEdt.getText().toString();
+            hometownString = edtTxtHomeCountry.getText().toString();
+            dateString = d_o_bEdt.getText().toString();
+
+// Get the InputMethodManager instance
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+// Hide the keyboard from the currently focused view
+            View view = getCurrentFocus();
+            if (view != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            String dialogTitle = "!!!--These can't be changed--!!!" + "\nAre your details correct?";
+            String dialogMessage = "Name: " + name + "\nAge: " + value + "\nD.O.B: " + dateString + "\nHomeCountry: " + hometownString;
+
+            Dialogs.showAlertDialog(Personal_Details.this, dialogTitle, dialogMessage, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    saveToParse();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(Personal_Details.this, Choices_tabs_Activity.class));
+                            finish();
+                        }
+                    }, 1000);
+
+
+                }
+            });
         }
     }
-
     public void saveToParse(){
-
-
-        String name = nameEdt.getText().toString();
-        String hometownString = edtTxtHomeCountry.getText().toString();
 
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel object, ParseException e) {
                 object.setName(name);
-                int value = Integer.parseInt(ageEdt.getText().toString());
+
                 object.setAge(value);
-                String dateString = d_o_bEdt.getText().toString().replace("/", "");
+                 dateString = d_o_bEdt.getText().toString().replace("/", "");
 
                 int dob = Integer.parseInt(dateString);
                 Date date = new Date(dob);
@@ -136,7 +170,7 @@ public class Personal_Details extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void done(ParseException e) {
                         if (e == null){
-                            Snackbar_Dialog.showSnackbar(Personal_Details.this, "Success!!!\n saved", 2000);
+                            Dialogs.showSnackbar(Personal_Details.this, "Success!!!\n saved", 2000);
 
                             ParseUser currentUser = ParseUser.getCurrentUser();
                             if (currentUser != null) {
@@ -151,4 +185,7 @@ public class Personal_Details extends AppCompatActivity implements View.OnClickL
         });
 
     }
+
+
+
 }

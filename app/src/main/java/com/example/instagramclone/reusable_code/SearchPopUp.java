@@ -1,6 +1,7 @@
 package com.example.instagramclone.reusable_code;
 
         import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.widget.SwitchCompat;
 
         import android.app.Activity;
         import android.content.Intent;
@@ -15,15 +16,13 @@ package com.example.instagramclone.reusable_code;
         import android.widget.CompoundButton;
         import android.widget.ImageButton;
         import android.widget.SeekBar;
-        import android.widget.Switch;
         import android.widget.TableLayout;
         import android.widget.TableRow;
         import android.widget.TextView;
 
+        import com.example.instagramclone.ButtonTxtArraysSingleton;
         import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
         import com.example.instagramclone.R;
-        import com.example.instagramclone.reusable_code.ParseUtils.DataBaseUtils;
-        import com.example.instagramclone.reusable_code.ParseUtils.ReusableQueries;
         import com.parse.GetCallback;
         import com.parse.ParseException;
         import com.parse.SaveCallback;
@@ -39,10 +38,8 @@ public class SearchPopUp extends AppCompatActivity implements View.OnClickListen
     private double searchDistance = 0;
 
     private TextView distanceText;
-     SeekBar startDistanceSeekBar;
 
     private TableRow tableRow;
-    private Switch switchBtn;
 
     private List<String> chosenCountiesList;
 
@@ -50,51 +47,53 @@ public class SearchPopUp extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_match_choices);
-        String[] countiesIreland = new String[]{"Antrim", "Armagh", "Carlow", "Cavan", "Clare", "Cork", "Derry", "Donegal", "Down", "Dublin", "Fermanagh", "Galway", "Kerry", "Kildare", "Kilkenny", "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon", "Sligo", "Tipperary", "Tyrone", "Waterford", "Westmeath", "Wexford", "Wicklow"};
+        setContentView(R.layout.activity_search_pop_up);
 
-        DataBaseUtils queryDatabase = new ReusableQueries(this);
 
         chosenCountiesList = new ArrayList<>();
 
+        //set the size of the page for pop up activity
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-
         getWindow().setLayout((int) (width * .9), (int) (height * .8));
         WindowManager.LayoutParams params = getWindow().getAttributes();
-
 
         params.gravity = Gravity.CENTER;
         getWindow().setAttributes(params);
 
         TextView textView = findViewById(R.id.txtview_title);
+        textView.setText(R.string.search_pop_title);
+
+
         findViewById(R.id.savebtn).setOnClickListener(this);
         findViewById(R.id.backbtn).setOnClickListener(this);
 
+        //layout for the counties buttons
         tableLayout = findViewById(R.id.tablelayout);
 
+        //singleton class of string arrays for buttons
+        ButtonTxtArraysSingleton singletonInstance = ButtonTxtArraysSingleton.getInstance();
 
-
+        //class that creates the buttons
         countieBtnList = new ArrayList<>();
         ButtonCreator buttonCreator = new ButtonCreator(this, countieBtnList);
-        buttonCreator.buttonCreator(tableLayout, this, "", countiesIreland);
+        buttonCreator.buttonCreator(tableLayout, this,singletonInstance.counties);
+
 
         addBtnTxtToArray = new AddBtnTxtToArray(this);
 
 
         distanceText = findViewById(R.id.distance);
-        startDistanceSeekBar = findViewById(R.id.start_distance_seekbar);
+        SeekBar startDistanceSeekBar = findViewById(R.id.start_distance_seekbar);
 
 
-        textView.setText(R.string.search_pop_title);
 
         tableRow = findViewById(R.id.seekBar_row);
         tableRow.setVisibility(View.GONE);
 
-        switchBtn = findViewById(R.id.switch_btn);
+        SwitchCompat switchBtn = findViewById(R.id.switch_btn);
 
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -136,6 +135,7 @@ public class SearchPopUp extends AppCompatActivity implements View.OnClickListen
         });
 
 
+        //parse query to get previously selected buttons or distance
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel parseModel, ParseException e) {
@@ -145,8 +145,7 @@ public class SearchPopUp extends AppCompatActivity implements View.OnClickListen
                      chosenCountiesList = new ArrayList<>(parseModel.getChosenCounties());
 
                     searchDistance = parseModel.getSearchDistance();
-
-
+                    //changes the colour of stroke around button of previously selected buttons
                     LightUpPreSelectedbtn lightUpPreSelectedbtn = new LightUpPreSelectedbtn(SearchPopUp.this);
                     lightUpPreSelectedbtn.lightUpPreSelectBtn(chosenCountiesList, countieBtnList);
                 }
@@ -167,22 +166,22 @@ public class SearchPopUp extends AppCompatActivity implements View.OnClickListen
         }
 
         if (!(v instanceof ImageButton)) {
-
+            //adds txt of btn to array
             addBtnTxtToArray.addBtnClickedTxtToArray(chosenCountiesList, v, 4);
 
         }
 
         // Save the search prefs
         if (v.getId() == R.id.savebtn) {
-            uploadToRealm();
+            saveToParse();
         }
 
 
 
     }
 
-    public void uploadToRealm() {
-// Set the value of a dynamic property using reflection
+    public void saveToParse() {
+//save all selected buttons txt to local datastore to be uploaded at later stage
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel parseModel, ParseException e) {

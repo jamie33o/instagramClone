@@ -133,14 +133,7 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone">
 
-                <ImageView
-                    android:id="@+id/imgplus"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="end|center"
-                    android:elevation="2dp"
-                    android:src="@drawable/baseline_add_24"
-                    android:visibility="gone" />
+
 
                 <View
                     android:id="@+id/line1"
@@ -205,7 +198,9 @@
                 android:id="@+id/table_layout_2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"></TableLayout>
+                android:layout_marginTop="10dp">
+
+            </TableLayout>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -495,7 +490,6 @@
                     android:layout_margin="30dp"
 
                     android:fontFamily="sans-serif-black"
-                    android:text="Interests"
                     android:textColor="@color/text_color"
                     android:textSize="20sp"
                     android:visibility="gone" />
@@ -527,4 +521,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/baseline_add_task_24" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

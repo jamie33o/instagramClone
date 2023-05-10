@@ -10,15 +10,76 @@
     app:cardPreventCornerOverlap="false"
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="@android:color/white">
-
-    <ImageView
-        android:id="@+id/item_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
-
-
     <LinearLayout
+        android:id="@+id/dotsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:elevation="3dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Dot 1 -->
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+        <!-- Dot 2 -->
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+        <!-- Dot 3 -->
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="50dp"
+            android:layout_height="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TableRow
+            android:layout_width="match_parent"
+            android:elevation="3dp"
+            android:layout_height="match_parent">
+            <View
+                android:id="@+id/clickable_left"
+                android:layout_width="match_parent"
+                android:elevation="5dp"
+                android:layout_weight="0.5"
+                android:layout_height="match_parent" />
+
+            <View
+                android:id="@+id/clickable_right"
+                android:layout_width="match_parent"
+                android:elevation="6dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+        </TableRow>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager_cardstackview"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+
+<LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,33 +87,38 @@
         android:layout_marginBottom="70dp"
         android:padding="16dp">
         <!--android:background="@drawable/gradation_black"-->
-        <TableRow
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent">
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:textSize="30sp"/>
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/item_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_weight="1"
             android:textColor="@android:color/white"
 
-            android:textSize="25sp"/>
+            android:textSize="25sp" />
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_gravity="end"
-               android:src="@drawable/baseline_add_24" />
+        <ImageView
+            android:id="@+id/profie_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="30dp"
 
-        </TableRow>
+            android:src="@drawable/baseline_add_24" />
+
+    </TableRow>
         <TextView
             android:id="@+id/item_city"
             android:layout_width="wrap_content"

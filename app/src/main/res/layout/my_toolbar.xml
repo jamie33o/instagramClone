@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/myToolbar"
-    android:background="@color/ActionBarTitleColor"
+    android:background="@drawable/tab_bar_background"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <ImageButton
@@ -36,6 +36,15 @@
         android:layout_gravity="start"
         android:padding="10dp" />
 
+    <ImageButton
+        android:id = "@+id/settings"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="end"
+        android:visibility="gone"
+
+        android:background="@drawable/settings_icon" />
 </androidx.appcompat.widget.Toolbar>
 
 

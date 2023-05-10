@@ -33,16 +33,16 @@ import java.util.List;
 
 
 public class Messaging_Activity extends AppCompatActivity implements View.OnClickListener {
-    List<Message> messages;
-    RecyclerView messageRecyclerView;
-    ParseUser recipientUserclass;
-    Button send_button;
+    private List<MessageModel> messages;
+    private RecyclerView messageRecyclerView;
+    private ParseUser recipientUserclass;
+    private Button send_button;
     private SubscriptionHandling<ParseMesssageModel> subscriptionHandling;
-    TextView profileName;
-    EditText edtMessage;
-    ParseUser currentUser;
-    ImageView profilePic;
-    MessageAdapter messageAdapter;
+    private TextView profileName;
+    private EditText edtMessage;
+    private ParseUser currentUser;
+    private ImageView profilePic;
+    private MessageAdapter messageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +79,7 @@ public class Messaging_Activity extends AppCompatActivity implements View.OnClic
                     image.getFileInBackground(new GetFileCallback() {
                         @Override
                         public void done(File file, ParseException e) {
-                            picasso.getImageNloadIntoImageview(profilePic, file.getAbsolutePath(), "", 150, 150, 100);
+                            picasso.getImageNloadIntoImageview(file.getAbsolutePath(), profilePic, 150, 150, 100);
 
                         }
                     });
@@ -111,7 +111,7 @@ public class Messaging_Activity extends AppCompatActivity implements View.OnClic
 
 
     public void addMessage(String messageText, String messageTime,ParseUser userclassPointer) {
-            Message message = new Message(messageText, messageTime,userclassPointer);
+            MessageModel message = new MessageModel(messageText, messageTime,userclassPointer);
             messages.add(message);
         messageAdapter.notifyItemInserted(messages.size() -1);
     }
@@ -186,13 +186,13 @@ public class Messaging_Activity extends AppCompatActivity implements View.OnClic
             public void done(ParseException e) {
                 if (e == null) {
                     addMessage(messageText,currentTimeString,currentUser);
-                    Snackbar_Dialog.showSnackbar(Messaging_Activity.this, "Success!!!\n Message sent", 2000);
+                    Dialogs.showSnackbar(Messaging_Activity.this, "Success!!!\n MessageModel sent", 2000);
 
                     edtMessage.setText("");
                 } else {
 
                     System.out.println(e.getMessage());
-                    Snackbar_Dialog.showSnackbar(Messaging_Activity.this, "Error!!!\n Message not sent", 2000);
+                    Dialogs.showSnackbar(Messaging_Activity.this, "Error!!!\n MessageModel not sent", 2000);
 
                 }
             }

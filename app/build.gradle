@@ -73,6 +73,7 @@ dependencies {
     implementation "com.github.parse-community.Parse-SDK-Android:parse:4.1.0"
     implementation 'com.github.parse-community:ParseLiveQuery-Android:1.2.2'
     implementation 'com.parse.bolts:bolts-android:1.4.0'
+
     //braintree payments
     implementation 'com.braintreepayments.api:drop-in:6.9.0'
 

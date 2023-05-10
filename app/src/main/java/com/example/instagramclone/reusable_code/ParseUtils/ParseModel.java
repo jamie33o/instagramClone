@@ -13,6 +13,7 @@ import java.util.List;
 
 @ParseClassName("Profile")
 public class ParseModel extends ParseObject {
+    
 
     public static ParseQuery<ParseModel> getQuery(boolean getcurrentuser) {
         ParseQuery<ParseModel> query = ParseQuery.getQuery(ParseModel.class);
@@ -24,6 +25,9 @@ public class ParseModel extends ParseObject {
         return query;
     }
 
+    public static final String IS_PAYED = "is_payed";
+    public static final String BOOL_SHOW_AGE = "show_age";
+    public static final String BOOL_SHOW_LOCATION = "show_location";
 
     public static final String LOCATION = "location";
 
@@ -97,6 +101,32 @@ public class ParseModel extends ParseObject {
         put(USER_CLASS_POINTER, userClassPointer);
     }
     // Define getters and setters for fields
+    public boolean getIsPayed() {
+        return getBoolean(IS_PAYED);
+    }
+
+    public void setIsPayed(boolean isPayed) {
+        put(IS_PAYED, isPayed);
+    }
+
+    public boolean getBoolShowLocation() {
+        return getBoolean(BOOL_SHOW_LOCATION);
+    }
+
+    public void setBoolShowLocation(boolean isPayed) {
+        put(BOOL_SHOW_LOCATION, isPayed);
+    }
+
+
+    public boolean getBoolShowAge() {
+        return getBoolean(BOOL_SHOW_AGE);
+    }
+
+    public void setBoolShowAge(boolean showAge) {
+        put(BOOL_SHOW_AGE, showAge);
+    }
+
+
     public String getUserName() {
         return getString(USER_NAME);
     }

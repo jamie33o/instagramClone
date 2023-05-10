@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/choices_tab_pages"
+    tools:context=".choices_tabs.Choices_tabs_Activity">
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager_choices_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/view_pager">
+
+    </androidx.viewpager2.widget.ViewPager2>
+
+
+
+    <!-- Dots Indicator -->
+    <LinearLayout
+        android:id="@+id/dotsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- Dot 1 -->
+        <View
+            android:id="@+id/dot1"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options"/>
+
+        <!-- Dot 2 -->
+        <View
+            android:id="@+id/dot2"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+        <!-- Dot 3 -->
+        <View
+            android:id="@+id/dot3"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+        <!-- Dot 1 -->
+        <View
+            android:id="@+id/dot4"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options"/>
+
+        <!-- Dot 2 -->
+        <View
+            android:id="@+id/dot5"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+        <!-- Dot 3 -->
+        <View
+            android:id="@+id/dot6"
+            android:layout_width="40dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_coner_shape_grey"
+            android:contentDescription="@string/scroll_view_options" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

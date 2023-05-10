@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.braintreepayments.api.DropInClient;
 import com.braintreepayments.api.DropInListener;
@@ -18,10 +17,14 @@ import com.braintreepayments.api.DropInRequest;
 import com.braintreepayments.api.DropInResult;
 import com.braintreepayments.api.PaymentMethodNonce;
 import com.braintreepayments.api.UserCanceledException;
+import com.braintreepayments.cardform.view.CardForm;
 import com.example.instagramclone.R;
+import com.example.instagramclone.reusable_code.DotsIndicator;
+import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
-import com.example.instagramclone.reusable_code.Snackbar_Dialog;
+import com.example.instagramclone.reusable_code.Dialogs;
 import com.parse.FunctionCallback;
+import com.parse.GetCallback;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 
@@ -35,57 +38,82 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     private DropInClient dropInClient;
     RecyclerView pricesRecyleView;
     PricesAdapter pricesAdapter;
-    Button payBtn;
+    int currentPosition;
+    int lastpos = 0;
+    double amount;
     DropInRequest dropInRequest;
-
+    List<PricesModel> pricesModelList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-
         // DropInClient can also be instantiated with a tokenization key
          dropInClient = new DropInClient(this, "sandbox_cs5rdzwp_bcpng56c5yzsxjjs");
+
+         //braintree payment drop in
          dropInRequest = new DropInRequest();
+        dropInRequest.setVaultManagerEnabled(true);
+        dropInRequest.setCardholderNameStatus(CardForm.FIELD_OPTIONAL);
         dropInClient.setListener(this);
 
 
-
-        List<PricesModel> pricesModelList = new ArrayList<>();
-
+        //list array for prices recycle view
+        pricesModelList = new ArrayList<>();
         pricesModelList.add(new PricesModel("Popular","1 week","€5.99","10% off"));
         pricesModelList.add(new PricesModel("Best value","1 Month","€15.99","20% off"));
         pricesModelList.add(new PricesModel("Bargain","1 Year","€130","50% off"));
 
 
-        payBtn = findViewById(R.id.paypal_button);
-        payBtn.setOnClickListener(this);
+
         // Initialize RecyclerView
         pricesRecyleView = findViewById(R.id.payment_recyclerview);
         pricesRecyleView.setLayoutManager(new LinearLayoutManager(this));
-        pricesAdapter = new PricesAdapter(this, pricesModelList);
+        pricesAdapter = new PricesAdapter(this, pricesModelList,this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         pricesRecyleView.setLayoutManager(layoutManager);
         pricesRecyleView.setAdapter(pricesAdapter);
-        SnapHelper snapHelperLikedYouBack = new LinearSnapHelper();
-        snapHelperLikedYouBack.attachToRecyclerView(pricesRecyleView);
+        //stops the recycleview in centre of page on each item
+        SnapHelper linearSnapHelper = new LinearSnapHelper();
+        linearSnapHelper.attachToRecyclerView(pricesRecyleView);
 
 
-    }
+
+        //dots under the recycle view to show which item user on and how many item
+        View dot1 = findViewById(R.id.dot1);
+        View dot2 = findViewById(R.id.dot2);
+        View dot3 = findViewById(R.id.dot3);
+        List<View> dots = new ArrayList<>();
+        dots.add(dot1);
+        dots.add(dot2);
+        dots.add(dot3);
+       new DotsIndicator(dots,this,pricesRecyleView,layoutManager);
+       }
+
     void postNonceToServer(String nonce) {
+        //get payment nonce from braintree and sends to server
         ParseCloud.callFunctionInBackground("processPayment", new HashMap<String, Object>() {{
             put("payment_method_nonce", nonce);
             put("ID", UtilsClass.getCurrentUsername());
-            put("amount", "10.00");
+            put("amount", amount);
         }}, new FunctionCallback<HashMap<String, Object>>() {
             @Override
             public void done(HashMap<String, Object> result, ParseException e) {
                 if (e == null) {
                     // Access the result values and convert them to strings
                     String message = Objects.requireNonNull(result.get("message")).toString();
-                    Snackbar_Dialog.showSnackbar(PaymentActivity.this,message,2000);
+                    Dialogs.showSnackbar(PaymentActivity.this,message,2000);
+
+                    ParseModel.getQuery(true).getFirstInBackground(new GetCallback<ParseModel>() {
+                        @Override
+                        public void done(ParseModel object, ParseException e) {
+                            //sets boolean ispayed on server when user pays to be used to unlock features
+                            object.setIsPayed(true);
+                            object.saveInBackground();
+                        }
+                    });
                 } else {
-                    Snackbar_Dialog.showSnackbar(PaymentActivity.this,"Error!!!\n"+e.getMessage(),2000);
+                    Dialogs.showSnackbar(PaymentActivity.this,"Error!!!\n"+e.getMessage(),2000);
                 }
             }
         });
@@ -98,7 +126,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void userPayMethodPrefs() {
-
+        //get user previous payment method nonce
         dropInClient.fetchMostRecentPaymentMethod(this, (dropInResult, error) -> {
             if (error != null) {
                 // an error occurred
@@ -131,7 +159,6 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     public void onDropInSuccess(@NonNull DropInResult dropInResult) {
         String paymentMethodNonce = Objects.requireNonNull(dropInResult.getPaymentMethodNonce()).getString();
         // use the result to update your UI and send the payment method nonce to your server
-        System.out.println(paymentMethodNonce);
         postNonceToServer(paymentMethodNonce);
 
     }
@@ -142,6 +169,7 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
     public void onDropInFailure(@NonNull Exception error) {
         if (error instanceof UserCanceledException) {
             // the user canceled
+
         } else {
             // handle error
         }
@@ -149,6 +177,15 @@ public class PaymentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        launchDropIn();
+        //launch drop in and get price from recycle view item that was clicked
+        if(v.getId() == R.id.pay_button) {
+            String priceString = pricesModelList.get(currentPosition).getPrice();
+            String numericString = priceString.replaceAll("[^0-9.]", ""); // Remove non-numeric characters
+            amount = Double.parseDouble(numericString); // Convert to double
+
+            launchDropIn();
+        }
+
+
     }
 }

@@ -83,9 +83,8 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="5dp"
-                android:background="@color/small_buttons"
                 android:contentDescription="@string/scroll_view_options"
-                android:src="@android:drawable/radiobutton_on_background" />
+                android:background="@drawable/rounded_coner_shape_grey" />
 
             <!-- Dot 2 -->
             <View
@@ -93,9 +92,7 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="5dp"
-                android:background="@color/small_buttons"
-                android:contentDescription="@string/scroll_view_options"
-                android:src="@android:drawable/radiobutton_on_background" />
+                android:background="@drawable/rounded_coner_shape_grey" />
 
             <!-- Dot 3 -->
             <View
@@ -103,10 +100,8 @@
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="5dp"
-                android:background="@color/small_buttons"
-
-                android:contentDescription="@string/scroll_view_options"
-                android:src="@android:drawable/radiobutton_on_background" />
+                android:background="@drawable/rounded_coner_shape_grey"
+                android:contentDescription="@string/scroll_view_options" />
 
         </LinearLayout>
 
