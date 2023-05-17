@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="Select"
+        android:layout_below="@+id/tv_price"
         android:layout_centerInParent="true"
         android:layout_alignParentBottom="true"
         android:visibility="gone"/>

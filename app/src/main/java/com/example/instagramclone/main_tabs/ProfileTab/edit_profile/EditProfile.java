@@ -3,6 +3,7 @@ package com.example.instagramclone.main_tabs.ProfileTab.edit_profile;
 import com.example.instagramclone.braintree_payment.PaymentActivity;
 import com.example.instagramclone.reusable_code.ParseUtils.ParseModel;
 import com.example.instagramclone.main_tabs.SocialMediaActivity;
+import com.example.instagramclone.reusable_code.ParseUtils.UtilsClass;
 import com.example.instagramclone.spotify.SpotifySongs;
 import com.example.instagramclone.reusable_code.SizeBasedOnDensity;
 import com.example.instagramclone.choices_tabs.Choices_tabs_Activity;
@@ -40,6 +41,8 @@ import com.example.instagramclone.R;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
@@ -212,7 +215,8 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
             }
 
             //saves all inputs to realm database
-            saveToParse();
+            if(viewId == R.id.back_btn)
+                saveToParse();
 
             //loads choices tabs if tablelayout press except favourite song
             if (viewId != myFavouriteSong.getId()) {
@@ -370,13 +374,11 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
     public void loadViews() {
 
-
         ParseModel.getQuery(true).fromPin().getFirstInBackground(new GetCallback<ParseModel>() {
             @Override
             public void done(ParseModel parseModel, ParseException e) {
                 if (e == null) {
                     // Set other fields here
-
                     List<String> mybasics = new ArrayList<>();
 
                     if(parseModel.getIsPayed()){
@@ -403,8 +405,6 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                         mybasics.add(parseModel.getHeight());
 
                     buttonCreator.buttonCreator(myBasicsLayout, EditProfile.this,  mybasics.toArray(new String[0]));
-
-
 
                     List<String> myLifeStyle = new ArrayList<>();
                     if (parseModel.getPets()!= null && !parseModel.getPets().equals(""))
@@ -462,6 +462,8 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
                     if (!myLifeStyle.isEmpty())
                         buttonCreator.buttonCreator(myLifestyleLayout, null,  myLifeStyle.toArray(new String[0]));
 
+                }else{
+                    Dialogs.showSnackbar(EditProfile.this,e.getMessage(),2000);
                 }
             }
         });
@@ -499,14 +501,14 @@ public class EditProfile  extends AppCompatActivity implements View.OnClickListe
 
 
                             } else {
-                                Dialogs.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
+                                Dialogs.showSnackbar(EditProfile.this, e.getMessage(), 2000);
 
                                 // Handle the error
                             }
                         }
                     });
                 } else {
-                    Dialogs.showSnackbar(EditProfile.this, "Error!!!\n Selection's not saved", 2000);
+                    Dialogs.showSnackbar(EditProfile.this, e.getMessage(), 2000);
                 }
             }
         });

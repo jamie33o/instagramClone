@@ -15,8 +15,12 @@ import com.example.instagramclone.R;
 import com.example.instagramclone.braintree_payment.PaymentActivity;
 import com.example.instagramclone.main_tabs.ItemModel;
 import com.example.instagramclone.main_tabs.likedprofiles_tab.messsaging.Messaging_Activity;
+import com.example.instagramclone.reusable_code.PiccassoLoadToImageView;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class Liked_Profile_Adapter extends RecyclerView.Adapter<Liked_Profile_Adapter.LikedProfileHolder> {
@@ -60,6 +64,7 @@ public class Liked_Profile_Adapter extends RecyclerView.Adapter<Liked_Profile_Ad
        private final Liked_Profile_Adapter adapter;
         private ParseUser recipientUserClassPointer;
         private  boolean isPayed=false;
+        private final PiccassoLoadToImageView piccasso;
         public LikedProfileHolder(View itemView, Liked_Profile_Adapter adapter) {
             super(itemView);
             this.adapter =adapter;
@@ -68,18 +73,14 @@ public class Liked_Profile_Adapter extends RecyclerView.Adapter<Liked_Profile_Ad
             age = itemView.findViewById(R.id.item_age);
             county = itemView.findViewById(R.id.item_city);
 
+            piccasso = new PiccassoLoadToImageView(itemView.getContext());
+
         }
 
 
         public void setData(ItemModel data) {
             isPayed = data.getIsPayed();
-
-            Picasso.get()
-                    .load(data.getImage1())
-                    .placeholder(R.drawable.baseline_add_a_photo_24)
-                    .fit()
-                    .centerCrop()
-                    .into(imageLp);
+            piccasso.getImageNloadIntoImageview(data.getImage1(), imageLp);
 
 
             name.setText(data.getName());

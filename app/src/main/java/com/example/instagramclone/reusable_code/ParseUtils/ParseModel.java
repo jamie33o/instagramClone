@@ -17,6 +17,7 @@ public class ParseModel extends ParseObject {
 
     public static ParseQuery<ParseModel> getQuery(boolean getcurrentuser) {
         ParseQuery<ParseModel> query = ParseQuery.getQuery(ParseModel.class);
+
         if(getcurrentuser) {
             query.whereEqualTo("userclasspointer", UtilsClass.getCurrentUser());
         }else {

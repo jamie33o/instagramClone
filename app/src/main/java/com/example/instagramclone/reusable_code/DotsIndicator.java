@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.instagramclone.R;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DotsIndicator {
 
@@ -43,10 +44,12 @@ public class DotsIndicator {
     public DotsIndicator(List<View> dots, Context context, ViewPager2 vp) {
         dots.get(0).setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_corner_shape_red, null));
 
+
+
+
         vp.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-
                 dots.get(lastpos).setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_coner_shape_grey, null));
                 dots.get(position).setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_corner_shape_red, null));
                 lastpos = position;

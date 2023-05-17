@@ -30,6 +30,10 @@ import com.parse.ParseFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ProfileTab extends Fragment implements View.OnClickListener {
 
@@ -120,36 +124,38 @@ public class ProfileTab extends Fragment implements View.OnClickListener {
         PricesAdapter pagerAdapter = new PricesAdapter(getContext(),pricesModelListProfilepg,null);
         viewPager.setAdapter(pagerAdapter);
 
-        // Set up auto-scrolling using Handler
-        final Handler handler = new Handler();
+        // Set up auto-scrolling using ScheduledExecutorService
+        final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (currentPage == NUM_PAGES - 1) {
-                    currentPage = 0;
-                } else {
-                    currentPage++;
-                }
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dots.get(currentPage == 0 ? 2 : currentPage-1).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(),R.drawable.rounded_coner_shape_grey,null));
-
+                try {
+                    if (currentPage == NUM_PAGES - 1) {
+                        currentPage = 0;
+                    } else {
+                        currentPage++;
                     }
-                },300);
 
-                dots.get(currentPage).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(),R.drawable.rounded_corner_shape_red,null));
-                viewPager.setCurrentItem(currentPage, true);
-                handler.postDelayed(this, AUTO_SCROLL_DELAY);
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dots.get(currentPage == 0 ? 2 : currentPage - 1).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(), R.drawable.rounded_coner_shape_grey, null));
+                            dots.get(currentPage).setBackground(ResourcesCompat.getDrawable(requireContext().getResources(), R.drawable.rounded_corner_shape_red, null));
+                            viewPager.setCurrentItem(currentPage, true);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
-        handler.postDelayed(runnable, AUTO_SCROLL_DELAY);
+        scheduledExecutorService.scheduleAtFixedRate(runnable, 0, AUTO_SCROLL_DELAY, TimeUnit.MILLISECONDS);
 
 
 
 
 
-    return view;//must return type view
+        return view;//must return type view
 
     }
 
